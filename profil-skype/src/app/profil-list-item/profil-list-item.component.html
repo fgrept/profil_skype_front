@@ -1,0 +1,12 @@
+<tr class="row">
+    <td class="col-2">{{profil.adresseSip}}</td>
+    <td class="col-2">{{profil.firstName}}</td>
+    <td class="col-2">{{profil.lastName}}</td>
+    <td class="col-1">{{profil.orgaUnityCode}}</td>
+    <td class="col-1">{{profil.siteCode}}</td>
+    <td class="col-1">{{profil.statusProfile}}</td>
+    <!--TODO : make the whole raw as clickable for detail-->
+    <!--TODO : route vers un formulaire écran détail/maj-->
+    <td class="col-1"><button class="btn-info">Detail</button></td>
+    <td class="col-1"><button class="btn-info" *ngIf="currentUserType!=0">Supprimer</button></td>   
+</tr>

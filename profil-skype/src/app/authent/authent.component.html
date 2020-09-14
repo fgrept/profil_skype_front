@@ -1,0 +1,24 @@
+
+<div class="custom-control custom-radio">
+    <input type="radio" class="custom-control-input" id="collaborateur" name="defaultExampleRadios"
+            (click)="updateUserRole(0)"
+            [checked]="currentUserType==0">
+    <label class="custom-control-label" for="collaborateur">collaborateur</label>
+  </div>
+  
+  <div class="custom-control custom-radio">
+    <input type="radio" class="custom-control-input" id="cil" name="defaultExampleRadios"
+    (click)="updateUserRole(1)"
+    [checked]="currentUserType==1">
+    <label class="custom-control-label" for="cil">cil</label>
+  </div>
+  
+  <div class="custom-control custom-radio">
+    <input type="radio" class="custom-control-input" id="admin" name="defaultExampleRadios"
+    (click)="updateUserRole(2)"
+    [checked]="currentUserType==2">
+    <label class="custom-control-label" for="admin">admin</label>
+  </div>
+  
+
+

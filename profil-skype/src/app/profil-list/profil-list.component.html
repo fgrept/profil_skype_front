@@ -1,0 +1,7 @@
+<div class="container">
+    <table class="table  table-striped">
+        <app-profil-list-item *ngFor="let item of profilList" [profil]="item">
+        </app-profil-list-item>
+    </table>
+    <p><button class="btn-info" *ngIf="currentUserType!=0">Créer</button></p> 
+</div>
