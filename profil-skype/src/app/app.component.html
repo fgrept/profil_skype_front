@@ -10,10 +10,10 @@
       <li routerLinkActive="active" class="nav-item">
         <a class="nav-link" routerLink="auth">Authentification</a>
       </li>
-      <li routerLinkActive="active" class="nav-item">
+      <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType!==0">
         <a class="nav-link" routerLink="profils">Profils Skype</a>
       </li>
-      <li routerLinkActive="active" class="nav-item">
+      <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType===2 || currentUserType===3">
         <a class="nav-link" routerLink="users">Utilisateur</a>
       </li>
     </ul>

@@ -8,5 +8,5 @@
     <!--TODO : make the whole raw as clickable for detail-->
     <!--TODO : route vers un formulaire écran détail/maj-->
     <td class="col-1"><button class="btn-info">Detail</button></td>
-    <td class="col-1"><button class="btn-info" *ngIf="currentUserType!=0">Supprimer</button></td>   
+    <td class="col-1"><button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Supprimer</button></td>   
 </tr>

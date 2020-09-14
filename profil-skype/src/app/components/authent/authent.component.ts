@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
+import { UserService } from 'src/app/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-authent',
@@ -9,18 +10,21 @@ import { UserService } from '../user.service';
 export class AuthentComponent implements OnInit {
 
   currentUserType;
+  userSuscribe: Subscription;
 
   constructor(private userService:UserService) {
     
    }
 
   ngOnInit(): void {
-    this.currentUserType=this.userService.userAuth;
+    this.userSuscribe = this.userService.userSubject.subscribe(
+      (user) => {
+        this.currentUserType= user;
+      }
+    );
   }
 
   updateUserRole (roleChosen) {
-    this.currentUserType = roleChosen;
-    //console.log(this.currentUserType);
     this.userService.updateRole(roleChosen);
   }
 }

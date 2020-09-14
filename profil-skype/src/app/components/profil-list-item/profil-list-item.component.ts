@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserService } from '../user.service';
+import { UserService } from '../../services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profil-list-item',
@@ -10,12 +11,17 @@ export class ProfilListItemComponent implements OnInit {
 
   @Input() profil;
   currentUserType;
+  userSuscribe: Subscription;
     
   constructor(private userService:UserService) {
   }
 
   ngOnInit(): void {
-    this.currentUserType=this.userService.userAuth;
+    this.userSuscribe = this.userService.userSubject.subscribe(
+      (user) => {
+        this.currentUserType= user;
+      }
+    );
   }
 
 }

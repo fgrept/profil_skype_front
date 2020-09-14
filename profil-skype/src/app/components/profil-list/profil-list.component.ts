@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
-import { Profil} from '../profil';
+import { UserService } from '../../services/user.service';
+import { Profil} from '../../profil';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profil-list',
@@ -10,6 +11,8 @@ import { Profil} from '../profil';
 export class ProfilListComponent implements OnInit {
 
   currentUserType;
+  userSuscribe: Subscription;
+
   profilList = Array<{}>();
   profil1:Profil = {adresseSip : "titi@gmail.com", firstName:"james", lastName:"bond", orgaUnityCode:"8802", siteCode:"12594", statusProfile:"ENABLED"};
   profil2:Profil = {adresseSip : "tata@gmail.com", firstName:"albert", lastName:"einstein", orgaUnityCode:"8812", siteCode:"12584", statusProfile:"DISABLED"};
@@ -27,7 +30,11 @@ export class ProfilListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUserType=this.userService.userAuth;
+    this.userSuscribe = this.userService.userSubject.subscribe(
+      (user) => {
+        this.currentUserType= user;
+      }
+    );
   }
 
 }

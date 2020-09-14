@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable} from 'rxjs/'
+import { Subject } from 'rxjs';
 
 enum userType {
   userUnknown,
@@ -12,11 +14,16 @@ enum userType {
 })
 
 export class UserService {
-  userAuth = userType.userUnknown;
+  private userAuth;
+  userSubject = new Subject<userType>();
 
-  constructor() {}
+  constructor() {
+    this.userAuth = userType.userUnknown;
+  }
 
   updateRole(roleChosen:userType) {
     this.userAuth = roleChosen;
+    this.userSubject.next(roleChosen);
   }
+
 }
