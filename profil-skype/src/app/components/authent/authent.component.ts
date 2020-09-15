@@ -12,16 +12,16 @@ export class AuthentComponent implements OnInit {
   currentUserType;
   userSuscribe: Subscription;
 
-  constructor(private userService:UserService) {
-    
-   }
+  constructor(private userService:UserService) {}
 
   ngOnInit(): void {
-    this.userSuscribe = this.userService.userSubject.subscribe(
+    this.currentUserType = this.userService.getCurrentRole();
+    // méthode inutile à part ajouter une couche d'abstraction et de la complexité
+    /*this.userSuscribe = this.userService.userSubject.subscribe(
       (user) => {
         this.currentUserType= user;
       }
-    );
+    );*/
   }
 
   updateUserRole (roleChosen) {

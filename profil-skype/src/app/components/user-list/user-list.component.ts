@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
+import { ProfilShort } from 'src/app/models/profil-short';
 
 @Component({
   selector: 'app-user-list',
@@ -10,16 +11,11 @@ import { Subscription } from 'rxjs';
 export class UserListComponent implements OnInit {
 
   currentUserType;
-  userSuscribe: Subscription;
 
-  constructor(private userService:UserService) { }
+  constructor() { }
+
 
   ngOnInit(): void {
-    this.userSuscribe = this.userService.userSubject.subscribe(
-      (user) => {
-        this.currentUserType= user;
-      }
-    );
   }
 
 }

@@ -15,7 +15,7 @@ enum userType {
 
 export class UserService {
   private userAuth;
-  userSubject = new Subject<userType>();
+  public userSubject = new Subject<userType>();
 
   constructor() {
     this.userAuth = userType.userUnknown;
@@ -23,7 +23,11 @@ export class UserService {
 
   updateRole(roleChosen:userType) {
     this.userAuth = roleChosen;
+    // méthode suivante nécessaire pour les components qui ecoutent la maj du role
     this.userSubject.next(roleChosen);
   }
 
+  getCurrentRole() {
+    return this.userAuth;
+  }
 }

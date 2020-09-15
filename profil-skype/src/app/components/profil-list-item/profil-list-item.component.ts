@@ -10,18 +10,14 @@ import { Subscription } from 'rxjs';
 export class ProfilListItemComponent implements OnInit {
 
   @Input() profil;
+  @Input() idProfil:number;
   currentUserType;
-  userSuscribe: Subscription;
     
   constructor(private userService:UserService) {
   }
 
   ngOnInit(): void {
-    this.userSuscribe = this.userService.userSubject.subscribe(
-      (user) => {
-        this.currentUserType= user;
-      }
-    );
+    this.currentUserType = this.userService.getCurrentRole();
   }
 
 }

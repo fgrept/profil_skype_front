@@ -10,13 +10,17 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProfilListItemComponent } from './components/profil-list-item/profil-list-item.component';
 import { ProfilConsultComponent } from './components/profil-consult/profil-consult.component';
 import { UserService} from './services/user.service'
+import { ProfilsService} from './services/profils.service'
 import { AuthentGuardService } from './services/authent-guard.service';
 import { UrlNotFoundComponent } from './components/url-not-found/url-not-found.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ProfilDetailComponent } from './components/profil-detail/profil-detail.component';
 
 const appRoutes: Routes = [
   {path:'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
   {path:'users', canActivate:[AuthentGuardService],component:UserListComponent},
   {path:'auth',component:AuthentComponent},
+  {path:'profils/:idProfil',component:ProfilDetailComponent},
   {path:'', component:ProfilListComponent,},
   {path:'not-found', component:UrlNotFoundComponent},
   {path:'**', redirectTo:'not-found'}
@@ -30,15 +34,18 @@ const appRoutes: Routes = [
     UserListComponent,
     ProfilListItemComponent,
     ProfilConsultComponent,
-    UrlNotFoundComponent
+    UrlNotFoundComponent,
+    ProfilDetailComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    HttpClientModule
   ],
   providers: [AuthentGuardService,
-              UserService],
+              UserService,
+              ProfilsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
