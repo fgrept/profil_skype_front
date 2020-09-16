@@ -8,13 +8,13 @@ import { ProfilListComponent } from './components/profil-list/profil-list.compon
 import { UserListComponent } from './components/user-list/user-list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { ProfilListItemComponent } from './components/profil-list-item/profil-list-item.component';
-import { ProfilConsultComponent } from './components/profil-consult/profil-consult.component';
 import { UserService} from './services/user.service'
 import { ProfilsService} from './services/profils.service'
 import { AuthentGuardService } from './services/authent-guard.service';
 import { UrlNotFoundComponent } from './components/url-not-found/url-not-found.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProfilDetailComponent } from './components/profil-detail/profil-detail.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const appRoutes: Routes = [
   {path:'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -33,7 +33,6 @@ const appRoutes: Routes = [
     ProfilListComponent,
     UserListComponent,
     ProfilListItemComponent,
-    ProfilConsultComponent,
     UrlNotFoundComponent,
     ProfilDetailComponent
   ],
@@ -41,7 +40,8 @@ const appRoutes: Routes = [
     BrowserModule,
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [AuthentGuardService,
               UserService,

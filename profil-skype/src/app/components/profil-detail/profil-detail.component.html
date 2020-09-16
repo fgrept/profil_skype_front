@@ -1,19 +1,67 @@
-<div class="container">
-    <h2>Détail du profil sélectionné : </h2>
-    <p>adresse sip : {{profilToShow.sip}}</p>
-    <p>enterprise Voice Enabled : {{profilToShow.enterpriseVoiceEnabled}}</p>
-    <p>voice poilcy : {{profilToShow.voicePolicy}}</p>
-    <p>dial Plan : {{profilToShow.dialPlan}}</p>
-    <p>sam account name : {{profilToShow.samAccountName}}</p>
-    <p>exUm Enabled : {{profilToShow.exUmEnabled}}</p>
-    <p>exchUser : {{profilToShow.exchUser}}</p>
-    <p>objectClass : {{profilToShow.objectClass}}</p>
-    <p>status du profil : {{profilToShow.statusProfile}}</p>
+<form [formGroup]="profilForm" (ngSubmit)="validateForm()">
 
-    <button>
-        <a routerLink="/profils">Retour à la liste</a>
-    </button>
-</div>
+    <p><br /><strong>Détail du profil Skype : </strong></p>
+    
+    <div class="form-group row" >
+        <label class="col-2" for="sip">Adresse SIP :</label>
+        <div class="col-4">
+            <input type="text" id="sip" class="form-control" formControlName="sip">
+        </div>
+    </div>
+    <div class="form-group row" >
+        <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
+        <div class="col-4">
+            <input type="text" id="voice" class="form-control" formControlName="voice">
+        </div>
+    </div>
+    <div class="form-group row" >
+        <label  class="col-2" for="dialPlan">Dial Plan :</label>
+        <div class="col-4">
+            <input type="text" id="dialPlan" class="form-control" formControlName="dialPlan">
+        </div>
+    </div>
+    <div class="form-group row" >
+        <label  class="col-2" for="samAccount">SAM Account Name :</label>
+        <div class="col-4">
+            <input type="text" id="samAccount" class="form-control" formControlName="samAccount">
+        </div>
+    </div>
+    <div class="form-group row" >
+        <label class="col-2" for="exUm">ExUm Enabled :</label>
+        <div class="col-4">
+            <input  type="text" id="exUm" class="form-control" formControlName="exUm">
+        </div>
+    </div>
+    <div class="form-group row" >
+        <label  class="col-2" for="exchUser">exchUser :</label>
+        <div class="col-4">
+            <input type="text" id="exchUser" class="form-control" formControlName="exchUser">
+        </div>
+    </div>
+    <div class="form-group row" >        
+        <label  class="col-2" for="objectClass">Object Class :</label>
+        <div class="col-4">
+            <input type="text" id="objectClass" class="form-control" formControlName="objectClass">
+        </div>
+    </div>
+    <div class="form-group row" >
+        <label  class="col-2" for="status">Status du profil :</label>
+        <div class="col-4">
+            <input type="text" id="status" class="form-control" formControlName="status">
+        </div>    
+    </div>
 
-
-
+    <div class="form-group row" >
+        <div class="col-2">
+            <button class="btn-info">
+            <a routerLink="/profils">Retour à la liste</a>
+        </button>
+        </div>
+        <div class="col-2">
+            <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Modifier</button>
+        </div>
+        <div class="col-2">
+            <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Supprimer</button>
+        </div>       
+    </div>  
+</form>

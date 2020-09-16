@@ -1,15 +1,32 @@
-<tr class="row">
-    <td class="col-3">{{profil.sip}}</td>
-    <td class="col-2">{{profil.firstName}}</td>
-    <td class="col-2">{{profil.lastName}}</td>
-    <td class="col-1">{{profil.orgaUnityCode}}</td>
-    <td class="col-1">{{profil.siteCode}}</td>
-    <td class="col-1">{{profil.statusProfile}}</td>
-    <!--TODO : make the whole raw as clickable for detail-->
-    <!--TODO : route vers un formulaire écran détail/maj-->
-    <td class="col-1">
-        <button class="btn-info"><a [routerLink]="idProfil">Detail</a></button>
-    </td>
-    <td class="col-1">
-        <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Supprimer</button></td>   
+<!--with explicits buttons-->
+<!--<tr class="row">
+        <td class="col-3">{{profil.sip}}</td>
+        <td class="col-2">{{profil.firstName}}</td>
+        <td class="col-2">{{profil.lastName}}</td>
+        <td class="col-1">{{profil.orgaUnityCode}}</td>
+        <td class="col-1">{{profil.siteCode}}</td>
+        <td class="col-1">{{profil.statusProfile}}</td>
+        <td class="col-1">
+            <button class="btn-info"><a [routerLink]="idProfil">Detail</a></button>
+        </td>
+        <td class="col-1">
+            <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Supprimer</button>
+        </td>   
 </tr>
+-->
+
+<!--with all the row clickable, the suppress button will be on the other component-->
+<div class="col-12 custom-style">
+    <a class="row stretched-link " [routerLink]="idProfil">
+        <td class="col-3">{{profil.sip}}</td>
+        <td class="col-2">{{profil.firstName}}</td>
+        <td class="col-2">{{profil.lastName}}</td>
+        <td class="col-1">{{profil.orgaUnityCode}}</td>
+        <td class="col-1">{{profil.siteCode}}</td>
+        <td class="col-1">{{profil.statusProfile}}</td>
+    </a>
+</div>
+
+
+
+<!--several class : stretched-link, clickable-->
