@@ -15,12 +15,14 @@ import { UrlNotFoundComponent } from './components/url-not-found/url-not-found.c
 import { HttpClientModule } from '@angular/common/http';
 import { ProfilDetailComponent } from './components/profil-detail/profil-detail.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProfilDetailEventsComponent } from './components/profil-detail-events/profil-detail-events.component';
 
 const appRoutes: Routes = [
   {path:'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
   {path:'users', canActivate:[AuthentGuardService],component:UserListComponent},
   {path:'auth',component:AuthentComponent},
   {path:'profils/:idProfil',component:ProfilDetailComponent},
+  {path:'profils/:idProfil/events',component:ProfilDetailEventsComponent},
   {path:'', component:ProfilListComponent,},
   {path:'not-found', component:UrlNotFoundComponent},
   {path:'**', redirectTo:'not-found'}
@@ -34,7 +36,8 @@ const appRoutes: Routes = [
     UserListComponent,
     ProfilListItemComponent,
     UrlNotFoundComponent,
-    ProfilDetailComponent
+    ProfilDetailComponent,
+    ProfilDetailEventsComponent
   ],
   imports: [
     BrowserModule,

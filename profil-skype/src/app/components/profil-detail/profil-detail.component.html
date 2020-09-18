@@ -1,67 +1,103 @@
 <form [formGroup]="profilForm" (ngSubmit)="validateForm()">
 
-    <p><br /><strong>Détail du profil Skype : </strong></p>
-    
-    <div class="form-group row" >
-        <label class="col-2" for="sip">Adresse SIP :</label>
-        <div class="col-4">
-            <input type="text" id="sip" class="form-control" formControlName="sip">
-        </div>
-    </div>
-    <div class="form-group row" >
-        <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
-        <div class="col-4">
-            <input type="text" id="voice" class="form-control" formControlName="voice">
-        </div>
-    </div>
-    <div class="form-group row" >
-        <label  class="col-2" for="dialPlan">Dial Plan :</label>
-        <div class="col-4">
-            <input type="text" id="dialPlan" class="form-control" formControlName="dialPlan">
-        </div>
-    </div>
-    <div class="form-group row" >
-        <label  class="col-2" for="samAccount">SAM Account Name :</label>
-        <div class="col-4">
-            <input type="text" id="samAccount" class="form-control" formControlName="samAccount">
-        </div>
-    </div>
-    <div class="form-group row" >
-        <label class="col-2" for="exUm">ExUm Enabled :</label>
-        <div class="col-4">
-            <input  type="text" id="exUm" class="form-control" formControlName="exUm">
-        </div>
-    </div>
-    <div class="form-group row" >
-        <label  class="col-2" for="exchUser">exchUser :</label>
-        <div class="col-4">
-            <input type="text" id="exchUser" class="form-control" formControlName="exchUser">
-        </div>
-    </div>
-    <div class="form-group row" >        
-        <label  class="col-2" for="objectClass">Object Class :</label>
-        <div class="col-4">
-            <input type="text" id="objectClass" class="form-control" formControlName="objectClass">
-        </div>
-    </div>
-    <div class="form-group row" >
-        <label  class="col-2" for="status">Status du profil :</label>
-        <div class="col-4">
-            <input type="text" id="status" class="form-control" formControlName="status">
-        </div>    
-    </div>
+    <div class="container">
 
-    <div class="form-group row" >
-        <div class="col-2">
-            <button class="btn-info">
-            <a routerLink="/profils">Retour à la liste</a>
-        </button>
+        <p><br /><strong>Détail du profil Skype : </strong></p>
+        
+        <div class="form-group row" >
+            <label class="col-2" for="sip">Adresse SIP :</label>
+            <div class="col-4">
+                <input type="text" id="sip" class="form-control" formControlName="sip">
+            </div>
         </div>
-        <div class="col-2">
-            <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Modifier</button>
+
+        <div class="form-group row" >
+            <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
+            <div class="col-4">
+                <input type="text" id="voice" class="form-control" formControlName="voice">
+            </div>
         </div>
-        <div class="col-2">
-            <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Supprimer</button>
-        </div>       
-    </div>  
+
+        <div class="form-group row" >
+            <label class="col-2" for="voicepolicy">Voice Policy :</label>
+            <div class="col-4">
+                <input type="text" id="voicepolicy" class="form-control" formControlName="voicepolicy">
+            </div>
+        </div>
+        <!-- checkbox ne fonctionne pas dans le form Reactive pour l'instant
+        <div class="form-group row" >
+            <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
+            <div class="col-4 row">
+                <label for="voiceoui">Oui</label>
+                <div class="col">
+                    <input type="radio" id="voiceoui" class="form-control" formControlName="voiceoui" value="Oui"
+                    [disabled]="this.changedNotAuthorized"
+                    [checked]="this.voiceEnabled">
+                </div>
+                <label for="voicenon">Non</label>
+                <div class="col">
+                    <input type="radio" id="voicenon" class="form-control" formControlName="voicenon" value="Non"
+                    [disabled]="this.changedNotAuthorized"
+                    [checked]="!this.voiceEnabled">
+                </div>
+                
+            </div>
+        </div>
+        -->
+        <div class="form-group row" >
+            <label  class="col-2" for="dialPlan">Dial Plan :</label>
+            <div class="col-4">
+                <input type="text" id="dialPlan" class="form-control" formControlName="dialPlan">
+            </div>
+        </div>
+        <div class="form-group row" >
+            <label  class="col-2" for="samAccount">SAM Account Name :</label>
+            <div class="col-4">
+                <input type="text" id="samAccount" class="form-control" formControlName="samAccount">
+            </div>
+        </div>
+        <div class="form-group row" >
+            <label class="col-2" for="exUm">ExUm Enabled :</label>
+            <div class="col-4">
+                <input  type="text" id="exUm" class="form-control" formControlName="exUm">
+            </div>
+        </div>
+        <div class="form-group row" >
+            <label  class="col-2" for="exchUser">exchUser :</label>
+            <div class="col-4">
+                <input type="text" id="exchUser" class="form-control" formControlName="exchUser">
+            </div>
+        </div>
+        <div class="form-group row" >        
+            <label  class="col-2" for="objectClass">Object Class :</label>
+            <div class="col-4">
+                <input type="text" id="objectClass" class="form-control" formControlName="objectClass">
+            </div>
+        </div>
+        <div class="form-group row" >
+            <label  class="col-2" for="status">Status du profil :</label>
+            <div class="col-4">
+                <input type="text" id="status" class="form-control" formControlName="status">
+            </div>    
+        </div>
+
+        <div class="form-group row" >
+            <div class="col-2">
+                <button class="btn-info">
+                    <a routerLink="/profils">Retour à la liste</a>
+                </button>
+            </div>
+            <div class="col-2">
+                <button class="btn-info">
+                    <a routerLink="events">Journal des évènements</a>
+                </button>
+            </div>
+            <div class="col-2">
+                <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Modifier</button>
+            </div>
+            <div class="col-2">
+                <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Supprimer</button>
+            </div>       
+        </div>  
+    </div>
 </form>

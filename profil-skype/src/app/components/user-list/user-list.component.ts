@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Subscription, Subject } from 'rxjs';
-import { ProfilShort } from 'src/app/models/profil-short';
+import { ProfilFromList } from 'src/app/models/profil-to-show';
 
 @Component({
   selector: 'app-user-list',

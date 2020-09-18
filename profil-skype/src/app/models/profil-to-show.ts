@@ -1,4 +1,4 @@
-export class ProfilShort {
+export class ProfilFromList {
 
     constructor(public sip:string,
                 public enterpriseVoiceEnabled:string,
@@ -9,7 +9,7 @@ export class ProfilShort {
                 public exchUser:string,
                 public objectClass:string,
                 public statusProfile:string,
-                public collalboraterId:string,
+                public collaboraterId:string,
                 public exirationDate:string,
                 public firstname:string,
                 public lastname:string,
