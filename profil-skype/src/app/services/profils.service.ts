@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { ProfilFromList } from '../models/profil-to-show';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
@@ -17,10 +17,11 @@ const baseUrl3: string = 'http://localhost:8181/v1/profile/delete/';
 @Injectable({
   providedIn: 'root'
 })
-export class ProfilsService {
+export class ProfilsService  {
 
   private profils: ProfilFromList[];
   profilsSubject = new Subject<ProfilFromList[]>();
+  updateSubject = new Subject();
 
   constructor(private httpClient: HttpClient) {}
 
@@ -57,6 +58,8 @@ export class ProfilsService {
     .subscribe(
       (response) => {
         console.log(response);
+        //this.route.navigate(["/profils"]);
+        this.updateSubject.next(response);
         //this.profils = response;
         //this.profilsSubject.next(response);
       },

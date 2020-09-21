@@ -1,4 +1,4 @@
-<form [formGroup]="profilForm" (ngSubmit)="validateForm()">
+<form [formGroup]="profilForm">
 
     <div class="container">
 
@@ -12,38 +12,25 @@
         </div>
 
         <div class="form-group row" >
-            <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
-            <div class="col-4">
-                <input type="text" id="voice" class="form-control" formControlName="voice">
-            </div>
-        </div>
-
-        <div class="form-group row" >
             <label class="col-2" for="voicepolicy">Voice Policy :</label>
             <div class="col-4">
                 <input type="text" id="voicepolicy" class="form-control" formControlName="voicepolicy">
             </div>
         </div>
-        <!-- checkbox ne fonctionne pas dans le form Reactive pour l'instant
-        <div class="form-group row" >
+
+        <div class="form-group row">
             <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
-            <div class="col-4 row">
-                <label for="voiceoui">Oui</label>
-                <div class="col">
-                    <input type="radio" id="voiceoui" class="form-control" formControlName="voiceoui" value="Oui"
-                    [disabled]="this.changedNotAuthorized"
-                    [checked]="this.voiceEnabled">
+            <div class="col-4">
+                <div class="raw" *ngFor="let item of voiceEnabled">
+                    <div class="col">
+                        <label >{{item.name}}
+                            <input type="radio" id="voice" class="form-control" [value]="item.value" [checked]="item.checked" formControlName="voiceEnabled" />
+                        </label>
+                     </div>   
                 </div>
-                <label for="voicenon">Non</label>
-                <div class="col">
-                    <input type="radio" id="voicenon" class="form-control" formControlName="voicenon" value="Non"
-                    [disabled]="this.changedNotAuthorized"
-                    [checked]="!this.voiceEnabled">
-                </div>
-                
-            </div>
+            </div>           
         </div>
-        -->
+
         <div class="form-group row" >
             <label  class="col-2" for="dialPlan">Dial Plan :</label>
             <div class="col-4">
@@ -56,12 +43,20 @@
                 <input type="text" id="samAccount" class="form-control" formControlName="samAccount">
             </div>
         </div>
-        <div class="form-group row" >
-            <label class="col-2" for="exUm">ExUm Enabled :</label>
+
+        <div class="form-group row">
+            <label class="col-2" for="voice">ExUm Enabled :</label>
             <div class="col-4">
-                <input  type="text" id="exUm" class="form-control" formControlName="exUm">
-            </div>
+                <div class="raw" *ngFor="let item of exUmEnabled">
+                    <div class="col">
+                        <label >{{item.name}}
+                            <input type="radio" id="voice" class="form-control" [value]="item.value" [checked]="item.checked" formControlName="exUmEnabled" />
+                        </label>
+                     </div>   
+                </div>
+            </div>           
         </div>
+
         <div class="form-group row" >
             <label  class="col-2" for="exchUser">exchUser :</label>
             <div class="col-4">
@@ -93,11 +88,13 @@
                 </button>
             </div>
             <div class="col-2">
-                <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Modifier</button>
+                <button type ="submit" class="btn-info" *ngIf="currentUserType==2 || currentUserType==3"
+                        (click)="updateProfil()">Modifier</button>
             </div>
             <div class="col-2">
-                <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Supprimer</button>
+                <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3" (click)="deleteProfil()">Supprimer</button>
             </div>       
         </div>  
     </div>
 </form>
+

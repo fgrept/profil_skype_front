@@ -12,6 +12,7 @@ export class AppComponent  implements OnInit, OnDestroy {
   currentUserType;
   userSuscribe: Subscription;
 
+
   constructor(private userService:UserService) { }
 
   ngOnDestroy(): void {
