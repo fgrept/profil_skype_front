@@ -57,7 +57,7 @@ export class ProfilsService  {
     this.httpClient.post(baseUrl2,profilChanged)
     .subscribe(
       (response) => {
-        console.log(response);
+        console.log("Maj back-end Ok");
         //this.route.navigate(["/profils"]);
         this.updateSubject.next(response);
         //this.profils = response;
@@ -65,6 +65,7 @@ export class ProfilsService  {
       },
       (error) => {
         console.log("erreur back-end " + error );
+        this.updateSubject.next(error);
       }
     )
   }
