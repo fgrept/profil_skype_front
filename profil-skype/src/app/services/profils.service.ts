@@ -19,14 +19,15 @@ const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
 })
 export class ProfilsService  {
 
-  private profils: ProfilFromList[];
+  private profils:ProfilFromList[];
   profilsSubject = new Subject<ProfilFromList[]>();
   updateSubject = new Subject();
+  deleteSubject = new Subject();
 
   constructor(private httpClient: HttpClient) {}
 
   getProfilById(id: number) {
-    if (id < this.profils.length) {
+    if (id < this.profils['length']) {
       return this.profils[id];
     } else {
       console.log("Problème d\'indice sur la liste");
@@ -71,15 +72,17 @@ export class ProfilsService  {
   }
 
   deleteProfilToServer(sip: string) {
-    this.httpClient.delete(baseUrl3 + sip, null)
+    this.httpClient.post(baseUrl3 + sip, null)
     .subscribe(
       (response) => {
         console.log(response);
+        this.deleteSubject.next(response);
         // this.profils = response;
         // this.profilsSubject.next(response);
       },
       (error) => {
         console.log('erreur back-end ' + error );
+        this.deleteSubject.next(error);
       }
     );
   }
