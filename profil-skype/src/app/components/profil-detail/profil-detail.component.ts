@@ -87,9 +87,9 @@ export class ProfilDetailComponent implements OnInit {
                           this.profilForm.value.exUmEnabled,
                           this.profilForm.value.exchUser,
                           this.profilForm.value.objectClass,
-                          this.profilForm.value.statusProfile);
+                          this.profilForm.value.status);
 
-    this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '300000', 'commentaire GF');
+    this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '000000', 'commentaire GF');
     // problem of refresh, even the server is callback (next call is good)
     this.profilService.updateSubject.subscribe(
           () => {
