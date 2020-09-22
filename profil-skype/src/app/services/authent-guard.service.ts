@@ -9,18 +9,18 @@ import { Subscription } from 'rxjs';
 export class AuthentGuardService implements CanActivate {
   currentUserType;
   userSuscribe: Subscription;
-  
+
   constructor(private userService: UserService,
-              private router: Router) { 
+              private router: Router) {
                 this.userSuscribe = this.userService.userSubject.subscribe(
                   (user) => {
-                    this.currentUserType= user;
+                    this.currentUserType = user;
                   }
                 );
               }
-  
+
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.currentUserType != 0) {
+    if (this.currentUserType !== 0) {
       return true;
     } else {
       this.router.navigate(['/auth']);

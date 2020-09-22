@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable} from 'rxjs/'
+import { Observable} from 'rxjs/';
 import { Subject } from 'rxjs';
 
 enum userType {
@@ -21,7 +21,7 @@ export class UserService {
     this.userAuth = userType.userUnknown;
   }
 
-  updateRole(roleChosen:userType) {
+  updateRole(roleChosen: userType) {
     this.userAuth = roleChosen;
     // méthode suivante nécessaire pour les components qui ecoutent la maj du role
     this.userSubject.next(roleChosen);

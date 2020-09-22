@@ -15,12 +15,11 @@ export class ProfilListComponent implements OnInit {
   profilList2: ProfilFromList[];
   profilSuscribe: Subscription;
 
-  constructor(private userService:UserService, private profilsService:ProfilsService) {
+  constructor(private userService: UserService, private profilsService: ProfilsService) {
   }
 
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
-    
     this.profilsService.getProfilsFromServer();
     this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
         (profils: ProfilFromList[]) => {
@@ -28,7 +27,6 @@ export class ProfilListComponent implements OnInit {
           console.log(this.profilList2);
         }
       );
-    
   }
 
 }

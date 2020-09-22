@@ -15,32 +15,30 @@ import { Subscription } from 'rxjs';
 })
 export class ProfilDetailComponent implements OnInit {
 
-  idProfil:number;
-  profilToShow:ProfilFromList;
-  profilForm:FormGroup;
+  idProfil: number;
+  profilToShow: ProfilFromList;
+  profilForm: FormGroup;
   voiceEnabled = [{name : 'oui', value : 'true', checked : false},
                   {name : 'non', value: 'false', checked : false}];
   exUmEnabled = [{name : 'oui', value : 'true', checked : false},
                   {name : 'non', value: 'false', checked : false}];
   currentUserType;
-  changedNotAuthorized:Boolean;
-  updateSuscribe:Subscription;
+  changedNotAuthorized: boolean;
+  updateSuscribe: Subscription;
 
 
-  constructor(private route:ActivatedRoute,
-              private profilService:ProfilsService,
-              private formBuilder:FormBuilder,
-              private userService:UserService,
-              private router:Router) { }
+  constructor(private route: ActivatedRoute,
+              private profilService: ProfilsService,
+              private formBuilder: FormBuilder,
+              private userService: UserService,
+              private router: Router) { }
 
   ngOnInit(): void {
-    this.idProfil = this.route.snapshot.params['idProfil'];
+    this.idProfil = this.route.snapshot.params.idProfil;
     this.profilToShow = this.profilService.getProfilById(this.idProfil);
     this.currentUserType = this.userService.getCurrentRole();
-    
-    this.currentUserType == 1 ? this.changedNotAuthorized = true : this.changedNotAuthorized = false;
-    
-    if (this.profilToShow.enterpriseVoiceEnabled == 'true') {
+    this.currentUserType === 1 ? this.changedNotAuthorized = true : this.changedNotAuthorized = false;
+    if (this.profilToShow.enterpriseVoiceEnabled === 'true') {
           this.voiceEnabled[0].checked = true;
           this.voiceEnabled[1].checked = false;
     } else {
@@ -48,7 +46,7 @@ export class ProfilDetailComponent implements OnInit {
       this.voiceEnabled[1].checked = true;
     }
 
-    if (this.profilToShow.exUmEnabled == 'true') {
+    if (this.profilToShow.exUmEnabled === 'true') {
       this.exUmEnabled[0].checked = true;
       this.exUmEnabled[1].checked = false;
     } else {
@@ -59,11 +57,11 @@ export class ProfilDetailComponent implements OnInit {
     this.profilForm = this.formBuilder.group({
       sip: [{value : this.profilToShow.sip, disabled : this.changedNotAuthorized},
             [Validators.required,
-            Validators.pattern("^sip:.*$")]],
+            Validators.pattern('^sip:.*$')]],
       voiceEnabled: [{value : this.profilToShow.enterpriseVoiceEnabled, disabled : this.changedNotAuthorized},
             Validators.required],
       voicepolicy: [{value : this.profilToShow.voicePolicy, disabled : this.changedNotAuthorized},
-            Validators.required],     
+            Validators.required],
       dialPlan: [{value : this.profilToShow.dialPlan, disabled : this.changedNotAuthorized},
             Validators.required],
       samAccount: [{value : this.profilToShow.samAccountName, disabled : this.changedNotAuthorized},
@@ -79,32 +77,30 @@ export class ProfilDetailComponent implements OnInit {
         });
     }
 
-  updateProfil() {   
+  updateProfil() {
     const profilChanged = new ProfilRaw (
-                          this.profilForm.value['sip'],
-                          this.profilForm.value['voiceEnabled'],
-                          this.profilForm.value['voicepolicy'],
-                          this.profilForm.value['dialPlan'],
-                          this.profilForm.value['samAccount'],
-                          this.profilForm.value['exUmEnabled'],
-                          this.profilForm.value['exchUser'],
-                          this.profilForm.value['objectClass'],
-                          this.profilForm.value['statusProfile']);
+                          this.profilForm.value.sip,
+                          this.profilForm.value.voiceEnabled,
+                          this.profilForm.value.voicepolicy,
+                          this.profilForm.value.dialPlan,
+                          this.profilForm.value.samAccount,
+                          this.profilForm.value.exUmEnabled,
+                          this.profilForm.value.exchUser,
+                          this.profilForm.value.objectClass,
+                          this.profilForm.value.statusProfile);
 
-    this.profilService.updateProfilToServer(profilChanged,this.profilToShow.collaboraterId,"300000","commentaire GF");
+    this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '300000', 'commentaire GF');
     // problem of refresh, even the server is callback (next call is good)
     this.profilService.updateSubject.subscribe(
           () => {
-            this.router.navigate(["/profils"]);
+            this.router.navigate(['/profils']);
           }
     );
-
-    
   }
 
-  deleteProfil() { 
-      this.profilService.deleteProfilToServer(this.profilForm.value['sip']);
-      this.router.navigate(["/profils"]);
+  deleteProfil() {
+      this.profilService.deleteProfilToServer(this.profilForm.value.sip);
+      this.router.navigate(['/profils']);
     }
 
 }
