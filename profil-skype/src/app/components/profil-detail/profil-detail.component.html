@@ -4,29 +4,38 @@
 
         <p><br /><strong>Détail du profil Skype : </strong></p>
         
-        <div class="form-group row" >
+        <div class="form-group row">
             <label class="col-2" for="sip">Adresse SIP :</label>
             <div class="col-4">
-                <input type="text" id="sip" class="form-control" formControlName="sip">
-            </div>
+                <input type="text" id="sip" class="form-control" formControlName="sip" required
+                        [attr.disabled]="(profilForm.get('sip').disabled === true) ? true : null">
+                <div *ngIf="profilForm.get('sip').invalid" class="alert alert-danger">            
+                    <div *ngIf="profilForm.get('sip').errors.required">
+                        L'adresse sip est obligatoire
+                    </div>
+                    <div *ngIf="profilForm.get('sip').hasError('pattern')">
+                        L'adresse sip doit commencer par sip:
+                    </div>
+                </div>
+            </div>       
         </div>
 
         <div class="form-group row" >
             <label class="col-2" for="voicepolicy">Voice Policy :</label>
             <div class="col-4">
-                <input type="text" id="voicepolicy" class="form-control" formControlName="voicepolicy">
+                <input type="text" id="voicepolicy" class="form-control" formControlName="voicepolicy"
+                [attr.disabled]="(profilForm.get('voicepolicy').disabled === true) ? true : null">
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
             <div class="col-4">
-                <div class="raw" *ngFor="let item of voiceEnabled">
-                    <div class="col">
-                        <label >{{item.name}}
-                            <input type="radio" id="voice" class="form-control" [value]="item.value" [checked]="item.checked" formControlName="voiceEnabled" />
-                        </label>
-                     </div>   
+                <div class="form-check form-check-inline" *ngFor="let item of voiceEnabled">
+                        <label class="form-check-label">{{item.name}}</label>
+                        <input type="radio" id="voice" class="form-check-input" [value]="item.value"
+                        [checked]="item.checked" formControlName="voiceEnabled"
+                        [attr.disabled]="(profilForm.get('voiceEnabled').disabled === true) ? true : null"/>
                 </div>
             </div>           
         </div>
@@ -34,25 +43,26 @@
         <div class="form-group row" >
             <label  class="col-2" for="dialPlan">Dial Plan :</label>
             <div class="col-4">
-                <input type="text" id="dialPlan" class="form-control" formControlName="dialPlan">
+                <input type="text" id="dialPlan" class="form-control" formControlName="dialPlan"
+                [attr.disabled]="(profilForm.get('dialPlan').disabled === true) ? true : null">
             </div>
         </div>
         <div class="form-group row" >
             <label  class="col-2" for="samAccount">SAM Account Name :</label>
             <div class="col-4">
-                <input type="text" id="samAccount" class="form-control" formControlName="samAccount">
+                <input type="text" id="samAccount" class="form-control" formControlName="samAccount"
+                [attr.disabled]="(profilForm.get('samAccount').disabled === true) ? true : null">
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-2" for="voice">ExUm Enabled :</label>
             <div class="col-4">
-                <div class="raw" *ngFor="let item of exUmEnabled">
-                    <div class="col">
-                        <label >{{item.name}}
-                            <input type="radio" id="voice" class="form-control" [value]="item.value" [checked]="item.checked" formControlName="exUmEnabled" />
-                        </label>
-                     </div>   
+                <div class="form-check form-check-inline" *ngFor="let item of exUmEnabled">
+                        <label class="form-check-label">{{item.name}}</label>
+                        <input type="radio" id="voice" class="form-check-input" [value]="item.value"
+                        [checked]="item.checked" formControlName="exUmEnabled"
+                        [attr.disabled]="(profilForm.get('exUmEnabled').disabled === true) ? true : null"/>                     
                 </div>
             </div>           
         </div>
@@ -60,22 +70,33 @@
         <div class="form-group row" >
             <label  class="col-2" for="exchUser">exchUser :</label>
             <div class="col-4">
-                <input type="text" id="exchUser" class="form-control" formControlName="exchUser">
+                <input type="text" id="exchUser" class="form-control" formControlName="exchUser"
+                [attr.disabled]="(profilForm.get('exchUser').disabled === true) ? true : null">
             </div>
         </div>
         <div class="form-group row" >        
             <label  class="col-2" for="objectClass">Object Class :</label>
             <div class="col-4">
-                <input type="text" id="objectClass" class="form-control" formControlName="objectClass">
+                <input type="text" id="objectClass" class="form-control" formControlName="objectClass"
+                [attr.disabled]="(profilForm.get('objectClass').disabled === true) ? true : null">
             </div>
         </div>
-        <div class="form-group row" >
-            <label  class="col-2" for="status">Status du profil :</label>
+
+        <div class="form-group row">
+            <label class="col-2" for="voice">Status du profil :</label>
             <div class="col-4">
-                <input type="text" id="status" class="form-control" formControlName="status">
-            </div>    
+                <div class="form-check form-check-inline" *ngFor="let item of statusProfile">
+                        <label class="form-check-label">{{item.name}}</label>
+                        <input type="radio" id={{item.name}} class="form-check-input"
+                        [value]="item.value" [checked]="item.checked"
+                        [attr.disabled]="item.disabled == true ? true : null"
+                        (click)="checkActiveInput(item.value)"
+                        formControlName="status"/>
+                </div>  
+            </div>           
         </div>
 
+    
         <div class="form-group row" >
             <div class="col-2">
                 <button class="btn-info">
@@ -89,12 +110,13 @@
             </div>
             <div class="col-2">
                 <button type ="submit" class="btn-info" *ngIf="currentUserType==2 || currentUserType==3"
-                        (click)="updateProfil()">Modifier</button>
+                        (click)="updateProfil()" [disabled]="profilForm.invalid">Modifier</button>
             </div>
             <div class="col-2">
                 <button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3" (click)="deleteProfil()">Supprimer</button>
             </div>       
         </div>  
     </div>
+
 </form>
 

@@ -29,7 +29,7 @@ export class ProfilsService  {
     if (id < this.profils.length) {
       return this.profils[id];
     } else {
-      console.log("Problème d\'indice sur la liste");
+      console.log('Problème d\'indice sur la liste');
       return null;
     }
   }
@@ -57,14 +57,15 @@ export class ProfilsService  {
     this.httpClient.post(baseUrl2, profilChanged)
     .subscribe(
       (response) => {
-        console.log(response);
-        // this.route.navigate(["/profils"]);
+        console.log('Maj back-end Ok');
+        // this.route.navigate(['/profils']);
         this.updateSubject.next(response);
         // this.profils = response;
         // this.profilsSubject.next(response);
       },
       (error) => {
-        console.log('erreur back-end ' + error.toString() );
+        console.log('erreur back-end ' + error );
+        this.updateSubject.next(error);
       }
     );
   }
