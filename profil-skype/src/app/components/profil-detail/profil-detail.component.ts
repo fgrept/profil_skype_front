@@ -27,10 +27,10 @@ export class ProfilDetailComponent implements OnInit {
                   {name : 'expiré', value: 'EXPIRED', checked: false, disabled: true}];
 
   currentUserType;
-  changedNotAuthorized:Boolean;
-  profilDesactivated:Boolean = false;
-  profilInputDesactivated:Boolean = false;
-  updateSuscribe:Subscription;
+  changedNotAuthorized: boolean;
+  profilDesactivated = false;
+  profilInputDesactivated = false;
+  updateSuscribe: Subscription;
 
   constructor(private route: ActivatedRoute,
               private profilService: ProfilsService,
@@ -50,9 +50,15 @@ export class ProfilDetailComponent implements OnInit {
     this.profilToShow.enterpriseVoiceEnabled === 'true' ? this.voiceEnabled[0].checked = true : this.voiceEnabled[1].checked = true;
     this.profilToShow.exUmEnabled === 'true' ? this.exUmEnabled[0].checked = true : this.exUmEnabled[1].checked = true;
 
-    if (this.profilToShow.statusProfile === 'ENABLED') {this.statusProfile[0].checked = true;}
-    if (this.profilToShow.statusProfile === 'DISABLED') {this.statusProfile[1].checked = true;}
-    if (this.profilToShow.statusProfile === 'EXPIRED') {this.statusProfile[2].checked = true;}
+    if (this.profilToShow.statusProfile === 'ENABLED') {
+        this.statusProfile[0].checked = true;
+    }
+    if (this.profilToShow.statusProfile === 'DISABLED') {
+        this.statusProfile[1].checked = true;
+    }
+    if (this.profilToShow.statusProfile === 'EXPIRED') {
+        this.statusProfile[2].checked = true;
+    }
 
     this.profilForm = this.formBuilder.group({
       sip: [{value : this.profilToShow.sip, disabled : this.profilInputDesactivated},
@@ -142,9 +148,8 @@ export class ProfilDetailComponent implements OnInit {
       
     }
 
-    checkActiveInput(statusSelected:string) {
+    checkActiveInput(statusSelected: string) {
           console.log(statusSelected);
-          
           if (statusSelected === 'DISABLED') {
             /* not possible to refresh the config dynamically
             this.profilDesactivated = true;
@@ -187,17 +192,21 @@ export class ProfilDetailComponent implements OnInit {
 
             this.profilForm.setControl('sip', this.formBuilder.control({value : this.profilToShow.sip, disabled : false},
                   [Validators.required,
-                  Validators.pattern("^sip:.*$")]));
-            this.profilForm.setControl('voiceEnabled', this.formBuilder.control({value : this.profilToShow.enterpriseVoiceEnabled, disabled : false}));
-            this.profilForm.setControl('voicepolicy', this.formBuilder.control({value : this.profilToShow.voicePolicy, disabled : false}));
-            this.profilForm.setControl('dialPlan', this.formBuilder.control({value : this.profilToShow.dialPlan, disabled : false}));
-            this.profilForm.setControl('samAccount', this.formBuilder.control({value : this.profilToShow.samAccountName, disabled : false}));
-            this.profilForm.setControl('exUmEnabled', this.formBuilder.control({value : this.profilToShow.exUmEnabled, disabled : false}));
-            this.profilForm.setControl('exchUser', this.formBuilder.control({value : this.profilToShow.exchUser, disabled : false}));
-            this.profilForm.setControl('objectClass', this.formBuilder.control({value : this.profilToShow.objectClass, disabled : false}));
-
+                  Validators.pattern('^sip:.*$')]));
+            this.profilForm.setControl('voiceEnabled', this.formBuilder.control(
+                {value : this.profilToShow.enterpriseVoiceEnabled, disabled : false}));
+            this.profilForm.setControl('voicepolicy', this.formBuilder.control(
+                {value : this.profilToShow.voicePolicy, disabled : false}));
+            this.profilForm.setControl('dialPlan', this.formBuilder.control(
+                {value : this.profilToShow.dialPlan, disabled : false}));
+            this.profilForm.setControl('samAccount', this.formBuilder.control(
+                {value : this.profilToShow.samAccountName, disabled : false}));
+            this.profilForm.setControl('exUmEnabled', this.formBuilder.control(
+                {value : this.profilToShow.exUmEnabled, disabled : false}));
+            this.profilForm.setControl('exchUser', this.formBuilder.control(
+                {value : this.profilToShow.exchUser, disabled : false}));
+            this.profilForm.setControl('objectClass', this.formBuilder.control(
+                {value : this.profilToShow.objectClass, disabled : false}));
           }
-
     }
-    
 }
