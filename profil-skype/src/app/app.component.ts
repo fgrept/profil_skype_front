@@ -8,12 +8,11 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent  implements OnInit, OnDestroy {
-  
   currentUserType;
   userSuscribe: Subscription;
 
 
-  constructor(private userService:UserService) { }
+  constructor(private userService: UserService) { }
 
   ngOnDestroy(): void {
     this.userSuscribe.unsubscribe();
@@ -22,11 +21,11 @@ export class AppComponent  implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userSuscribe = this.userService.userSubject.subscribe(
       (user) => {
-        this.currentUserType= user;
+        this.currentUserType = user;
       }
     );
     if (!this.currentUserType) {
-        this.currentUserType = 0;      
+        this.currentUserType = 0;
     }
   }
 

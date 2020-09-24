@@ -1,3 +1,4 @@
+/* tslint:disable:whitespace */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -8,25 +9,28 @@ import { ProfilListComponent } from './components/profil-list/profil-list.compon
 import { UserListComponent } from './components/user-list/user-list.component';
 import { Routes, RouterModule } from '@angular/router';
 import { ProfilListItemComponent } from './components/profil-list-item/profil-list-item.component';
-import { UserService} from './services/user.service'
-import { ProfilsService} from './services/profils.service'
+import { UserService} from './services/user.service';
+import { ProfilsService} from './services/profils.service';
 import { AuthentGuardService } from './services/authent-guard.service';
 import { UrlNotFoundComponent } from './components/url-not-found/url-not-found.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProfilDetailComponent } from './components/profil-detail/profil-detail.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProfilDetailEventsComponent } from './components/profil-detail-events/profil-detail-events.component';
+import { UserListItemComponent } from './components/user-list-item/user-list-item.component';
+import { UserDetailComponent } from './components/user-detail/user-detail.component';
 
 const appRoutes: Routes = [
-  {path:'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
-  {path:'users', canActivate:[AuthentGuardService],component:UserListComponent},
-  {path:'auth',component:AuthentComponent},
-  {path:'profils/:idProfil',component:ProfilDetailComponent},
-  {path:'profils/:idProfil/events',component:ProfilDetailEventsComponent},
-  {path:'', component:ProfilListComponent,},
-  {path:'not-found', component:UrlNotFoundComponent},
-  {path:'**', redirectTo:'not-found'}
-]
+  {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
+  {path: 'users', canActivate:[AuthentGuardService],component:UserListComponent},
+  {path: 'auth', component:AuthentComponent},
+  {path: 'profils/:idProfil',component:ProfilDetailComponent},
+  {path: 'profils/:idProfil/events',component:ProfilDetailEventsComponent},
+  {path: 'users/:idUser',component:UserDetailComponent},
+  {path: '', component:ProfilListComponent,},
+  {path: 'not-found', component:UrlNotFoundComponent},
+  {path: '**', redirectTo: 'not-found'}
+];
 
 @NgModule({
   declarations: [
@@ -37,7 +41,9 @@ const appRoutes: Routes = [
     ProfilListItemComponent,
     UrlNotFoundComponent,
     ProfilDetailComponent,
-    ProfilDetailEventsComponent
+    ProfilDetailEventsComponent,
+    UserListItemComponent,
+    UserDetailComponent
   ],
   imports: [
     BrowserModule,

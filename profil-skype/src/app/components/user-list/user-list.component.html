@@ -1,2 +1,17 @@
-<p>user-list works!</p>
-{{currentUserType}}
+<div class="container">
+    <table class="table  table-striped">
+        <thead>
+        <tr class="row">
+            <th class="col-1">Id</th>
+            <th class="col-2">prénom</th>
+            <th class="col-2">nom</th>
+            <th class="col-1">uo</th>
+            <th class="col-3">roles</th>
+        </tr>
+        </thead>
+        <app-user-list-item *ngFor="let item of userListResult, let index = index"
+                              [user]="item" [idUser]="index">
+        </app-user-list-item>
+    </table>
+    <p><button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Créer</button></p>
+</div>
