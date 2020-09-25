@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { ProfilFromList } from 'src/app/models/profil-to-show';
-import { AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { ProfilRaw } from 'src/app/models/profil-raw';
@@ -31,6 +31,7 @@ export class ProfilDetailComponent implements OnInit {
   profilDesactivated = false;
   profilInputDesactivated = false;
   updateSuscribe: Subscription;
+  updateAuthorized:boolean;
 
   constructor(private route: ActivatedRoute,
               private profilService: ProfilsService,
@@ -65,9 +66,9 @@ export class ProfilDetailComponent implements OnInit {
             [Validators.required,
             Validators.pattern('^sip:.*$')]],
       voiceEnabled: [{value : this.profilToShow.enterpriseVoiceEnabled, disabled : this.profilInputDesactivated},
-            Validators.required],
+            Validators.required],            
       voicepolicy: [{value : this.profilToShow.voicePolicy, disabled : this.profilInputDesactivated},
-            Validators.required],
+            [Validators.required]],
       dialPlan: [{value : this.profilToShow.dialPlan, disabled : this.profilInputDesactivated},
             Validators.required],
       samAccount: [{value : this.profilToShow.samAccountName, disabled : this.profilInputDesactivated},
@@ -81,6 +82,35 @@ export class ProfilDetailComponent implements OnInit {
       status: [{value : this.profilToShow.statusProfile, disabled : this.changedNotAuthorized},
             Validators.required]
         });
+
+      this.profilForm.valueChanges.subscribe(form => this.checkUpdateAuthorized(form));
+      this.profilForm.get('status').valueChanges.subscribe(form => this.checkActiveInput2(form))
+    }
+
+    checkActiveInput2(value) {
+      if (value === 'DISABLED') {
+            // TODO : reset the value at their origin, or set the status of the control
+            //this.profilForm.value['sip'] = this.profilToShow.sip;
+            this.profilInputDesactivated = true;
+      } else {
+            this.profilInputDesactivated = false;
+      }
+      
+    }
+
+    checkUpdateAuthorized(form) {
+      let changedDetected:boolean = false;
+
+      (form.sip !== this.profilToShow.sip) ? changedDetected = true : null;
+      (form.voiceEnabled !== this.profilToShow.enterpriseVoiceEnabled) ? changedDetected = true : null;
+      (form.voicepolicy !== this.profilToShow.voicePolicy) ? changedDetected = true : null;
+      (form.dialPlan !== this.profilToShow.dialPlan) ? changedDetected = true : null;
+      (form.samAccount !== this.profilToShow.samAccountName) ? changedDetected = true : null;
+      (form.exUmEnabled !== this.profilToShow.exUmEnabled) ? changedDetected = true : null;
+      (form.exchUser !== this.profilToShow.exchUser) ? changedDetected = true : null;
+      (form.objectClass !== this.profilToShow.objectClass) ? changedDetected = true : null;
+
+      changedDetected === true ? this.updateAuthorized = true : this.updateAuthorized = false;
     }
 
     updateProfil() {
@@ -148,65 +178,4 @@ export class ProfilDetailComponent implements OnInit {
       
     }
 
-    checkActiveInput(statusSelected: string) {
-          console.log(statusSelected);
-          if (statusSelected === 'DISABLED') {
-            /* not possible to refresh the config dynamically
-            this.profilDesactivated = true;
-            this.profilInputDesactivated = this.changedNotAuthorized || this.profilInputDesactivated;*/
-      
-            /* HOW TO : 
-            // - use this if you want just to update the value-field of control
-            this.profilForm.patchValue({sip : 'TOTO'})
-            // - use this if you want set an existing control
-            this.profilForm.setControl('sip', this.formBuilder.control({value : this.profilToShow.sip, disabled : true}));
-            */
-            
-            // we set the profil before reconstruction of the form
-            /*this.profilToShow.sip = this.profilForm.value.sip;
-            this.profilToShow.enterpriseVoiceEnabled = this.profilForm.value.voiceEnabled;
-            this.profilToShow.voicePolicy = this.profilForm.value.voicepolicy;
-            this.profilToShow.dialPlan = this.profilForm.value.dialPlan;
-            this.profilToShow.samAccountName = this.profilForm.value.samAccount;
-            this.profilToShow.exUmEnabled = this.profilForm.value.exUmEnabled;
-            this.profilToShow.exchUser = this.profilForm.value.exchUser;
-            this.profilToShow.objectClass = this.profilForm.value.objectClass;*/
-
-            // form re-build
-            this.profilForm.setControl('sip', this.formBuilder.control({value : this.profilToShow.sip, disabled : true},
-                                    [Validators.required,
-                                    Validators.pattern("^sip:.*$")]));
-            this.profilForm.setControl('voiceEnabled', this.formBuilder.control({value : this.profilToShow.enterpriseVoiceEnabled, disabled : true}));
-            this.profilForm.setControl('voicepolicy', this.formBuilder.control({value : this.profilToShow.voicePolicy, disabled : true}));
-            this.profilForm.setControl('dialPlan', this.formBuilder.control({value : this.profilToShow.dialPlan, disabled : true}));
-            this.profilForm.setControl('samAccount', this.formBuilder.control({value : this.profilToShow.samAccountName, disabled : true}));
-            this.profilForm.setControl('exUmEnabled', this.formBuilder.control({value : this.profilToShow.exUmEnabled, disabled : true}));
-            this.profilForm.setControl('exchUser', this.formBuilder.control({value : this.profilToShow.exchUser, disabled : true}));
-            this.profilForm.setControl('objectClass', this.formBuilder.control({value : this.profilToShow.objectClass, disabled : true}));
-
-                
-          } else {
-            /* not possible to refresh the config dynamically
-            this.profilDesactivated = false;
-            this.profilInputDesactivated = this.changedNotAuthorized || this.profilInputDesactivated;*/
-
-            this.profilForm.setControl('sip', this.formBuilder.control({value : this.profilToShow.sip, disabled : false},
-                  [Validators.required,
-                  Validators.pattern('^sip:.*$')]));
-            this.profilForm.setControl('voiceEnabled', this.formBuilder.control(
-                {value : this.profilToShow.enterpriseVoiceEnabled, disabled : false}));
-            this.profilForm.setControl('voicepolicy', this.formBuilder.control(
-                {value : this.profilToShow.voicePolicy, disabled : false}));
-            this.profilForm.setControl('dialPlan', this.formBuilder.control(
-                {value : this.profilToShow.dialPlan, disabled : false}));
-            this.profilForm.setControl('samAccount', this.formBuilder.control(
-                {value : this.profilToShow.samAccountName, disabled : false}));
-            this.profilForm.setControl('exUmEnabled', this.formBuilder.control(
-                {value : this.profilToShow.exUmEnabled, disabled : false}));
-            this.profilForm.setControl('exchUser', this.formBuilder.control(
-                {value : this.profilToShow.exchUser, disabled : false}));
-            this.profilForm.setControl('objectClass', this.formBuilder.control(
-                {value : this.profilToShow.objectClass, disabled : false}));
-          }
-    }
 }
