@@ -32,7 +32,7 @@ export class UserService {
     this.userAuth = userType.userUnknown;
   }
 
-  getProfilById(id: number) {
+  getUserById(id: number) {
         if (id < this.users.length) {
             return this.users[id];
         } else {

@@ -85,7 +85,7 @@ export class ProfilDetailComponent implements OnInit {
 
     updateProfil() {
 
-      profilChanged:ProfilRaw;
+      profilChanged: ProfilRaw;
 
       if (this.profilForm.value.status === 'DISABLED') {
             const profilChanged = new ProfilRaw (
@@ -98,16 +98,15 @@ export class ProfilDetailComponent implements OnInit {
                   this.profilToShow.exchUser,
                   this.profilToShow.objectClass,
                   this.profilForm.value.status);
-      
-                  this.profilService.updateSubject.subscribe(
+            this.profilService.updateSubject.subscribe(
                         (response: Object) => {
                               console.log(response);
                               this.router.navigate(['/profils']);
                         }
                   );
-            this.profilService.updateProfilToServer(profilChanged,this.profilToShow.collaboraterId,'300000','commentaire GF');
+            this.profilService.updateProfilToServer(profilChanged,this.profilToShow.collaboraterId,'000000','commentaire GF');
 
-      } else { //ENABLED
+      } else { // ENABLED
           const profilChanged = new ProfilRaw (
             this.profilForm.value.sip,
             this.profilForm.value.voiceEnabled,
@@ -125,27 +124,24 @@ export class ProfilDetailComponent implements OnInit {
                         this.router.navigate(['/profils']);
                   }
             );
-            this.profilService.updateProfilToServer(profilChanged,this.profilToShow.collaboraterId,'300000','commentaire GF');  
+          this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '000000', 'commentaire GF');
 
-      }    
-    
+      }
     }
 
-    deleteProfil() { 
+    deleteProfil() {
       this.profilService.deleteSubject.subscribe(
             (response: Object) => {
                   console.log(response);
                   this.router.navigate(['/profils']);
             }
       );
-      
       if (this.profilForm.value.status === 'DISABLED') {
             this.profilService.deleteProfilToServer(this.profilToShow.sip);
       } else {
             this.profilService.deleteProfilToServer(this.profilForm.value.sip);
       }
       ;
-      
     }
 
     checkActiveInput(statusSelected: string) {
@@ -154,14 +150,14 @@ export class ProfilDetailComponent implements OnInit {
             /* not possible to refresh the config dynamically
             this.profilDesactivated = true;
             this.profilInputDesactivated = this.changedNotAuthorized || this.profilInputDesactivated;*/
-      
-            /* HOW TO : 
+
+            /* HOW TO :
             // - use this if you want just to update the value-field of control
             this.profilForm.patchValue({sip : 'TOTO'})
             // - use this if you want set an existing control
             this.profilForm.setControl('sip', this.formBuilder.control({value : this.profilToShow.sip, disabled : true}));
             */
-            
+
             // we set the profil before reconstruction of the form
             /*this.profilToShow.sip = this.profilForm.value.sip;
             this.profilToShow.enterpriseVoiceEnabled = this.profilForm.value.voiceEnabled;
@@ -175,16 +171,22 @@ export class ProfilDetailComponent implements OnInit {
             // form re-build
             this.profilForm.setControl('sip', this.formBuilder.control({value : this.profilToShow.sip, disabled : true},
                                     [Validators.required,
-                                    Validators.pattern("^sip:.*$")]));
-            this.profilForm.setControl('voiceEnabled', this.formBuilder.control({value : this.profilToShow.enterpriseVoiceEnabled, disabled : true}));
-            this.profilForm.setControl('voicepolicy', this.formBuilder.control({value : this.profilToShow.voicePolicy, disabled : true}));
-            this.profilForm.setControl('dialPlan', this.formBuilder.control({value : this.profilToShow.dialPlan, disabled : true}));
-            this.profilForm.setControl('samAccount', this.formBuilder.control({value : this.profilToShow.samAccountName, disabled : true}));
-            this.profilForm.setControl('exUmEnabled', this.formBuilder.control({value : this.profilToShow.exUmEnabled, disabled : true}));
-            this.profilForm.setControl('exchUser', this.formBuilder.control({value : this.profilToShow.exchUser, disabled : true}));
-            this.profilForm.setControl('objectClass', this.formBuilder.control({value : this.profilToShow.objectClass, disabled : true}));
-
-                
+                                    Validators.pattern('^sip:.*$')]));
+            this.profilForm.setControl('voiceEnabled',
+                this.formBuilder.control({value : this.profilToShow.enterpriseVoiceEnabled, disabled : true}));
+            this.profilForm.setControl('voicepolicy',
+                this.formBuilder.control({value : this.profilToShow.voicePolicy, disabled : true}));
+            this.profilForm.setControl('dialPlan',
+                this.formBuilder.control({value : this.profilToShow.dialPlan, disabled : true}));
+            this.profilForm.setControl('samAccount',
+                this.formBuilder.control({value : this.profilToShow.samAccountName, disabled : true}));
+            this.profilForm.setControl('exUmEnabled',
+                this.formBuilder.control({value :
+                    this.profilToShow.exUmEnabled, disabled : true}));
+            this.profilForm.setControl('exchUser',
+                this.formBuilder.control({value : this.profilToShow.exchUser, disabled : true}));
+            this.profilForm.setControl('objectClass',
+                this.formBuilder.control({value : this.profilToShow.objectClass, disabled : true}));
           } else {
             /* not possible to refresh the config dynamically
             this.profilDesactivated = false;

@@ -63,7 +63,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "profil-skype:build"
+            "browserTarget": "profil-skype:build",
+            "port": 4200
           },
           "configurations": {
             "production": {
