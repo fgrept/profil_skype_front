@@ -3,6 +3,7 @@ import { Observable} from 'rxjs/';
 import { Subject } from 'rxjs';
 import {UserResult} from '../models/user-result';
 import {HttpClient} from '@angular/common/http';
+import {UserCreate} from "../models/user-create";
 
 const urlUserCreate = 'http://localhost:8181/v1/user/create';
 const urlUserUprole = 'http://localhost:8181/v1/user/uprole/';
@@ -31,6 +32,7 @@ export class UserService {
   public userSubject = new Subject<userType>();
   public userUpdateSubject = new Subject();
   public userDeleteSubject = new Subject();
+  public userCreateSubject = new Subject();
 
   constructor(private httpClient: HttpClient) {
     this.userAuth = userType.userUnknown;
@@ -143,6 +145,18 @@ export class UserService {
             (error) => {
                 console.log('Erreur back end', error);
                 this.userDeleteSubject.next(error);
+            }
+        );
+    }
+    createUserToServer(userCreate: UserCreate) {
+        this.httpClient.post(urlUserCreate, userCreate).subscribe(
+            (response) => {
+                console.log('Création effectuée');
+                this.userCreateSubject.next(response);
+            },
+            (error) => {
+                console.log('Erreur back end', error);
+                this.userCreateSubject .next(error);
             }
         );
     }
