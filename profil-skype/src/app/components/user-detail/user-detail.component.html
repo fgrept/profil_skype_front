@@ -1,1 +1,66 @@
-<p>user-detail works!</p>
+<form [formGroup]="userForm">
+    <div class="container">
+        <p><br/><strong>Détail de l'utilisateur</strong></p>
+
+        <div class="formGroup row">
+            <label class="col-2" for="collaboraterId">Id annuaire :</label>
+            <div class="col-4">
+                <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="lastName">Nom :</label>
+            <div class="col-4">
+                <input type="text" id="lastName" class="form-control" formControlName="lastName" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="firstName">Prénom :</label>
+            <div class="col-4">
+                <input type="text" id="firstName" class="form-control" formControlName="firstName" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="deskPhoneNumber">Tel bureau :</label>
+            <div class="col-4">
+                <input type="tel" id="deskPhoneNumber" class="form-control" formControlName="deskPhoneNumber" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="mobilePhoneNumber">Tel portable :</label>
+            <div class="col-4">
+                <input type="tel" id="mobilePhoneNumber" class="form-control" formControlName="mobilePhoneNumber" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="mailAdress">Adresse Mail :</label>
+            <div class="col-4">
+                <input type="email" id="mailAdress" class="form-control" formControlName="mailAdress" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="orgaUnitCode">Code UO :</label>
+            <div class="col-4">
+                <input type="text" id="orgaUnitCode" class="form-control" formControlName="orgaUnitCode" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="localisation">Localisation :</label>
+            <div class="col-4">
+                <input type="text" id="localisation" class="form-control" formControlName="localisation" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-2" for="userRolesForm">Roles :</label>
+            <div class="col-4">
+                <div class="form-check" *ngFor="let item of userRolesForm">
+                    <input  type="checkbox" id={{item.name}} [value]="item.value" [checked]="item.checked"
+                            (change)="onCheckRoleChange($event)" class="form-check-input">
+                    <label class="form-check-label">{{item.value}}</label>
+                </div>
+            </div>
+        </div>
+        <button [disabled]="!updateAuthorized" class="btn btn-success" (click)="updateUser()">Mettre à jour</button>
+        <button class="btn btn-danger" (click)="deleteUser()">Supprimer</button>
+    </div>
+</form>

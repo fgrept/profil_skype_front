@@ -6,6 +6,9 @@ import {UserService} from '../../services/user.service';
   templateUrl: './user-list-item.component.html',
   styleUrls: ['./user-list-item.component.css']
 })
+/**
+ * classe fille qui permet l'affichage de l'utilisateur sélectionné
+ */
 export class UserListItemComponent implements OnInit {
 
   @Input() user;

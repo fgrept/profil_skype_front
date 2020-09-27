@@ -7,6 +7,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './profil-list-item.component.html',
   styleUrls: ['./profil-list-item.component.css']
 })
+/**
+ * Classe enfant qui récupère le profil sélectionné et l'affiche
+ */
 export class ProfilListItemComponent implements OnInit {
 
   @Input() profil;
