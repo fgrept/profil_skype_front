@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ProfilDetailEventsComponent } from './components/profil-detail-events/profil-detail-events.component';
 import { UserListItemComponent } from './components/user-list-item/user-list-item.component';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
+import { UserCreateComponent } from './components/user-create/user-create.component';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -43,7 +44,8 @@ const appRoutes: Routes = [
     ProfilDetailComponent,
     ProfilDetailEventsComponent,
     UserListItemComponent,
-    UserDetailComponent
+    UserDetailComponent,
+    UserCreateComponent
   ],
   imports: [
     BrowserModule,

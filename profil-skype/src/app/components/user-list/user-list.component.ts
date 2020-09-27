@@ -9,6 +9,9 @@ import {UserResult} from '../../models/user-result';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
+/**
+ * Classe parente pour l'affichage de la liste des utilisateurs
+ */
 export class UserListComponent implements OnInit {
 
   currentUserType;
@@ -17,7 +20,9 @@ export class UserListComponent implements OnInit {
 
   constructor(private userService: UserService) { }
 
-
+    /**
+     * Récupération à l'initialisation de la liste des utilisateurs et du rôle courant
+     */
   ngOnInit(): void {
       this.currentUserType = this.userService.getCurrentRole();
       this.userService.getUsersFromServer();

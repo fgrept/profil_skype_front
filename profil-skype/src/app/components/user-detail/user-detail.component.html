@@ -54,11 +54,13 @@
             <label class="col-2" for="userRolesForm">Roles :</label>
             <div class="col-4">
                 <div class="form-check" *ngFor="let item of userRolesForm">
-                    <input  type="checkbox" id={{item.name}} [value]="item.value" [checked]="item.checked" class="form-check-input">
+                    <input  type="checkbox" id={{item.name}} [value]="item.value" [checked]="item.checked"
+                            (change)="onCheckRoleChange($event)" class="form-check-input">
                     <label class="form-check-label">{{item.value}}</label>
                 </div>
             </div>
         </div>
-        <button class="btn btn-success">Mettre à jour</button><button class="btn btn-danger">Supprimer</button>
+        <button [disabled]="!updateAuthorized" class="btn btn-success" (click)="updateUser()">Mettre à jour</button>
+        <button class="btn btn-danger" (click)="deleteUser()">Supprimer</button>
     </div>
 </form>
