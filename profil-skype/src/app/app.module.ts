@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ProfilDetailEventsComponent } from './components/profil-detail-events/profil-detail-events.component';
 import { UserListItemComponent } from './components/user-list-item/user-list-item.component';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
+import { NgxPaginationModule} from 'ngx-pagination';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -50,7 +51,8 @@ const appRoutes: Routes = [
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ],
   providers: [AuthentGuardService,
               UserService,

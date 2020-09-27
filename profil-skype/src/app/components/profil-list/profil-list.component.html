@@ -10,9 +10,11 @@
                 <th class="col-1">status</th>
             </tr>
         </thead>        
-        <app-profil-list-item *ngFor="let item of profilList2, let index = index"
+        <app-profil-list-item *ngFor="let item of profilList2 | paginate: 
+                    { itemsPerPage: 2, currentPage: page, totalItems:numberOfProfil }, let index = index"
             [profil]="item" [idProfil]="index">
         </app-profil-list-item>
     </table>
     <p><button class="btn-info" *ngIf="currentUserType==2 || currentUserType==3">Créer</button></p> 
+    <pagination-controls (pageChange)="onPageChanged($event)"></pagination-controls>
 </div>
