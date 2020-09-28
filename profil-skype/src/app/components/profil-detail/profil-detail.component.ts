@@ -87,9 +87,24 @@ export class ProfilDetailComponent implements OnInit {
         this.profilForm.get('status').valueChanges.subscribe(form => this.checkActiveInput2(form));
     }
 
+    /**
+     * method for reset the value to their initial value when the user want to desactivate
+     * the profil, and also prevent other change of param of the profil skype
+     * 
+     * @param value 
+     */
     checkActiveInput2(value) {
         if (value === 'DISABLED') {
-            // this.profilForm.value['sip'] = this.profilToShow.sip;
+            // we reset to intial value the input form
+            this.profilForm.get('sip').setValue(this.profilToShow.sip);
+            this.profilForm.get('voiceEnabled').setValue(this.profilToShow.enterpriseVoiceEnabled);
+            this.profilForm.get('voicepolicy').setValue(this.profilToShow.voicePolicy);
+            this.profilForm.get('dialPlan').setValue(this.profilToShow.dialPlan);
+            this.profilForm.get('samAccount').setValue(this.profilToShow.samAccountName);
+            this.profilForm.get('exUmEnabled').setValue(this.profilToShow.exUmEnabled);
+            this.profilForm.get('exchUser').setValue(this.profilToShow.exchUser);
+            this.profilForm.get('objectClass').setValue(this.profilToShow.objectClass);
+
             this.profilInputDesactivated = true;
         } else {
             this.profilInputDesactivated = false;
@@ -97,6 +112,12 @@ export class ProfilDetailComponent implements OnInit {
 
     }
 
+    /**
+     * method for detect if one input has been modified and therefore authorized
+     * the user to clickon the update button
+     * 
+     * @param form 
+     */
     checkUpdateAuthorized(form) {
         let changedDetected = false;
 
@@ -108,55 +129,31 @@ export class ProfilDetailComponent implements OnInit {
         (form.exUmEnabled !== this.profilToShow.exUmEnabled) ? changedDetected = true : null;
         (form.exchUser !== this.profilToShow.exchUser) ? changedDetected = true : null;
         (form.objectClass !== this.profilToShow.objectClass) ? changedDetected = true : null;
+        (form.status !== this.profilToShow.statusProfile) ? changedDetected = true : null;
 
         changedDetected === true ? this.updateAuthorized = true : this.updateAuthorized = false;
     }
 
     updateProfil() {
 
-        profilChanged: ProfilRaw;
+        const profilChanged = new ProfilRaw (
+            this.profilForm.get('sip').value,
+            this.profilForm.get('voiceEnabled').value,
+            this.profilForm.get('voicepolicy').value,
+            this.profilForm.get('dialPlan').value,
+            this.profilForm.get('samAccount').value,
+            this.profilForm.get('exUmEnabled').value,
+            this.profilForm.get('exchUser').value,
+            this.profilForm.get('objectClass').value,
+            this.profilForm.get('status').value);
 
-        if (this.profilForm.value.status === 'DISABLED') {
-            const profilChanged = new ProfilRaw (
-                this.profilToShow.sip,
-                this.profilToShow.enterpriseVoiceEnabled,
-                this.profilToShow.voicePolicy,
-                this.profilToShow.dialPlan,
-                this.profilToShow.samAccountName,
-                this.profilToShow.exUmEnabled,
-                this.profilToShow.exchUser,
-                this.profilToShow.objectClass,
-                this.profilForm.value.status);
-
-            this.profilService.updateSubject.subscribe(
-                (response: Object) => {
-                    console.log(response);
-                    this.router.navigate(['/profils']);
-                }
-            );
-            this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '000000', 'commentaire GF');
-
-        } else { // ENABLED
-            const profilChanged = new ProfilRaw (
-                this.profilForm.value.sip,
-                this.profilForm.value.voiceEnabled,
-                this.profilForm.value.voicepolicy,
-                this.profilForm.value.dialPlan,
-                this.profilForm.value.samAccount,
-                this.profilForm.value.exUmEnabled,
-                this.profilForm.value.exchUser,
-                this.profilForm.value.objectClass,
-                this.profilForm.value.status);
-
-            this.profilService.updateSubject.subscribe(
-                (response: Object) => {
-                    console.log(response);
-                    this.router.navigate(['/profils']);
-                }
-            );
-            this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '000000', 'commentaire GF');
-
-        }
+        this.profilService.updateSubject.subscribe(
+            (response: Object) => {
+                console.log(response);
+                this.router.navigate(['/profils']);
+            }
+        );
+        this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '000000', 'commentaire GF');
 
     }
 
