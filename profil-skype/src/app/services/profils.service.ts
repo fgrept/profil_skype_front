@@ -8,6 +8,7 @@ import { ProfilForChange } from '../models/profil-for-change';
 const baseUrl = 'http://localhost:8181/v1/profile/list/all';
 const baseUrl2 = 'http://localhost:8181/v1/profile/update';
 const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
+const baseUrl4 = 'http://localhost:8181/v1/profile/count/'
 /*const headers = new HttpHeaders()
       .append('Content-Type', 'application/json')
       .append('Access-Control-Allow-Headers', 'Content-Type')
@@ -23,6 +24,8 @@ export class ProfilsService  {
   profilsSubject = new Subject<ProfilFromList[]>();
   updateSubject = new Subject();
   deleteSubject = new Subject();
+  private numberProfil :number;
+  numberProfilSubject = new Subject<number>();
 
   constructor(private httpClient: HttpClient) {}
 
@@ -35,12 +38,29 @@ export class ProfilsService  {
     }
   }
 
-  getProfilsFromServer() {
-    this.httpClient.get<any[]>(baseUrl// , {headers}
+  getNumberOfProfilFromServer() {
+    this.httpClient.get<any>(baseUrl4// , {headers}
     )
     .subscribe(
       (response) => {
-        // console.log(response);
+        console.log(response);
+        this.numberProfil = response;
+        this.numberProfilSubject.next(response);
+      },
+      (error) => {
+        console.log('erreur back-end ' + error );
+      }
+    );
+  }
+  
+  getProfilsFromServer(pageAsked:number) {
+    let url = baseUrl + '/' + (pageAsked-1) + '/2/0';
+    console.log(url);
+    this.httpClient.get<any[]>(url// , {headers}
+    )
+    .subscribe(
+      (response) => {
+        console.log(response);
         this.profils = response;
         this.profilsSubject.next(response);
       },

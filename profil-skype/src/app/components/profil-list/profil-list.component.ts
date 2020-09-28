@@ -14,19 +14,39 @@ export class ProfilListComponent implements OnInit {
   currentUserType;
   profilList2: ProfilFromList[];
   profilSuscribe: Subscription;
+  profilNumbersuscribe: Subscription;
+  page:number = 1;
+  numberOfProfil:number;
 
   constructor(private userService: UserService, private profilsService: ProfilsService) {
   }
 
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
-    this.profilsService.getProfilsFromServer();
+
+    this.profilsService.getNumberOfProfilFromServer();
+    this.profilNumbersuscribe = this.profilsService.numberProfilSubject.subscribe(
+      (total:number) => {
+        this.numberOfProfil = total;
+      }
+    );
+
+    this.profilsService.getProfilsFromServer(this.page);
     this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
         (profils: ProfilFromList[]) => {
           this.profilList2 = profils;
-          console.log(this.profilList2);
         }
       );
+  }
+
+  onPageChanged(pageDemand:number) {
+    this.page = pageDemand;
+    this.profilsService.getProfilsFromServer(pageDemand);
+    this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
+      (profils: ProfilFromList[]) => {
+        this.profilList2 = profils;
+      }
+    );
   }
 
 }
