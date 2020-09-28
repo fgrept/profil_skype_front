@@ -1,6 +1,6 @@
 export class UserCreate {
 
-    constructor(public collaboraterid: string,
+    constructor(public collaboraterId: string,
                 public roles: string[]) {
     }
 }

@@ -3,7 +3,7 @@ import { Observable} from 'rxjs/';
 import { Subject } from 'rxjs';
 import {UserResult} from '../models/user-result';
 import {HttpClient} from '@angular/common/http';
-import {UserCreate} from "../models/user-create";
+import {UserCreate} from '../models/user-create';
 
 const urlUserCreate = 'http://localhost:8181/v1/user/create';
 const urlUserUprole = 'http://localhost:8181/v1/user/uprole/';
@@ -60,7 +60,7 @@ export class UserService {
               this.usersSubject.next(response);
             },
             (error) => {
-              console.log('erreur back-end ' + error );
+              console.log('erreur back-end ', error );
             }
         );
   }
@@ -149,6 +149,7 @@ export class UserService {
         );
     }
     createUserToServer(userCreate: UserCreate) {
+        this.setRoles(userCreate.roles);
         this.httpClient.post(urlUserCreate, userCreate).subscribe(
             (response) => {
                 console.log('Création effectuée');

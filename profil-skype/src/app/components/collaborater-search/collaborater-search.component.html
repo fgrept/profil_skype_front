@@ -1,0 +1,74 @@
+<form [formGroup]="collaboraterForm">
+    <p><br/><strong>Recherche collaborateur : </strong></p>
+    <div class="form-group row">
+        <label for="collaboraterId" class="col-2">Id annuaire :</label>
+        <div class="col-4">
+            <input placeholder="123456" type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="lastName" class="col-2">Nom :</label>
+        <div class="col-4">
+            <input placeholder="Durand" type="text" id="lastName" class="form-control" formControlName="lastName">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="firstName" class="col-2">Prénom :</label>
+        <div class="col-4">
+            <input placeholder="Martin" type="text" id="firstName" class="form-control" formControlName="firstName">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="deskPhoneNumber" class="col-2">Tel bureau :</label>
+        <div class="col-4">
+            <input placeholder="0102030405" type="tel" id="deskPhoneNumber" class="form-control" formControlName="deskPhoneNumber">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="mobilePhoneNumber" class="col-2">Tel portable :</label>
+        <div class="col-4">
+            <input placeholder="0602030405" type="tel" id="mobilePhoneNumber" class="form-control" formControlName="mobilePhoneNumber">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="mailAdress" class="col-2">Adresse Mail :</label>
+        <div class="col-4">
+            <input placeholder="toto@tutu.com" type="email" id="mailAdress" class="form-control" formControlName="mailAdress">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="orgaUnitCode" class="col-2">Code UO :</label>
+        <div class="col-4">
+            <input placeholder="00604" type="text" id="orgaUnitCode" class="form-control" formControlName="orgaUnitCode">
+        </div>
+    </div>
+    <button class="btn btn-success" (click)="onSearch()">Rechercher</button>
+    <button class="btn btn-danger" (click)="onResetForm()">Réinitialiser</button>
+</form>
+<table class="table  table-striped" *ngIf="isSearched">
+    <thead>
+    <tr class="row">
+        <th class="col-1">Id</th>
+        <th class="col-2">prénom</th>
+        <th class="col-2">nom</th>
+        <th class="col-2">Tel bureau</th>
+        <th class="col-2">Tel portable</th>
+        <th class="col-2">Adresse Mail</th>
+        <th class="col-1">uo</th>
+    </tr>
+    </thead>
+
+    <div class="col-12 custom-style" *ngFor="let item of collaboraterListResult">
+        <a class="row stretched-link " [routerLink]="item.collaboraterId">
+            <td class="col-1">{{item.collaboraterId}}</td>
+            <td class="col-2">{{item.firstName}}</td>
+            <td class="col-2">{{item.lastName}}</td>
+            <th class="col-2">{{item.deskPhoneNumber}}</th>
+            <th class="col-2">{{item.mobilePhoneNumber}}</th>
+            <th class="col-2">{{item.mailAdress}}</th>
+            <td class="col-1">{{item.orgaUnitCode}}</td>
+        </a>
+    </div>
+</table>
+
+

@@ -20,6 +20,8 @@ import { ProfilDetailEventsComponent } from './components/profil-detail-events/p
 import { UserListItemComponent } from './components/user-list-item/user-list-item.component';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
 import { UserCreateComponent } from './components/user-create/user-create.component';
+import { CollaboraterSearchComponent } from './components/collaborater-search/collaborater-search.component';
+import { UserCreateRoleComponent } from './components/user-create-role/user-create-role.component';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -27,6 +29,8 @@ const appRoutes: Routes = [
   {path: 'auth', component:AuthentComponent},
   {path: 'profils/:idProfil',component:ProfilDetailComponent},
   {path: 'profils/:idProfil/events',component:ProfilDetailEventsComponent},
+  {path: 'users/create',component:UserCreateComponent},
+  {path: 'users/create/:idUser',component:UserCreateRoleComponent},
   {path: 'users/:idUser',component:UserDetailComponent},
   {path: '', component:ProfilListComponent,},
   {path: 'not-found', component:UrlNotFoundComponent},
@@ -45,7 +49,9 @@ const appRoutes: Routes = [
     ProfilDetailEventsComponent,
     UserListItemComponent,
     UserDetailComponent,
-    UserCreateComponent
+    UserCreateComponent,
+    CollaboraterSearchComponent,
+    UserCreateRoleComponent
   ],
   imports: [
     BrowserModule,
