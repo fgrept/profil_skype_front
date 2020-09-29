@@ -95,7 +95,7 @@ export class ProfilsService  {
     this.httpClient.post(baseUrl3 + sip, null)
     .subscribe(
       (response) => {
-        console.log(response);
+        //console.log(response);
         this.deleteSubject.next(response);
         // this.profils = response;
         // this.profilsSubject.next(response);
