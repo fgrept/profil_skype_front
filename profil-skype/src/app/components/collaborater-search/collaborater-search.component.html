@@ -42,12 +42,15 @@
             <input placeholder="00604" type="text" id="orgaUnitCode" class="form-control" formControlName="orgaUnitCode">
         </div>
     </div>
-    <button class="btn btn-success" (click)="onSearch()">Rechercher</button>
-    <button class="btn btn-danger" (click)="onResetForm()">Réinitialiser</button>
+    <div class="col-md-6 text-center">
+        <button class="btn btn-success mr-3" (click)="onSearch()">Rechercher</button>
+        <button class="btn btn-danger" (click)="onResetForm()">Réinitialiser</button>
+    </div>
 </form>
+<br/>
 <table class="table  table-striped" *ngIf="isSearched">
     <thead>
-    <tr class="row">
+    <tr class="row text-center">
         <th class="col-1">Id</th>
         <th class="col-2">prénom</th>
         <th class="col-2">nom</th>
@@ -58,8 +61,8 @@
     </tr>
     </thead>
 
-    <div class="col-12 custom-style" *ngFor="let item of collaboraterListResult">
-        <a class="row stretched-link " [routerLink]="item.collaboraterId">
+    <div class="col-12 custom-style" *ngFor="let item of collaboraterListResult" >
+        <a class="row stretched-link text-center" [routerLink]="item.collaboraterId">
             <td class="col-1">{{item.collaboraterId}}</td>
             <td class="col-2">{{item.firstName}}</td>
             <td class="col-2">{{item.lastName}}</td>

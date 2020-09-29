@@ -26,7 +26,7 @@ export class UserListComponent implements OnInit {
   ngOnInit(): void {
       this.currentUserType = this.userService.getCurrentRole();
       this.userService.getUsersFromServer();
-      this.userSubscribe = this.userService.usersSubject.subscribe(
+      this.userSubscribe = this.userService.getusersSubject().subscribe(
         (users: UserResult[]) => {
           this.userListResult = users;
           console.log(this.userListResult);

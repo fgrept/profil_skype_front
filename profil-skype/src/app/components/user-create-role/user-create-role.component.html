@@ -55,19 +55,21 @@
             <div class="col-4">
                 <div class="form-check" *ngFor="let item of userRolesFormCreate">
                     <input  type="checkbox" id={{item.name}} [value]="item.value" [checked]="item.checked"
-                            (change)="onCheckRoleChange($event)" class="form-check-input">
+                            (change)="onCheckRoleChange($event)" class="form-check-input" [disabled]="isCreated">
                     <label class="form-check-label">{{item.value}}</label>
                 </div>
             </div>
         </div>
         <br/>
-        <div class="d-flex justify-content-between">
-            <div class="ml-5 mr-3">
-                <button [disabled]="!createAuthorized" class="btn btn-success " (click)="createUser()">Créer</button>
-            </div>
-            <div class="mr-auto">
-                <button class="btn btn-danger">Annuler</button>
-            </div>
+        <div *ngIf="!isCreated" class="col-md-6 text-center">
+            <button [disabled]="!createAuthorized" class="btn btn-success mr-3" (click)="createUser()">Créer</button>
+            <button class="btn btn-danger">Annuler</button>
+        </div>
+        <div *ngIf="isCreated" class="col-md-6 text-center">
+            <button class="btn btn-danger" [routerLink]="['/users']">Retour</button>
+        </div>
+        <div class="col-md-6">
+            <ngb-alert *ngIf="isAvailableMessage" type="success" (close)="successMessage = ''">{{ successMessage }}</ngb-alert>
         </div>
     </div>
 </form>

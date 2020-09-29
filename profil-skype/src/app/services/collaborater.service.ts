@@ -13,7 +13,7 @@ const urlCollaboraterSearch = 'http://localhost:8181/v1/collaborater/list/criter
 export class CollaboraterService {
 
   private collaboraters: Collaborater[];
-  public collaboraterGetSubject = new Subject();
+  private collaboraterGetSubject = new Subject();
   private collaborater: Collaborater;
 
   constructor(private httpClient: HttpClient) { }
@@ -45,5 +45,9 @@ export class CollaboraterService {
               return coll;
           }
       }
+  }
+
+  getCollaboraterGetSubject() {
+      return this.collaboraterGetSubject;
   }
 }
