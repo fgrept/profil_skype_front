@@ -3,6 +3,8 @@ import { UserService } from '../../services/user.service';
 import { Subscription } from 'rxjs';
 import { ProfilFromList } from 'src/app/models/profil-to-show';
 import { ProfilsService } from 'src/app/services/profils.service';
+import { SearchService } from 'src/app/services/search.service';
+import { FilterProfilPipe } from '../../pipes/filter-profil.pipe';
 
 @Component({
   selector: 'app-profil-list',
@@ -15,10 +17,14 @@ export class ProfilListComponent implements OnInit {
   profilList2: ProfilFromList[];
   profilSuscribe: Subscription;
   profilNumbersuscribe: Subscription;
+  searchSuscribe: Subscription;
+  searchText:string;
   page:number = 1;
   numberOfProfil:number;
 
-  constructor(private userService: UserService, private profilsService: ProfilsService) {
+  constructor(private userService: UserService,
+              private profilsService: ProfilsService,
+              private searchService: SearchService) {
   }
 
   ngOnInit(): void {
@@ -37,6 +43,12 @@ export class ProfilListComponent implements OnInit {
           this.profilList2 = profils;
         }
       );
+    
+      this.searchSuscribe = this.searchService.searchSubject.subscribe(
+        (inputText:string) => {
+          this.searchText = inputText;
+        }
+      )
   }
 
   onPageChanged(pageDemand:number) {

@@ -134,6 +134,10 @@ export class ProfilDetailComponent implements OnInit {
         changedDetected === true ? this.updateAuthorized = true : this.updateAuthorized = false;
     }
 
+    /**
+     * method for updating the skype profil, either some fields change,
+     * or change of the status (desactivation)
+     */
     updateProfil() {
 
         const profilChanged = new ProfilRaw (

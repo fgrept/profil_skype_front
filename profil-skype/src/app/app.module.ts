@@ -23,6 +23,7 @@ import { NgxPaginationModule} from 'ngx-pagination';
 import { UserCreateComponent } from './components/user-create/user-create.component';
 import { CollaboraterSearchComponent } from './components/collaborater-search/collaborater-search.component';
 import { UserCreateRoleComponent } from './components/user-create-role/user-create-role.component';
+import { FilterProfilPipe } from './pipes/filter-profil.pipe';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -52,7 +53,8 @@ const appRoutes: Routes = [
     UserDetailComponent,
     UserCreateComponent,
     CollaboraterSearchComponent,
-    UserCreateRoleComponent
+    UserCreateRoleComponent,
+    FilterProfilPipe
   ],
   imports: [
     BrowserModule,
