@@ -23,6 +23,7 @@ import { NgxPaginationModule} from 'ngx-pagination';
 import { UserCreateComponent } from './components/user-create/user-create.component';
 import { CollaboraterSearchComponent } from './components/collaborater-search/collaborater-search.component';
 import { UserCreateRoleComponent } from './components/user-create-role/user-create-role.component';
+import { FilterProfilPipe } from './pipes/filter-profil.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DialogModalComponent } from './components/dialog-modal/dialog-modal.component';
 
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
     UserCreateComponent,
     CollaboraterSearchComponent,
     UserCreateRoleComponent,
+    FilterProfilPipe,
     DialogModalComponent
   ],
   imports: [

@@ -17,6 +17,11 @@
         <a class="nav-link" routerLink="users">Utilisateur</a>
       </li>
     </ul>
+  
+    <form [formGroup]="searchForm" class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Recherche dans la page"
+      aria-label="Search" formControlName="search">
+    </form>
   </div>
 </nav>
 <router-outlet></router-outlet>

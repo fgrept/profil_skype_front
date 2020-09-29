@@ -11,7 +11,7 @@
             </tr>
         </thead>        
         <app-profil-list-item *ngFor="let item of profilList2 | paginate: 
-                    { itemsPerPage: 2, currentPage: page, totalItems:numberOfProfil }, let index = index"
+                    { itemsPerPage: 2, currentPage: page, totalItems:numberOfProfil } | filterProfil : searchText, let index = index"
             [profil]="item" [idProfil]="index">
         </app-profil-list-item>
     </table>
