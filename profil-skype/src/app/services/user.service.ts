@@ -148,6 +148,11 @@ export class UserService {
             }
         );
     }
+
+    /**
+     * Création d'un user (id avec les rôles associés)
+     * @param userCreate
+     */
     createUserToServer(userCreate: UserCreate) {
         this.setRoles(userCreate.roles);
         this.httpClient.post(urlUserCreate, userCreate).subscribe(

@@ -1,8 +1,11 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {UserResult} from '../../models/user-result';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {DialogModalComponent} from '../dialog-modal/dialog-modal.component';
+
 
 @Component({
   selector: 'app-user-detail',
@@ -22,9 +25,14 @@ export class UserDetailComponent implements OnInit {
   updateAuthorized: boolean;
   roles: string[];
 
+  modalOptions: NgbModalOptions = {};
+
   constructor(private routeUser: ActivatedRoute,
               private userService: UserService,
-              private formBuilderUser: FormBuilder)  {
+              private formBuilderUser: FormBuilder,
+              private modalService: NgbModal,
+              private router: Router)
+{
 
   }
 
@@ -125,7 +133,38 @@ export class UserDetailComponent implements OnInit {
     this.userService.updateUserToServer(this.userResult);
   }
 
+  /**
+   * Suppression de l'utilisateur sur confirmation depuis la fenêtre modale.
+   * Après suppression,
+   */
   deleteUser() {
-    this.userService.deleteUserToServer(this.userResult);
+
+    const modalRef = this.openModal();
+    modalRef.result.then(
+        confirm => {
+          console.log('retour modal', confirm);
+          if (confirm.toString() === 'Confirm') {
+            this.userService.deleteUserToServer(this.userResult);
+            this.router.navigate(['users']);
+          }
+        }, dismiss => {
+          console.log('retour modal', dismiss);
+        }
+    );
+  }
+
+  /**
+   * Paramétrage de la fenêtre modale
+   */
+  openModal(): NgbModalRef {
+    this.openModal();
+    this.modalOptions.backdrop = 'static';
+    this.modalOptions.keyboard = false;
+    this.modalOptions.centered = true;
+    const modalDiag = this.modalService.open(DialogModalComponent, this.modalOptions);
+    modalDiag.componentInstance.message = 'Confirmez-vous la suppression de l\'id ' + this.userResult.collaboraterId + '?';
+    modalDiag.componentInstance.title = 'Demande de suppression';
+    return modalDiag;
   }
 }
+

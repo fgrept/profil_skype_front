@@ -18,11 +18,13 @@ import { ProfilDetailComponent } from './components/profil-detail/profil-detail.
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProfilDetailEventsComponent } from './components/profil-detail-events/profil-detail-events.component';
 import { UserListItemComponent } from './components/user-list-item/user-list-item.component';
-import { UserDetailComponent } from './components/user-detail/user-detail.component';
+import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import { NgxPaginationModule} from 'ngx-pagination';
 import { UserCreateComponent } from './components/user-create/user-create.component';
 import { CollaboraterSearchComponent } from './components/collaborater-search/collaborater-search.component';
 import { UserCreateRoleComponent } from './components/user-create-role/user-create-role.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DialogModalComponent } from './components/dialog-modal/dialog-modal.component';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -52,7 +54,8 @@ const appRoutes: Routes = [
     UserDetailComponent,
     UserCreateComponent,
     CollaboraterSearchComponent,
-    UserCreateRoleComponent
+    UserCreateRoleComponent,
+    DialogModalComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +63,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     HttpClientModule,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgbModule
   ],
   providers: [AuthentGuardService,
               UserService,
