@@ -157,7 +157,7 @@ export class UserDetailComponent implements OnInit {
    * Paramétrage de la fenêtre modale
    */
   openModal(): NgbModalRef {
-    this.openModal();
+
     this.modalOptions.backdrop = 'static';
     this.modalOptions.keyboard = false;
     this.modalOptions.centered = true;
