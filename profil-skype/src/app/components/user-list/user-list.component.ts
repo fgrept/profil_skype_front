@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Subscription, Subject } from 'rxjs';
-import { ProfilFromList } from 'src/app/models/profil-to-show';
 import {UserResult} from '../../models/user-result';
 
 @Component({
@@ -20,18 +19,25 @@ export class UserListComponent implements OnInit {
 
   constructor(private userService: UserService) { }
 
+
     /**
      * Récupération à l'initialisation de la liste des utilisateurs et du rôle courant
      */
   ngOnInit(): void {
+      this.userListResult = this.userService.getUsers();
       this.currentUserType = this.userService.getCurrentRole();
-      this.userService.getUsersFromServer();
-      this.userSubscribe = this.userService.getusersSubject().subscribe(
-        (users: UserResult[]) => {
-          this.userListResult = users;
-          console.log(this.userListResult);
-        }
-    );
+      console.log('users en cours', this.userService.getUsers());
+      if (this.userListResult === null) {
+          this.userService.getUsersFromServer();
+          this.userSubscribe = this.userService.getusersSubject().subscribe(
+              (users: UserResult[]) => {
+                  this.userListResult = users;
+                  console.log(this.userListResult);
+              }
+          );
+      } else {
+          console.log('liste en cours', this.userService.getUsers());
+      }
   }
 
 }

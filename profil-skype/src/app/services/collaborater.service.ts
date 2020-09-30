@@ -19,14 +19,15 @@ export class CollaboraterService {
   constructor(private httpClient: HttpClient) { }
 
   getCollaboratersFromServer(collaboratersSearch: Collaborater) {
-    this.httpClient.post<any[]>(urlCollaboraterSearch + '0/100/collaboraterId', collaboratersSearch).subscribe(
+    this.httpClient.post<any[]>(urlCollaboraterSearch + '0/100/collaboraterId', collaboratersSearch, {observe: 'response'}).subscribe(
         (response) => {
-          console.log('réponse Get collaborateur', response);
-          this.collaboraters = response;
+          console.log('réponse Get collaborateur', response.body);
+          console.log('count', response.headers.get('count'));
+          this.collaboraters = response.body;
           this.collaboraterGetSubject.next(response);
         },
         (error) => {
-          console.log('erreur backend', error);
+          console.log('erreur backend', error.status);
         }
     );
   }

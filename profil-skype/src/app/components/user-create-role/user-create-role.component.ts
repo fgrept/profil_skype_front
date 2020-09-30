@@ -7,6 +7,7 @@ import {UserService} from '../../services/user.service';
 import {UserCreate} from '../../models/user-create';
 import {debounceTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {UserResult} from "../../models/user-result";
 
 @Component({
   selector: 'app-user-create-role',
@@ -98,6 +99,23 @@ export class UserCreateRoleComponent implements OnInit {
       this.userCreate = new UserCreate(this.userFormCreate.value.collaboraterId, this.roles);
       console.log('Create User : id userCreate ', this.userCreate.collaboraterId);
       this.userService.createUserToServer(this.userCreate);
+      this.userService.addUserToList(new UserResult(
+          this.collboraterSelect.collaboraterId,
+          this.collboraterSelect.lastName,
+          this.collboraterSelect.firstName,
+          this.collboraterSelect.deskPhoneNumber,
+          this.collboraterSelect.mobilePhoneNumber,
+          this.collboraterSelect.mailAdress,
+          this.collboraterSelect.orgaUnitCode,
+          this.collboraterSelect.orgaUnitType,
+          this.collboraterSelect.orgaUnitShortLabel,
+          this.collboraterSelect.siteCode,
+          this.collboraterSelect.siteName,
+          this.collboraterSelect.siteAddress,
+          this.collboraterSelect.sitePostalCode,
+          this.collboraterSelect.siteCity,
+          this.roles
+      ));
       this.isCreated = true;
       this.changeSuccessMessage('Création effectuée');
     }

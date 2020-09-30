@@ -46,14 +46,14 @@ export class ProfilListComponent implements OnInit {
           this.profilList2 = profils;
         }
       );
-    
-      this.searchSuscribe = this.searchService.searchSubject.subscribe(
+
+    this.searchSuscribe = this.searchService.searchSubject.subscribe(
         (inputText:string) => {
           this.searchText = inputText;
         }
-      )
+      );
 
-      this.searchForm = this.formBuilder.group(
+    this.searchForm = this.formBuilder.group(
         {searchSip : new FormControl(),
         searchFirstname : new FormControl(),
         searchLastname : new FormControl(),
@@ -84,7 +84,7 @@ export class ProfilListComponent implements OnInit {
    * method for reload the list profils form server with some criteria filters to applied
    */
   onSearchFilterClick() {
-    
+
     // TODO :
     // - activate the other filters according to the available template fields
     // - count the new number of profil with the criteria

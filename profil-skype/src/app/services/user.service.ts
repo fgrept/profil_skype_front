@@ -26,7 +26,7 @@ enum userType {
  */
 export class UserService {
 
-  private users: UserResult[];
+  private users: UserResult[] = null;
   private usersSubject = new Subject<UserResult[]>();
   private userAuth;
   public userSubject = new Subject<userType>();
@@ -45,6 +45,9 @@ export class UserService {
             console.log('Problème d\'indice sur la liste');
             return null;
         }
+    }
+    getUsers(): UserResult[]{
+      return this.users;
     }
 
     /**
@@ -85,16 +88,20 @@ export class UserService {
      */
   getRoles(){
       for (let userList of this.users) {
-          for (let index in userList.roles) {
-              if (userList.roles[index] === 'ROLE_USER') {
-                  userList.roles[index] = 'Utilisateur';
-              }
-              if (userList.roles[index] === 'ROLE_RESP') {
-                  userList.roles[index] = 'Responsable';
-              }
-              if (userList.roles[index] === 'ROLE_ADMIN') {
-                  userList.roles[index] = 'Administrateur';
-              }
+          this.getRole(userList);
+      }
+  }
+
+  getRole(userList: UserResult) {
+      for (let index in userList.roles) {
+          if (userList.roles[index] === 'ROLE_USER') {
+              userList.roles[index] = 'Utilisateur';
+          }
+          if (userList.roles[index] === 'ROLE_RESP') {
+              userList.roles[index] = 'Responsable';
+          }
+          if (userList.roles[index] === 'ROLE_ADMIN') {
+              userList.roles[index] = 'Administrateur';
           }
       }
   }
@@ -109,8 +116,6 @@ export class UserService {
       this.httpClient.put(urlUserUprole + userResult.collaboraterId + '/' + userResult.roles, null, {observe: 'response'}).subscribe(
           (response)  => {
               console.log ('Maj role user back end ok');
-              console.log('headers', response.headers);
-              console.log('headers keys', response.headers.keys());
               this.userUpdateSubject.next(response.body);
           },
           (error) => {
@@ -118,6 +123,7 @@ export class UserService {
               this.userUpdateSubject.next(error);
           }
       );
+      this.getRole(userResult);
     }
 
     /**
@@ -172,5 +178,16 @@ export class UserService {
                 this.userCreateSubject .next(error);
             }
         );
+    }
+
+    deleteUserFromList(userResult: UserResult) {
+        const index: number = this.users.indexOf(userResult);
+        this.users.splice(index, 1);
+        console.log('index delete', index);
+    }
+
+    addUserToList(userResult: UserResult) {
+        this.getRole(userResult);
+        this.users.push(userResult);
     }
 }

@@ -28,6 +28,7 @@ export class ProfilsService  {
   deleteSubject = new Subject();
   private numberProfil: number;
   numberProfilSubject = new Subject<number>();
+  count: number;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -41,15 +42,15 @@ export class ProfilsService  {
   }
 
   getNumberOfProfilFromServer() {
-    this.httpClient.get<any>(baseUrl4)
+    this.httpClient.get<any>(baseUrl4, {observe: 'response'})
     .subscribe(
-      (response) => {
-        console.log(response);
-        this.numberProfil = response;
-        this.numberProfilSubject.next(response);
+      (result) => {
+        console.log(result);
+        this.numberProfil = result.body;
+        this.numberProfilSubject.next(result.body);
       },
       (error) => {
-        console.log('erreur back-end ' + error );
+        console.log('erreur back-end ' + error.status );
       }
     );
   }
@@ -71,13 +72,15 @@ export class ProfilsService  {
 
   getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
     let url = baseUrl5 + '/' + (pageAsked - 1) + '/2/0';
+
     console.log(url);
-    this.httpClient.post<any[]>(url, searchprofil)
+    this.httpClient.post<any[]>(url, searchprofil, {observe: 'response'})
     .subscribe(
       (response) => {
         console.log(response);
-        this.profils = response;
-        this.profilsSubject.next(response);
+        this.profils = response.body;
+        this.count = Number(response.headers.get('count'));
+        this.profilsSubject.next(response.body);
       },
       (error) => {
         console.log('erreur back-end ' + error );
@@ -112,7 +115,7 @@ export class ProfilsService  {
         this.deleteSubject.next(response);
       },
       (error) => {
-        console.log('erreur back-end ' + error );
+        console.log('erreur back-end ' + error.status );
         this.deleteSubject.next(error);
       }
     );

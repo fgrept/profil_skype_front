@@ -154,6 +154,7 @@ export class UserDetailComponent implements OnInit {
           console.log('retour modal', confirm);
           if (confirm.toString() === 'Confirm') {
             this.userService.deleteUserToServer(this.userResult);
+            this.userService.deleteUserFromList(this.userResult);
             this.router.navigate(['users']);
           }
         }, dismiss => {
