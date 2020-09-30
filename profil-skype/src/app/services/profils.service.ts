@@ -9,7 +9,7 @@ const baseUrl = 'http://localhost:8181/v1/profile/list/all';
 const baseUrl2 = 'http://localhost:8181/v1/profile/update';
 const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
 const baseUrl4 = 'http://localhost:8181/v1/profile/count/';
-const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria';
+const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria/';
 
 /*const headers = new HttpHeaders()
       .append('Content-Type', 'application/json')
@@ -72,7 +72,7 @@ export class ProfilsService  {
 
 
   getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
-    let url = baseUrl5 + '/' + (pageAsked - 1) + '/10/0';
+    let url = baseUrl5 + (pageAsked - 1) + '/10/0/ASC';
 
     console.log(url);
     this.httpClient.post<any[]>(url, searchprofil, {observe: 'response'})
