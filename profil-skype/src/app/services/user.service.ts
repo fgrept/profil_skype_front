@@ -27,12 +27,12 @@ enum userType {
 export class UserService {
 
   private users: UserResult[];
-  usersSubject = new Subject<UserResult[]>();
+  private usersSubject = new Subject<UserResult[]>();
   private userAuth;
   public userSubject = new Subject<userType>();
-  public userUpdateSubject = new Subject();
-  public userDeleteSubject = new Subject();
-  public userCreateSubject = new Subject();
+  private userUpdateSubject = new Subject();
+  private userDeleteSubject = new Subject();
+  private userCreateSubject = new Subject();
 
   constructor(private httpClient: HttpClient) {
     this.userAuth = userType.userUnknown;
@@ -73,6 +73,10 @@ export class UserService {
 
   getCurrentRole() {
     return this.userAuth;
+  }
+
+  getusersSubject() {
+        return this.usersSubject;
   }
 
     /**

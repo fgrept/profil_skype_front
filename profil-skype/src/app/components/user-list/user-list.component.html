@@ -13,11 +13,7 @@
                               [user]="item" [idUser]="index">
         </app-user-list-item>
     </table>
-    <div class="d-flex justify-content-center">
         <a routerLink="create">
-        <button class="btn btn-success mr-auto ml-auto" *ngIf="currentUserType==2 || currentUserType==3">
-            Créer
-        </button>
+        <button class="btn btn-success" *ngIf="currentUserType==2 || currentUserType==3">Créer</button>
         </a>
-    </div>
 </div>

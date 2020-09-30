@@ -5,6 +5,8 @@ import {UserResult} from '../../models/user-result';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {DialogModalComponent} from '../dialog-modal/dialog-modal.component';
+import {Subject} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
 
 
 @Component({
@@ -25,6 +27,11 @@ export class UserDetailComponent implements OnInit {
   updateAuthorized: boolean;
   roles: string[];
 
+  successSubject = new Subject<string>();
+  successMessage: string;
+  availableMessage = false;
+
+  // options pour la fenêtre modale
   modalOptions: NgbModalOptions = {};
 
   constructor(private routeUser: ActivatedRoute,
@@ -70,6 +77,7 @@ export class UserDetailComponent implements OnInit {
       localisation: this.localisation,
       userRolesForm: this.userRolesForm
     });
+    this.initAlert();
   }
 
   /**
@@ -80,7 +88,7 @@ export class UserDetailComponent implements OnInit {
         [{name : 'admin', value: 'Administrateur', checked: false},
           {name : 'resp', value: 'Responsable', checked: false},
           {name: 'user', value: 'Utilisateur', checked: false}];
-    for (let item of this.userResult.roles) {
+    for (const item of this.userResult.roles) {
       if (item === 'Administrateur') {
         this.userRolesForm[0].checked = true;
       }
@@ -124,13 +132,14 @@ export class UserDetailComponent implements OnInit {
   updateUser() {
     this.roles = [];
     console.log('roles', this.userRolesForm);
-    for (let role of this.userRolesForm) {
+    for (const role of this.userRolesForm) {
       if (role.checked) {
         this.roles.push(role.value);
       }
     }
     this.userResult.roles = this.roles;
     this.userService.updateUserToServer(this.userResult);
+    this.changeSuccessMessage('Mise à jour effectuée');
   }
 
   /**
@@ -151,6 +160,7 @@ export class UserDetailComponent implements OnInit {
           console.log('retour modal', dismiss);
         }
     );
+
   }
 
   /**
@@ -165,6 +175,21 @@ export class UserDetailComponent implements OnInit {
     modalDiag.componentInstance.message = 'Confirmez-vous la suppression de l\'id ' + this.userResult.collaboraterId + '?';
     modalDiag.componentInstance.title = 'Demande de suppression';
     return modalDiag;
+  }
+
+  initAlert() {
+    this.successSubject.subscribe(message => this.successMessage = message);
+    this.successSubject.pipe(
+        debounceTime(2000)
+    ).subscribe(() => {
+      this.successMessage = '';
+      this.availableMessage = false;
+    });
+  }
+
+  changeSuccessMessage(message: string) {
+    this.availableMessage = true;
+    this.successSubject.next(message);
   }
 }
 

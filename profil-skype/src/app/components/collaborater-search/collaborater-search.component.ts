@@ -16,6 +16,7 @@ export class CollaboraterSearchComponent implements OnInit {
   isSearched: boolean;
   collaboraterListResult: Collaborater[];
   collaboraterSubcribe: Subscription;
+  idUser: string;
 
   constructor(private formBuilderCollaborater: FormBuilder,
               private collaboraterService: CollaboraterService) { }
@@ -35,7 +36,7 @@ export class CollaboraterSearchComponent implements OnInit {
   onSearch() {
       this.initCollaboraterSearch();
       this.collaboraterService.getCollaboratersFromServer(this.collaboraterSearch);
-      this.collaboraterSubcribe = this.collaboraterService.collaboraterGetSubject.subscribe(
+      this.collaboraterSubcribe = this.collaboraterService.getCollaboraterGetSubject().subscribe(
           (collaboraters: Collaborater[]) => {
               this.collaboraterListResult = collaboraters;
               console.log('liste collaborateurs', this.collaboraterListResult);

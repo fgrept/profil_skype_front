@@ -4,7 +4,9 @@ import {CollaboraterService} from '../../services/collaborater.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Collaborater} from '../../models/collaborater';
 import {UserService} from '../../services/user.service';
-import {UserCreate} from "../../models/user-create";
+import {UserCreate} from '../../models/user-create';
+import {debounceTime} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-user-create-role',
@@ -22,6 +24,10 @@ export class UserCreateRoleComponent implements OnInit {
   createAuthorized: boolean;
   userCreate: UserCreate;
   roles: string[];
+  isCreated: boolean;
+  private successSubject = new Subject<string>();
+  successMessage: string;
+  isAvailableMessage = false;
 
   constructor(private routeUser: ActivatedRoute,
               private collaboraterService: CollaboraterService,
@@ -38,6 +44,8 @@ export class UserCreateRoleComponent implements OnInit {
     this.collboraterSelect = this.collaboraterService.getCollaboraterByCollaboraterId(this.idCollaborater);
     this.initForm();
     this.createAuthorized = false;
+    this.isCreated = false;
+    this.initAlert();
   }
 
     initForm() {
@@ -90,14 +98,31 @@ export class UserCreateRoleComponent implements OnInit {
       this.userCreate = new UserCreate(this.userFormCreate.value.collaboraterId, this.roles);
       console.log('Create User : id userCreate ', this.userCreate.collaboraterId);
       this.userService.createUserToServer(this.userCreate);
+      this.isCreated = true;
+      this.changeSuccessMessage('Création effectuée');
     }
 
     private getRolesForm() {
         this.roles = [];
-        for (let roleForm of this.userRolesFormCreate){
+        for (const roleForm of this.userRolesFormCreate){
             if (roleForm.checked === true){
                 this.roles.push(roleForm.value);
             }
         }
+    }
+
+    initAlert() {
+        this.successSubject.subscribe(message => this.successMessage = message);
+        this.successSubject.pipe(
+            debounceTime(2000)
+        ).subscribe(() => {
+            this.successMessage = '';
+            this.isAvailableMessage = false;
+        });
+    }
+
+    changeSuccessMessage(message: string) {
+        this.isAvailableMessage = true;
+        this.successSubject.next(message);
     }
 }
