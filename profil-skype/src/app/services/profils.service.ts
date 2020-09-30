@@ -8,7 +8,7 @@ import { ProfilForChange } from '../models/profil-for-change';
 const baseUrl = 'http://localhost:8181/v1/profile/list/all';
 const baseUrl2 = 'http://localhost:8181/v1/profile/update';
 const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
-const baseUrl4 = 'http://localhost:8181/v1/profile/count/'
+const baseUrl4 = 'http://localhost:8181/v1/profile/count/';
 /*const headers = new HttpHeaders()
       .append('Content-Type', 'application/json')
       .append('Access-Control-Allow-Headers', 'Content-Type')
