@@ -9,6 +9,8 @@ const baseUrl = 'http://localhost:8181/v1/profile/list/all';
 const baseUrl2 = 'http://localhost:8181/v1/profile/update';
 const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
 const baseUrl4 = 'http://localhost:8181/v1/profile/count/';
+const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria';
+
 /*const headers = new HttpHeaders()
       .append('Content-Type', 'application/json')
       .append('Access-Control-Allow-Headers', 'Content-Type')
@@ -20,17 +22,17 @@ const baseUrl4 = 'http://localhost:8181/v1/profile/count/';
 })
 export class ProfilsService  {
 
-  private profils:ProfilFromList[];
+  private profils: ProfilFromList[];
   profilsSubject = new Subject<ProfilFromList[]>();
   updateSubject = new Subject();
   deleteSubject = new Subject();
-  private numberProfil :number;
+  private numberProfil: number;
   numberProfilSubject = new Subject<number>();
 
   constructor(private httpClient: HttpClient) {}
 
   getProfilById(id: number) {
-    if (id < this.profils['length']) {
+    if (id < this.profils.length) {
       return this.profils[id];
     } else {
       console.log('Problème d\'indice sur la liste');
@@ -39,8 +41,7 @@ export class ProfilsService  {
   }
 
   getNumberOfProfilFromServer() {
-    this.httpClient.get<any>(baseUrl4// , {headers}
-    )
+    this.httpClient.get<any>(baseUrl4)
     .subscribe(
       (response) => {
         console.log(response);
@@ -52,12 +53,10 @@ export class ProfilsService  {
       }
     );
   }
-  
-  getProfilsFromServer(pageAsked:number) {
-    let url = baseUrl + '/' + (pageAsked-1) + '/2/0';
-    console.log(url);
-    this.httpClient.get<any[]>(url// , {headers}
-    )
+
+  getProfilsFromServer(pageAsked: number) {
+    let url = baseUrl + '/' + (pageAsked - 1) + '/2/0';
+    this.httpClient.get<any[]>(url)
     .subscribe(
       (response) => {
         console.log(response);
@@ -70,6 +69,21 @@ export class ProfilsService  {
     );
   }
 
+  getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
+    let url = baseUrl5 + '/' + (pageAsked - 1) + '/2/0';
+    console.log(url);
+    this.httpClient.post<any[]>(url, searchprofil)
+    .subscribe(
+      (response) => {
+        console.log(response);
+        this.profils = response;
+        this.profilsSubject.next(response);
+      },
+      (error) => {
+        console.log('erreur back-end ' + error );
+      }
+    );
+  }
   updateProfilToServer(profilRaw: ProfilRaw, idAnnuaire: string , idCil: string, comment: string) {
     const profilChanged = new ProfilForChange (
           profilRaw.sip, profilRaw.enterpriseVoiceEnabled, profilRaw.voicePolicy, profilRaw.dialPlan,
@@ -95,10 +109,7 @@ export class ProfilsService  {
     this.httpClient.post(baseUrl3 + sip, null)
     .subscribe(
       (response) => {
-        //console.log(response);
         this.deleteSubject.next(response);
-        // this.profils = response;
-        // this.profilsSubject.next(response);
       },
       (error) => {
         console.log('erreur back-end ' + error );

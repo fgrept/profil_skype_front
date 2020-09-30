@@ -161,6 +161,9 @@ export class ProfilDetailComponent implements OnInit {
 
     }
 
+    /**
+     * method for delete the Skype Profil in the server with a confirmation box
+     */
     deleteProfil() {
         this.profilService.deleteSubject.subscribe(
             (response: Object) => {
