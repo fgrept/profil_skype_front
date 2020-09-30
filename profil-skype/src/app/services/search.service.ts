@@ -6,12 +6,13 @@ import { Subject } from 'rxjs';
 })
 export class SearchService {
 
-  private searchText:string;
   public searchSubject = new Subject();
 
   constructor() { }
 
-  getSearchText(textReceived:string) {
-    this.searchSubject.next(textReceived);
-  }
+  // inutile : l'émission de la data est faite depuis le component source sur
+  // le service injecté
+  // getSearchText(textReceived:string) {
+  //   this.searchSubject.next(textReceived);
+  // }
 }

@@ -56,22 +56,23 @@ export class ProfilsService  {
   }
 
   getProfilsFromServer(pageAsked: number) {
-    let url = baseUrl + '/' + (pageAsked - 1) + '/2/0';
-    this.httpClient.get<any[]>(url)
+    let url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
+    this.httpClient.get<any[]>(url, {observe: 'response'})
     .subscribe(
       (response) => {
         console.log(response);
-        this.profils = response;
-        this.profilsSubject.next(response);
+        this.profils = response.body;
+        this.profilsSubject.next(response.body);
       },
       (error) => {
-        console.log('erreur back-end ' + error );
+        console.log('erreur back-end ' + error.status );
       }
     );
   }
 
+
   getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
-    let url = baseUrl5 + '/' + (pageAsked - 1) + '/2/0';
+    let url = baseUrl5 + '/' + (pageAsked - 1) + '/10/0';
 
     console.log(url);
     this.httpClient.post<any[]>(url, searchprofil, {observe: 'response'})
