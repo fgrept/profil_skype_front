@@ -2,3 +2,20 @@ svg {
     font-size: 2em;
     color:#2199E8;
 }
+/* main {
+    position:fixed;
+    margin-top: 4%;
+    margin-left: 5%;
+}
+thead {
+    position: fixed;
+    background-color: white;
+    z-index: 1;
+} */
+footer {
+    position: fixed;
+    width: inherit;
+    bottom: 0;
+    background-color: #F8F9FA;
+    z-index: 1;
+}  

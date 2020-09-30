@@ -36,7 +36,7 @@ export class AppComponent  implements OnInit, OnDestroy {
   }
 
   onSearchInput(form) {
-    this.searchService.getSearchText(form.search);
+    this.searchService.searchSubject.next(form.search);
   }
 
 }

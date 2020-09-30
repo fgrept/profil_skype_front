@@ -54,7 +54,7 @@ export class ProfilsService  {
   }
   
   getProfilsFromServer(pageAsked:number) {
-    let url = baseUrl + '/' + (pageAsked-1) + '/2/0';
+    let url = baseUrl + '/' + (pageAsked-1) + '/10/0';
     this.httpClient.get<any[]>(url)
     .subscribe(
       (response) => {
@@ -69,7 +69,7 @@ export class ProfilsService  {
   }
 
   getProfilsFromServerWithCriteria(pageAsked:number, searchprofil:ProfilFromList) {
-    let url = baseUrl5 + '/' + (pageAsked-1) + '/2/0';
+    let url = baseUrl5 + '/' + (pageAsked-1) + '/10/0';
     console.log(url);
     this.httpClient.post<any[]>(url,searchprofil)
     .subscribe(

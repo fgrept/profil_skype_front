@@ -1,11 +1,11 @@
 <!--with all the row clickable, the suppress button will be on the other component-->
 <div class="col-12 custom-style">
     <a class="row stretched-link " [routerLink]="idProfil">
-        <td class="col-3">{{profil.sip}}</td>
-        <td class="col-2">{{profil.firstName}}</td>
-        <td class="col-1">{{profil.lastName}}</td>
-        <td class="col-1">{{profil.orgaUnityCode}}</td>
-        <td class="col-1">{{profil.siteCode}}</td>
+        <td class="col-3 d-none d-lg-block">{{profil.sip}}</td>
+        <td class="col-4 col-sm-2">{{profil.firstName}}</td>
+        <td class="col-4 col-sm-2">{{profil.lastName}}</td>
+        <td class="col-sm-2 col-lg-1 d-none d-sm-block">{{profil.orgaUnityCode}}</td>
+        <td class="col-sm-2 col-lg-1 d-none d-sm-block">{{profil.siteCode}}</td>
         <td class="col-1">{{profil.dialPlan}}</td>
         <td class="col-1">{{profil.statusProfile}}</td>
     </a>
