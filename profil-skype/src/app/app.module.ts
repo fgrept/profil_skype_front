@@ -26,6 +26,7 @@ import { UserCreateRoleComponent } from './components/user-create-role/user-crea
 import { FilterProfilPipe } from './pipes/filter-profil.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DialogModalComponent } from './components/dialog-modal/dialog-modal.component';
+import { CollaboraterSearchItemComponent } from './components/collaborater-search-item/collaborater-search-item.component';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -57,7 +58,8 @@ const appRoutes: Routes = [
     CollaboraterSearchComponent,
     UserCreateRoleComponent,
     FilterProfilPipe,
-    DialogModalComponent
+    DialogModalComponent,
+    CollaboraterSearchItemComponent
   ],
   imports: [
     BrowserModule,

@@ -10,6 +10,7 @@ const baseUrl2 = 'http://localhost:8181/v1/profile/update';
 const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
 const baseUrl4 = 'http://localhost:8181/v1/profile/count/';
 const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria';
+
 /*const headers = new HttpHeaders()
       .append('Content-Type', 'application/json')
       .append('Access-Control-Allow-Headers', 'Content-Type')
@@ -21,17 +22,17 @@ const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria';
 })
 export class ProfilsService  {
 
-  private profils:ProfilFromList[];
+  private profils: ProfilFromList[];
   profilsSubject = new Subject<ProfilFromList[]>();
   updateSubject = new Subject();
   deleteSubject = new Subject();
-  private numberProfil :number;
+  private numberProfil: number;
   numberProfilSubject = new Subject<number>();
 
   constructor(private httpClient: HttpClient) {}
 
   getProfilById(id: number) {
-    if (id < this.profils['length']) {
+    if (id < this.profils.length) {
       return this.profils[id];
     } else {
       console.log('Problème d\'indice sur la liste');
@@ -71,7 +72,7 @@ export class ProfilsService  {
   getProfilsFromServerWithCriteria(pageAsked:number, searchprofil:ProfilFromList) {
     let url = baseUrl5 + '/' + (pageAsked-1) + '/10/0';
     console.log(url);
-    this.httpClient.post<any[]>(url,searchprofil)
+    this.httpClient.post<any[]>(url, searchprofil)
     .subscribe(
       (response) => {
         console.log(response);

@@ -48,30 +48,35 @@
     </div>
 </form>
 <br/>
-<table class="table  table-striped" *ngIf="isSearched">
-    <thead>
-    <tr class="row text-center">
-        <th class="col-1">Id</th>
-        <th class="col-2">prénom</th>
-        <th class="col-2">nom</th>
-        <th class="col-2">Tel bureau</th>
-        <th class="col-2">Tel portable</th>
-        <th class="col-2">Adresse Mail</th>
-        <th class="col-1">uo</th>
-    </tr>
-    </thead>
+<div class="container">
+    <table class="table  table-striped" *ngIf="isSearched">
+        <thead>
+        <tr class="row text-center">
+            <th class="col-1">Id</th>
+            <th class="col-2">prénom</th>
+            <th class="col-2">nom</th>
+            <th class="col-2">Tel bureau</th>
+            <th class="col-2">Tel portable</th>
+            <th class="col-2">Adresse Mail</th>
+            <th class="col-1">uo</th>
+        </tr>
+        </thead>
+        <app-collaborater-search-item *ngFor="let item of collaboraterListResult"
+        [collaborater]="item" [idUser]="item.collaboraterId">
+        </app-collaborater-search-item>
 
-    <div class="col-12 custom-style" *ngFor="let item of collaboraterListResult" >
-        <a class="row stretched-link text-center" [routerLink]="item.collaboraterId">
-            <td class="col-1">{{item.collaboraterId}}</td>
-            <td class="col-2">{{item.firstName}}</td>
-            <td class="col-2">{{item.lastName}}</td>
-            <th class="col-2">{{item.deskPhoneNumber}}</th>
-            <th class="col-2">{{item.mobilePhoneNumber}}</th>
-            <th class="col-2">{{item.mailAdress}}</th>
-            <td class="col-1">{{item.orgaUnitCode}}</td>
-        </a>
-    </div>
-</table>
+        <!--      <div class="col-12 custom-style" *ngFor="let item of collaboraterListResult">
+              <a class="row stretched-link text-center" [routerLink]="item.collaboraterId">
+                    <td class="col-1">{{item.collaboraterId}}</td>
+                    <td class="col-2">{{item.firstName}}</td>
+                    <td class="col-2">{{item.lastName}}</td>
+                    <th class="col-2">{{item.deskPhoneNumber}}</th>
+                    <th class="col-2">{{item.mobilePhoneNumber}}</th>
+                    <th class="col-2">{{item.mailAdress}}</th>
+                    <td class="col-1">{{item.orgaUnitCode}}</td>
+                </a>
+        </div> -->
+    </table>
+</div>
 
 

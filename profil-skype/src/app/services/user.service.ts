@@ -51,13 +51,14 @@ export class UserService {
      * Récupère la liste des utilisateurs sans critères de filtre ni pagination
      */
     getUsersFromServer(){
-    this.httpClient.get<any[]>(urlUserGet)
+    this.httpClient.get<any[]>(urlUserGet, {observe: 'response'})
         .subscribe(
             (response) => {
-              console.log(response);
-              this.users = response;
+              console.log('header values', response.headers.keys());
+              console.log('count', response.headers.get('count'));
+              this.users = response.body;
               this.getRoles();
-              this.usersSubject.next(response);
+              this.usersSubject.next(response.body);
             },
             (error) => {
               console.log('erreur back-end ', error );
@@ -105,10 +106,12 @@ export class UserService {
     updateUserToServer(userResult: UserResult) {
       this.setRoles(userResult.roles);
       console.log('roles service User', userResult.roles);
-      this.httpClient.put(urlUserUprole + userResult.collaboraterId + '/' + userResult.roles, null).subscribe(
+      this.httpClient.put(urlUserUprole + userResult.collaboraterId + '/' + userResult.roles, null, {observe: 'response'}).subscribe(
           (response)  => {
               console.log ('Maj role user back end ok');
-              this.userUpdateSubject.next(response);
+              console.log('headers', response.headers);
+              console.log('headers keys', response.headers.keys());
+              this.userUpdateSubject.next(response.body);
           },
           (error) => {
               console.log('erreur back-end ', error);
