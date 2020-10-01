@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Subscription, Subject } from 'rxjs';
 import {UserResult} from '../../models/user-result';
+import {debounceTime} from "rxjs/operators";
 
 @Component({
   selector: 'app-user-list',
@@ -16,6 +17,10 @@ export class UserListComponent implements OnInit {
   currentUserType;
   userListResult: UserResult[];
   userSubscribe: Subscription;
+
+    successSubject = new Subject<string>();
+    successMessage: string;
+    availableMessage = false;
 
   constructor(private userService: UserService) { }
 
@@ -38,6 +43,32 @@ export class UserListComponent implements OnInit {
       } else {
           console.log('liste en cours', this.userService.getUsers());
       }
+      this.initAlert();
+      this.isDeletedUser();
   }
+
+    initAlert() {
+        this.successSubject.subscribe(message => this.successMessage = message);
+        this.successSubject.pipe(
+            debounceTime(2000)
+        ).subscribe(() => {
+            this.successMessage = '';
+            this.availableMessage = false;
+        });
+    }
+
+    isDeletedUser() {
+      this.userService.getUserDeleteSubject().subscribe(
+          (response) => {
+              console.log(response);
+              this.changeSuccessMessage('Suppression effectuée');
+          }
+      );
+    }
+
+    changeSuccessMessage(message: string) {
+        this.availableMessage = true;
+        this.successSubject.next(message);
+    }
 
 }

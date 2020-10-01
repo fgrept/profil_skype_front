@@ -69,6 +69,11 @@ export class UserService {
         );
   }
 
+  getUserDeleteSubject() {
+        return this.userDeleteSubject;
+  }
+
+
   updateRole(roleChosen: userType) {
     this.userAuth = roleChosen;
     // méthode suivante nécessaire pour les components qui ecoutent la maj du role
