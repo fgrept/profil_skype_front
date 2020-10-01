@@ -7,3 +7,6 @@ a:hover, a:focus {
     color: #FFFF;
     text-decoration: none;
 }
+input {
+    margin-left: -20px;
+}

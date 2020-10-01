@@ -59,6 +59,7 @@ export class ProfilDetailComponent implements OnInit {
         }
         if (this.profilToShow.statusProfile === 'EXPIRED') {
             this.statusProfile[2].checked = true;
+            this.statusProfile[1].disabled = true;
         }
 
         this.profilForm = this.formBuilder.group({
@@ -79,10 +80,12 @@ export class ProfilDetailComponent implements OnInit {
                 Validators.required],
             objectClass: [{value : this.profilToShow.objectClass, disabled : this.profilInputDesactivated},
                 Validators.required],
+            expirationDate: [{value : this.profilToShow.expirationDate.slice(0,10), disabled : true},
+                    Validators.required],
             status: [{value : this.profilToShow.statusProfile, disabled : this.changedNotAuthorized},
                 Validators.required]
         });
-
+        
         this.profilForm.valueChanges.subscribe(form => this.checkUpdateAuthorized(form));
         this.profilForm.get('status').valueChanges.subscribe(form => this.checkActiveInput2(form));
     }
@@ -132,6 +135,11 @@ export class ProfilDetailComponent implements OnInit {
         (form.status !== this.profilToShow.statusProfile) ? changedDetected = true : null;
 
         changedDetected === true ? this.updateAuthorized = true : this.updateAuthorized = false;
+
+        // set the status in case of change
+        if (changedDetected && this.profilForm.value['status'] === 'EXPIRED') {
+            this.profilForm.get('status').setValue('ENABLED');
+        }
     }
 
     /**

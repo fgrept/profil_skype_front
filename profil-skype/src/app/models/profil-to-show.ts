@@ -10,7 +10,7 @@ export class ProfilFromList {
                 public objectClass: string,
                 public statusProfile: string,
                 public collaboraterId: string,
-                public exirationDate: string,
+                public expirationDate: string,
                 public firstname: string,
                 public lastname: string,
                 public orgaUnityCode: string,
