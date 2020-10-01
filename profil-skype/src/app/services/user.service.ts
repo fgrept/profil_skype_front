@@ -69,6 +69,11 @@ export class UserService {
         );
   }
 
+  getUserDeleteSubject() {
+        return this.userDeleteSubject;
+  }
+
+
   updateRole(roleChosen: userType) {
     this.userAuth = roleChosen;
     // méthode suivante nécessaire pour les components qui ecoutent la maj du role
@@ -189,5 +194,15 @@ export class UserService {
     addUserToList(userResult: UserResult) {
         this.getRole(userResult);
         this.users.push(userResult);
+    }
+
+    getUserFromListByCollaboraterId(collaboraterId: string): UserResult{
+
+        for (let user of this.users) {
+            if (user.collaboraterId === collaboraterId){
+                return user;
+            }
+        }
+        return null;
     }
 }

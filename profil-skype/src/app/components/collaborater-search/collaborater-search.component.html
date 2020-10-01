@@ -62,7 +62,7 @@
         </tr>
         </thead>
         <app-collaborater-search-item *ngFor="let item of collaboraterListResult"
-        [collaborater]="item" [idUser]="item.collaboraterId">
+        [collaborater]="item" [idUser]="item.collaboraterId" [type]="type">
         </app-collaborater-search-item>
 
         <!--      <div class="col-12 custom-style" *ngFor="let item of collaboraterListResult">

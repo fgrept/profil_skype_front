@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserCreateComponent implements OnInit {
 
+  type: string;
   constructor() { }
 
   ngOnInit(): void {
+    this.type = 'user';
   }
 
 }

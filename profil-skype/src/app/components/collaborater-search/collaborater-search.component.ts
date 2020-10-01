@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {CollaboraterService} from '../../services/collaborater.service';
 import {Collaborater} from '../../models/collaborater';
@@ -11,6 +11,7 @@ import {Subscription} from 'rxjs';
 })
 export class CollaboraterSearchComponent implements OnInit {
 
+    @Input() type: string;
   collaboraterForm: FormGroup;
   collaboraterSearch: Collaborater;
   isSearched: boolean;

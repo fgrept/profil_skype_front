@@ -24,7 +24,7 @@ export class CollaboraterService {
           console.log('réponse Get collaborateur', response.body);
           console.log('count', response.headers.get('count'));
           this.collaboraters = response.body;
-          this.collaboraterGetSubject.next(response);
+          this.collaboraterGetSubject.next(response.body);
         },
         (error) => {
           console.log('erreur backend', error.status);
