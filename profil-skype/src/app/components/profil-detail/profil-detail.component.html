@@ -5,7 +5,7 @@
         <p><br /><strong>Détail du profil Skype : </strong></p>
         
         <div class="form-group row">
-            <label class="col-2" for="sip">Adresse SIP :</label>
+            <label class="col-3" for="sip">Adresse SIP :</label>
             <div class="col-4">
                 <input type="text" id="sip" class="form-control" formControlName="sip" required
                     [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
@@ -21,7 +21,7 @@
         </div>
 
         <div class="form-group row" >
-            <label class="col-2" for="voicepolicy">Voice Policy :</label>
+            <label class="col-3" for="voicepolicy">Voice Policy :</label>
             <div class="col-4">
                 <input type="text" id="voicepolicy" class="form-control" formControlName="voicepolicy"
                 [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-2" for="voice">Enterprise Voice Enabled :</label>
+            <label class="col-3" for="voice">Enterprise Voice Enabled :</label>
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of voiceEnabled">
                         <label class="form-check-label">{{item.name}}</label>
@@ -41,14 +41,14 @@
         </div>
 
         <div class="form-group row" >
-            <label  class="col-2" for="dialPlan">Dial Plan :</label>
+            <label  class="col-3" for="dialPlan">Dial Plan :</label>
             <div class="col-4">
                 <input type="text" id="dialPlan" class="form-control" formControlName="dialPlan"
                 [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
             </div>
         </div>
         <div class="form-group row" >
-            <label  class="col-2" for="samAccount">SAM Account Name :</label>
+            <label  class="col-3" for="samAccount">SAM Account Name :</label>
             <div class="col-4">
                 <input type="text" id="samAccount" class="form-control" formControlName="samAccount"
                 [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
@@ -56,7 +56,7 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-2" for="voice">ExUm Enabled :</label>
+            <label class="col-3" for="voice">ExUm Enabled :</label>
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of exUmEnabled">
                         <label class="form-check-label">{{item.name}}</label>
@@ -68,22 +68,30 @@
         </div>
 
         <div class="form-group row" >
-            <label  class="col-2" for="exchUser">exchUser :</label>
+            <label  class="col-3" for="exchUser">exchUser :</label>
             <div class="col-4">
                 <input type="text" id="exchUser" class="form-control" formControlName="exchUser"
                 [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
             </div>
         </div>
         <div class="form-group row" >        
-            <label  class="col-2" for="objectClass">Object Class :</label>
+            <label  class="col-3" for="objectClass">Object Class :</label>
             <div class="col-4">
                 <input type="text" id="objectClass" class="form-control" formControlName="objectClass"
                 [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
             </div>
         </div>
 
+        <div class="form-group row" >        
+            <label  class="col-3" for="expirationDate">Date d'expiration :</label>
+            <div class="col-4">
+                <input type="text" id="expirationDate" class="form-control" formControlName="expirationDate"
+                >
+            </div>
+        </div>
+
         <div class="form-group row">
-            <label class="col-2" for="voice">Status du profil :</label>
+            <label class="col-3" for="voice">Status du profil :</label>
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of statusProfile">
                         <label class="form-check-label">{{item.name}}</label>
