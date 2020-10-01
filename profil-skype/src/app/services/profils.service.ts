@@ -56,7 +56,7 @@ export class ProfilsService  {
   }
 
   getProfilsFromServer(pageAsked: number) {
-    let url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
+    const url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
     this.httpClient.get<any[]>(url, {observe: 'response'})
     .subscribe(
       (response) => {
@@ -72,7 +72,7 @@ export class ProfilsService  {
 
 
   getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
-    let url = baseUrl5 + (pageAsked - 1) + '/10/0/ASC';
+    const url = baseUrl5 + (pageAsked - 1) + '/10/0/ASC';
 
     console.log(url);
     this.httpClient.post<any[]>(url, searchprofil, {observe: 'response'})
@@ -122,4 +122,13 @@ export class ProfilsService  {
     );
   }
 
+    getProfilFromListByCollaboraterId(collaboraterId: string): ProfilFromList {
+
+    for (let profil of this.profils) {
+          if (profil.collaboraterId === collaboraterId) {
+            return profil;
+          }
+        }
+    return null;
+    }
 }

@@ -190,4 +190,14 @@ export class UserService {
         this.getRole(userResult);
         this.users.push(userResult);
     }
+
+    getUserFromListByCollaboraterId(collaboraterId: string): UserResult{
+
+        for (let user of this.users) {
+            if (user.collaboraterId === collaboraterId){
+                return user;
+            }
+        }
+        return null;
+    }
 }
