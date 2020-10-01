@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{title}}</h4>
+</div>
+<div class="modal-body">
+  <p>{{message}}</p>
+  <form [formGroup]="formDialog">
+    <p><strong>Commentaire additionnel : </strong></p>
+    <input class="form-control" formControlName="comment">
+  </form>
+</div>
+<div class="modal-footer">
+  <div class="col-md-12 text-center">
+      <button type="button" class="btn btn-success mr-3" data-backdrop="static"
+              (click)="onConfirm()">Confirmer</button>
+      <button type="button" class="btn btn-danger" data-backdrop="static"
+              (click)="activeModal.dismiss('Reset')">Annuler</button>
+  </div>
+</div>

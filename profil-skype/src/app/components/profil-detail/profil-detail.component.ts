@@ -7,6 +7,11 @@ import { Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { ProfilRaw } from 'src/app/models/profil-raw';
 import { Subscription } from 'rxjs';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { DialogModalComponent } from '../dialog-modal/dialog-modal.component';
+import { DialogModalFormComponent } from '../dialog-modal-form/dialog-modal-form.component';
+import {debounceTime} from 'rxjs/operators';
+import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
     selector: 'app-profil-detail',
@@ -33,11 +38,19 @@ export class ProfilDetailComponent implements OnInit {
     updateSuscribe: Subscription;
     updateAuthorized: boolean;
 
+    // options pour la fenêtre modale
+    modalOptions: NgbModalOptions = {};
+    successSubject = new Subject<string>();
+    successMessage: string;
+    availableMessage = false;
+
     constructor(private route: ActivatedRoute,
                 private profilService: ProfilsService,
                 private formBuilder: FormBuilder,
                 private userService: UserService,
-                private router: Router) { }
+                private router: Router,
+                private modalService: NgbModal
+                ) { }
 
     ngOnInit(): void {
         this.idProfil = this.route.snapshot.params.idProfil;
@@ -162,10 +175,26 @@ export class ProfilDetailComponent implements OnInit {
         this.profilService.updateSubject.subscribe(
             (response: Object) => {
                 console.log(response);
-                this.router.navigate(['/profils']);
+                // update server done : display confirm box then routing
+                this.emitAlertAndRouting('Mise à jour effectuée');
             }
         );
-        this.profilService.updateProfilToServer(profilChanged, this.profilToShow.collaboraterId, '000000', 'commentaire GF');
+
+        const modalForm =  this.openModalForm();
+        modalForm.result.then(
+            confirm => {
+                console.log('retour modal', confirm);
+                if (confirm['result'] === 'Confirm') {
+                    this.profilService.updateProfilToServer(
+                        profilChanged,
+                        this.profilToShow.collaboraterId, 
+                        '000000',
+                        confirm['comment']);
+                }
+              }, dismiss => {
+                console.log('retour modal', dismiss);
+              }
+        );
 
     }
 
@@ -176,15 +205,67 @@ export class ProfilDetailComponent implements OnInit {
         this.profilService.deleteSubject.subscribe(
             (response: Object) => {
                 console.log(response);
-                this.router.navigate(['/profils']);
+                // update server done : display confirm box then routing
+                this.emitAlertAndRouting('Suppression effectuée');
             }
         );
+        
+        const modalRef = this.openModal();
+        modalRef.result.then(
+            confirm => {
+                console.log('retour modal', confirm);
+                if (confirm.toString() === 'Confirm') {
+                    if (this.profilForm.value.status === 'DISABLED') {
+                        this.profilService.deleteProfilToServer(this.profilToShow.sip);
+                    } else {
+                        this.profilService.deleteProfilToServer(this.profilForm.value.sip);
+                    }
+                }
+              }, dismiss => {
+                console.log('retour modal', dismiss);
+              }
+        );        
+    }
 
-        if (this.profilForm.value.status === 'DISABLED') {
-            this.profilService.deleteProfilToServer(this.profilToShow.sip);
-        } else {
-            this.profilService.deleteProfilToServer(this.profilForm.value.sip);
-        }
+    /**
+    * Paramétrage de la fenêtre modale de suppression
+    */
+    openModal(): NgbModalRef {
+    
+        this.modalOptions.backdrop = 'static';
+        this.modalOptions.keyboard = false;
+        this.modalOptions.centered = true;
+        const modalDiag = this.modalService.open(DialogModalComponent, this.modalOptions);
+        modalDiag.componentInstance.message = 'Confirmez-vous la suppression du profil Skype ' + this.profilForm.get('sip').value + '?';
+        modalDiag.componentInstance.title = 'Demande de suppression';
+        return modalDiag;
+  }
+
+    /**
+    * Paramétrage de la fenêtre modale de mise à jour
+    */
+    openModalForm(): NgbModalRef {
+        
+        this.modalOptions.backdrop = 'static';
+        this.modalOptions.keyboard = false;
+        this.modalOptions.centered = true;
+        const modalDiag = this.modalService.open(DialogModalFormComponent, this.modalOptions);
+        modalDiag.componentInstance.message = 'Confirmez-vous la mise à jour du profil Skype ' + this.profilForm.get('sip').value + '?';
+        modalDiag.componentInstance.title = 'Demande de mise à jour';
+        return modalDiag;
+    }
+
+    emitAlertAndRouting(message:string) {
+        this.successMessage = message;
+        this.availableMessage = true;
+        this.successSubject.pipe(debounceTime(2000)).subscribe(
+            () => {
+                this.successMessage = '';
+                this.availableMessage = false;
+                this.router.navigate(['/profils'])
+            }
+        );
+        this.successSubject.next();
     }
 
 }

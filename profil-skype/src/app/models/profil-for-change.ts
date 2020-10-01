@@ -13,6 +13,6 @@ export class ProfilForChange {
                 public statusProfile: string,
                 public collaboraterId: string,
                 public itCorrespondantId: string,
-                public comment: string
+                public eventComment: string
                 ) {}
 }

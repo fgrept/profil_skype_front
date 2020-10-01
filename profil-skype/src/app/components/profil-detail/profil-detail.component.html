@@ -33,7 +33,7 @@
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of voiceEnabled">
                         <label class="form-check-label">{{item.name}}</label>
-                        <input type="radio" id="voice" class="form-check-input" [value]="item.value"
+                        <input type="radio" class="form-check-input" [value]="item.value"
                         [checked]="item.checked" formControlName="voiceEnabled"
                         [attr.disabled]="(!profilInputDesactivated === true) ? null : true"/>
                 </div>
@@ -56,11 +56,11 @@
         </div>
 
         <div class="form-group row">
-            <label class="col-3" for="voice">ExUm Enabled :</label>
+            <label class="col-3" for="exUmEnabled">ExUm Enabled :</label>
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of exUmEnabled">
                         <label class="form-check-label">{{item.name}}</label>
-                        <input type="radio" id="voice" class="form-check-input" [value]="item.value"
+                        <input type="radio" class="form-check-input" [value]="item.value"
                         [checked]="item.checked" formControlName="exUmEnabled"
                         [attr.disabled]="(!profilInputDesactivated === true) ? null : true"/>                     
                 </div>
@@ -115,14 +115,18 @@
                 </button>
             </div>
             <div class="col-2 mx-4">
-                <button type ="submit" class="btn btn-secondary" *ngIf="currentUserType==2 || currentUserType==3"
-                        (click)="updateProfil()" [disabled]="profilForm.invalid || (!updateAuthorized)">Modifier</button>
+                <button type ="submit" class="btn btn-secondary"
+                *ngIf="currentUserType==2 || currentUserType==3"
+                (click)="updateProfil()"
+                [disabled]="profilForm.invalid || (!updateAuthorized)">Modifier</button>
             </div>
             <div class="col-2">
                 <button class="btn btn-secondary" *ngIf="currentUserType==2 || currentUserType==3" (click)="deleteProfil()">Supprimer</button>
-            </div>       
+            </div>
         </div> 
     </div>
-
+    <div class="col-md-6">
+        <ngb-alert *ngIf="availableMessage" type="success" dismissible="false">{{ successMessage }}</ngb-alert>
+    </div>
 </form>
 
