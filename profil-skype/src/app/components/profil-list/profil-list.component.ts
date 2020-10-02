@@ -40,12 +40,13 @@ export class ProfilListComponent implements OnInit {
       }
     );
 
-    this.profilsService.getProfilsFromServer(this.page);
     this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
         (profils: ProfilFromList[]) => {
           this.profilList2 = profils;
         }
       );
+
+    this.profilsService.getProfilsFromServer(this.page);
 
     this.searchSuscribe = this.searchService.searchSubject.subscribe(
         (inputText:string) => {
@@ -110,11 +111,7 @@ export class ProfilListComponent implements OnInit {
     // in case of activation criteria, we reset the list at the first page => 1
     let p = 1;
     // the filtrer on boolean must not be "" but null
-    
     if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
-
-    // actually, the back don't work if status is not set => ENABLED by default
-    //if (profilSearch.statusProfile === '') {profilSearch.statusProfile = 'ENABLED'};
 
     this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
     

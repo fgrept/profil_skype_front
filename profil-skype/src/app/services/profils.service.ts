@@ -29,6 +29,7 @@ export class ProfilsService  {
   private numberProfil: number;
   numberProfilSubject = new Subject<number>();
   count: number;
+  public pageListToReload:boolean=true;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -55,19 +56,28 @@ export class ProfilsService  {
     );
   }
 
+  /**
+   * method for reload the list of profil or to re-emit thus in memmory
+   */
   getProfilsFromServer(pageAsked: number) {
-    const url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
-    this.httpClient.get<any[]>(url, {observe: 'response'})
-    .subscribe(
-      (response) => {
-        console.log(response);
-        this.profils = response.body;
-        this.profilsSubject.next(response.body);
-      },
-      (error) => {
-        console.log('erreur back-end ' + error.status );
-      }
-    );
+    if (this.pageListToReload) {
+      const url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
+      this.httpClient.get<any[]>(url, {observe: 'response'})
+      .subscribe(
+        (response) => {
+          console.log(response);
+          this.profils = response.body;
+          this.profilsSubject.next(response.body);
+        },
+        (error) => {
+          console.log('erreur back-end ' + error.status );
+        }
+      );
+    } else {
+      this.profilsSubject.next(this.profils);
+      this.pageListToReload = true;
+    }
+    
   }
 
 

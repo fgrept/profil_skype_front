@@ -227,6 +227,11 @@ export class ProfilDetailComponent implements OnInit {
         );        
     }
 
+    returnToList() {
+        this.profilService.pageListToReload = false;
+        this.router.navigate(['/profils']);
+    }
+
     /**
     * Paramétrage de la fenêtre modale de suppression
     */
