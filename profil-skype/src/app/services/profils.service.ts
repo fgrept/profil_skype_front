@@ -29,7 +29,9 @@ export class ProfilsService  {
   private numberProfil: number;
   numberProfilSubject = new Subject<number>();
   count: number;
-  public pageListToReload:boolean=true;
+  // variables when we go back to the list from the detail
+  public profilListToReload:boolean=true;
+  public pageListToShow:number=1;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -60,7 +62,8 @@ export class ProfilsService  {
    * method for reload the list of profil or to re-emit thus in memmory
    */
   getProfilsFromServer(pageAsked: number) {
-    if (this.pageListToReload) {
+    this.pageListToShow = pageAsked;
+    if (this.profilListToReload) {
       const url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
       this.httpClient.get<any[]>(url, {observe: 'response'})
       .subscribe(
@@ -75,7 +78,7 @@ export class ProfilsService  {
       );
     } else {
       this.profilsSubject.next(this.profils);
-      this.pageListToReload = true;
+      this.profilListToReload = true;
     }
     
   }

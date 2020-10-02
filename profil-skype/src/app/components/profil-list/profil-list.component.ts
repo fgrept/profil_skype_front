@@ -20,7 +20,7 @@ export class ProfilListComponent implements OnInit {
   profilNumbersuscribe: Subscription;
   searchSuscribe: Subscription;
   searchText:string;
-  page:number = 1;
+  page:number;
   numberOfProfil:number;
   searchForm:FormGroup;
 
@@ -33,12 +33,12 @@ export class ProfilListComponent implements OnInit {
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
 
-    this.profilsService.getNumberOfProfilFromServer();
     this.profilNumbersuscribe = this.profilsService.numberProfilSubject.subscribe(
-      (total:number) => {
-        this.numberOfProfil = total;
-      }
-    );
+          (total:number) => {
+            this.numberOfProfil = total;
+          }
+        );
+    this.profilsService.getNumberOfProfilFromServer();
 
     this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
         (profils: ProfilFromList[]) => {
@@ -46,7 +46,8 @@ export class ProfilListComponent implements OnInit {
         }
       );
 
-    this.profilsService.getProfilsFromServer(this.page);
+    this.page = this.profilsService.pageListToShow;
+    this.profilsService.getProfilsFromServer(this.profilsService.pageListToShow);
 
     this.searchSuscribe = this.searchService.searchSubject.subscribe(
         (inputText:string) => {
