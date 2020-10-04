@@ -65,6 +65,16 @@ export class ProfilListComponent implements OnInit {
         searchStatus : new FormControl()
       }
       );
+
+      /* var el = document.getElementById('tata');
+      document.addEventListener('scroll', (e) => {
+        console.log('scroll : ' , document.documentElement.scrollHeight,
+        ' - ' , document.documentElement.scrollTop, ' -' ,
+        document.documentElement.scrollHeight);
+        let pos:number = document.documentElement.scrollHeight - document.documentElement.scrollTop;
+         el.style.top = pos.toString();
+      }) */
+
   }
 
   /**

@@ -40,8 +40,8 @@
             </tbody>
             <!-- ajout de 2 lignes vides pour pouvoir les scroller avec le footer -->
             <br/><br/><br/>
-            <footer>
-                <p><button class="btn-info custom-btn" *ngIf="currentUserType==2 || currentUserType==3">Créer</button></p>
+            <footer class="footer">
+                <p><button  class="btn-info custom-btn" *ngIf="currentUserType==2 || currentUserType==3">Créer</button></p>
                 <pagination-controls (pageChange)="onPageChanged($event)"></pagination-controls>
             </footer>
         </table>
