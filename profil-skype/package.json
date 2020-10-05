@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~9.1.4",
     "@angular/router": "~9.1.4",
     "@ng-bootstrap/ng-bootstrap": "^6.2.0",
+    "@types/jquery": "^3.5.1",
     "bootstrap": "^4.5.2",
     "jquery": "^3.5.1",
     "ngx-pagination": "^5.0.0",

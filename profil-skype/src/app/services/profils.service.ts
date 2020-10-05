@@ -24,10 +24,12 @@ export class ProfilsService  {
 
   private profils: ProfilFromList[];
   private numberProfil: number;
+  //private buttonFilter:boolean=false;
   public profilsSubject = new Subject<ProfilFromList[]>();
   public updateSubject = new Subject();
   public deleteSubject = new Subject();
   public numberProfilSubject = new Subject<number>();
+  public buttonFilterSubject = new Subject<boolean>();
   // variables when we go back to the list from the detail
   public profilListToReload:boolean=true;
   public profilListToCount:boolean=true;
@@ -110,6 +112,7 @@ export class ProfilsService  {
     }
     
   }
+
   updateProfilToServer(profilRaw: ProfilRaw, idAnnuaire: string , idCil: string, comment: string) {
     const profilChanged = new ProfilForChange (
           profilRaw.sip, profilRaw.enterpriseVoiceEnabled, profilRaw.voicePolicy, profilRaw.dialPlan,
@@ -153,5 +156,6 @@ export class ProfilsService  {
           }
         }
     return null;
-    }
+  }
+
 }

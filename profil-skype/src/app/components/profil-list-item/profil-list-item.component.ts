@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { ProfilsService } from 'src/app/services/profils.service';
 
 @Component({
   selector: 'app-profil-list-item',
@@ -15,11 +17,21 @@ export class ProfilListItemComponent implements OnInit {
   @Input() profil;
   @Input() idProfil: number;
   currentUserType;
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+              private router: Router,
+              private profilService: ProfilsService) {
   }
 
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
   }
+
+// A FINALISER
+  /* routingTo() {
+    let url = '/profils/' + this.idProfil;
+    this.profilService.buttonFilterSubject.next(false);
+    this.router.navigate([url]);
+
+  } */
 
 }
