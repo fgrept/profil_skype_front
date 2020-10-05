@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {UserResult} from '../../models/user-result';
@@ -14,7 +14,7 @@ import {debounceTime} from 'rxjs/operators';
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.css']
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent implements OnInit, OnDestroy {
 
   // index de la table des users issu du formulaire
   idUser: number;
@@ -56,6 +56,12 @@ export class UserDetailComponent implements OnInit {
     this.initForm();
     console.log('Roles formulaire :', this.userRolesForm);
     this.updateAuthorized = false;
+  }
+
+  ngOnDestroy(): void {
+      if (this.successSubject !== null && this.successSubject !== undefined){
+        this.successSubject.unsubscribe();
+      }
   }
 
   /**

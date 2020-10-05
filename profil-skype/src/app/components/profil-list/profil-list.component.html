@@ -41,7 +41,9 @@
             <!-- ajout de 2 lignes vides pour pouvoir les scroller avec le footer -->
             <br/><br/><br/>
             <footer>
-                <p><button class="btn-info custom-btn" *ngIf="currentUserType==2 || currentUserType==3">Créer</button></p>
+                <a routerLink="create">
+                    <button class="btn btn-success" *ngIf="currentUserType==2 || currentUserType==3">Créer</button>
+                </a>
                 <pagination-controls (pageChange)="onPageChanged($event)"></pagination-controls>
             </footer>
         </table>

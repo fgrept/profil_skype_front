@@ -10,6 +10,8 @@ const baseUrl2 = 'http://localhost:8181/v1/profile/update';
 const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
 const baseUrl4 = 'http://localhost:8181/v1/profile/count/';
 const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria/';
+const urlGet = 'http://localhost:8181/v1/profile/get/';
+const urlCreate = 'http://localhost:8181/v1/profile/create/';
 
 /*const headers = new HttpHeaders()
       .append('Content-Type', 'application/json')
@@ -26,6 +28,11 @@ export class ProfilsService  {
   profilsSubject = new Subject<ProfilFromList[]>();
   updateSubject = new Subject();
   deleteSubject = new Subject();
+  getProfilSubject = new Subject();
+  createSubject = new Subject();
+
+    profilFromServer: ProfilFromList;
+
   private numberProfil: number;
   numberProfilSubject = new Subject<number>();
   count: number;
@@ -41,6 +48,20 @@ export class ProfilsService  {
     }
   }
 
+  createProfil(profilForChange: ProfilForChange) {
+      this.httpClient.post<any>(urlCreate, profilForChange, {observe: 'response'})
+          .subscribe(
+              (result) => {
+                  console.log(result);
+                  this.createSubject.next(result.body);
+              },
+              (error) => {
+                  console.log('erreur back-end ' + error.status );
+                  this.createSubject.next(error);
+              }
+          );
+  }
+
   getNumberOfProfilFromServer() {
     this.httpClient.get<any>(baseUrl4, {observe: 'response'})
     .subscribe(
@@ -51,6 +72,7 @@ export class ProfilsService  {
       },
       (error) => {
         console.log('erreur back-end ' + error.status );
+        this.numberProfilSubject.next(error);
       }
     );
   }
@@ -61,6 +83,8 @@ export class ProfilsService  {
     .subscribe(
       (response) => {
         console.log(response);
+        console.log('headers', response.headers.keys());
+        console.log('count', response.headers.get('count'));
         this.profils = response.body;
         this.profilsSubject.next(response.body);
       },
@@ -79,8 +103,10 @@ export class ProfilsService  {
     .subscribe(
       (response) => {
         console.log(response);
+        console.log('headers', response.headers.keys());
         this.profils = response.body;
         this.count = Number(response.headers.get('count'));
+        console.log('count après récupération :', this.count);
         this.profilsSubject.next(response.body);
       },
       (error) => {
@@ -130,5 +156,21 @@ export class ProfilsService  {
           }
         }
     return null;
+    }
+
+    getProfilFromServerByCollaboraterId(collaboraterId: string) {
+
+        this.httpClient.get<any>(urlGet + collaboraterId, {observe: 'response'})
+            .subscribe(
+                (result) => {
+//                    console.log('headers', result.headers.keys());
+                    this.profilFromServer = result.body;
+                    this.getProfilSubject.next(result.body);
+                },
+                (error) => {
+                    this.getProfilSubject.next(error);
+                    console.log('erreur back-end ' + error.status );
+                }
+            );
     }
 }

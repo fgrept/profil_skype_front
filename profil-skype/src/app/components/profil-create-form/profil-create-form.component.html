@@ -1,0 +1,123 @@
+<form [formGroup]="profilFormCreate">
+
+    <div class="container">
+
+        <p><br /><strong>Création du profil Skype : </strong></p>
+
+        <div class="formGroup row">
+            <label class="col-3" for="collaboraterId">Id annuaire :</label>
+            <div class="col-4">
+                <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-3" for="sip">Adresse SIP :</label>
+            <div class="col-4">
+                <input type="text" id="sip" class="form-control" formControlName="sip" required>
+
+                <div *ngIf="profilFormCreate.get('sip').invalid" class="alert alert-danger">
+                    <div *ngIf="profilFormCreate.get('sip').errors.required">
+                        L'adresse sip est obligatoire
+                    </div>
+                    <div *ngIf="profilFormCreate.get('sip').hasError('pattern')">
+                        L'adresse sip doit commencer par sip:
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" >
+            <label class="col-3" for="voicePolicy">Voice Policy :</label>
+            <div class="col-4">
+                <input type="text" id="voicePolicy" class="form-control" formControlName="voicePolicy"
+                       [attr.disabled]="(isVoiceDisabled === true) ? true : null">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-3" for="voiceEnabled">Enterprise Voice Enabled :</label>
+            <div class="col-4">
+                <div class="form-check form-check-inline" *ngFor="let item of voiceEnabled, let index = index">
+                    <label class="form-check-label">{{item.name}}</label>
+                    <input type="radio" class="form-check-input" id="voiceEnabled" [value]="item.value" formControlName="voiceEnabled"
+                           (change)="verifyChange($event)">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" >
+            <label  class="col-3" for="dialPlan">Dial Plan :</label>
+            <div class="col-4">
+                <input type="text" id="dialPlan" class="form-control" formControlName="dialPlan">
+
+                <div *ngIf="profilFormCreate.get('dialPlan').invalid" class="alert alert-danger">
+                    <div *ngIf="profilFormCreate.get('dialPlan').errors.required">
+                        Le dial plan est obligatoire
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row" >
+            <label  class="col-3" for="samAccount">SAM Account Name :</label>
+            <div class="col-4">
+                <input type="text" id="samAccount" class="form-control" formControlName="samAccount">
+
+                <div *ngIf="profilFormCreate.get('samAccount').invalid" class="alert alert-danger">
+                    <div *ngIf="profilFormCreate.get('samAccount').errors.required">
+                        Le SAM Account Name est obligatoire
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-3" for="exUmEnabled">ExUm Enabled :</label>
+            <div class="col-4">
+                <div class="form-check form-check-inline" *ngFor="let item of exUmEnabled">
+                    <label class="form-check-label">{{item.name}}</label>
+                    <input type="radio" class="form-check-input" id="exUmEnabled" [value]="item.value"
+                           formControlName="exUmEnabled" [disabled]="isCreated"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" >
+            <label  class="col-3" for="exchUser">exchUser :</label>
+            <div class="col-4">
+                <div class="form-check form-check-inline" *ngFor="let item of exchUser">
+                    <label class="form-check-label">{{item.name}}</label>
+                    <input type="radio" class="form-check-input" id="exchUser" [value]="item.value"
+                           formControlName="exchUser" [disabled]="isCreated"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row" >
+            <label  class="col-3" for="objectClass">Object Class :</label>
+            <div class="col-4">
+                <input type="text" id="objectClass" class="form-control" formControlName="objectClass">
+
+                <div *ngIf="profilFormCreate.get('objectClass').invalid" class="alert alert-danger">
+                    <div *ngIf="profilFormCreate.get('objectClass').errors.required">
+                        L'Object Class est obligatoire'
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <div *ngIf="!isCreated" class="col-md-6 text-center">
+            <button [disabled]="!createAuthorized" class="btn btn-success mr-3" (click)="createProfil()">Créer</button>
+            <button class="btn btn-danger" [routerLink]="['/profils']">Annuler</button>
+        </div>
+        <div *ngIf="isCreated" class="col-md-6 text-center">
+            <button class="btn btn-danger" [routerLink]="['/profils']">Retour</button>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <ngb-alert *ngIf="availableMessage" type="success" dismissible="false">{{ successMessage }}</ngb-alert>
+    </div>
+
+</form>
+
