@@ -21,9 +21,9 @@
         </div>
 
         <div class="form-group row" >
-            <label class="col-3" for="voicepolicy">Voice Policy :</label>
+            <label class="col-3" for="voicePolicy">Voice Policy :</label>
             <div class="col-4">
-                <input type="text" id="voicepolicy" class="form-control" formControlName="voicepolicy"
+                <input type="text" id="voicePolicy" class="form-control" formControlName="voicePolicy"
                 [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
             </div>
         </div>
@@ -70,8 +70,12 @@
         <div class="form-group row" >
             <label  class="col-3" for="exchUser">exchUser :</label>
             <div class="col-4">
-                <input type="text" id="exchUser" class="form-control" formControlName="exchUser"
-                [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
+                <div class="form-check form-check-inline" *ngFor="let item of exchUser">
+                    <label class="form-check-label">{{item.name}}</label>
+                    <input type="radio" class="form-check-input" id="exchUser" [value]="item.value"
+                           [checked]="item.checked" formControlName="exchUser"
+                           [attr.disabled]="(!profilInputDesactivated === true) ? null : true"/>
+                </div>
             </div>
         </div>
         <div class="form-group row" >        

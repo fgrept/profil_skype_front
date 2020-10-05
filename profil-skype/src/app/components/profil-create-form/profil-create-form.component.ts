@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {ProfilsService} from '../../services/profils.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {ActivatedRoute, ParamMap } from '@angular/router';
 import {ProfilForChange} from '../../models/profil-for-change';
 import {debounceTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -36,8 +36,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService,
               private profilService: ProfilsService,
               private formBuilder: FormBuilder,
-              private routeProfil: ActivatedRoute,
-              private router: Router) { }
+              private routeProfil: ActivatedRoute) { }
 
   ngOnInit(): void {
     //   récupération de l'id sélectionnée
@@ -100,7 +99,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
           console.log('reponse create ok ', response);
           this.changeSuccessMessage('création du profil effectuée');
           this.disabledForm();
-//          this.router.navigate(['/profils']);
+
         },
         (error) => {
           console.log('reponse create error ', error);
