@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {CollaboraterService} from '../../services/collaborater.service';
 import {Collaborater} from '../../models/collaborater';
@@ -9,7 +9,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './collaborater-search.component.html',
   styleUrls: ['./collaborater-search.component.css']
 })
-export class CollaboraterSearchComponent implements OnInit {
+export class CollaboraterSearchComponent implements OnInit, OnDestroy {
 
     @Input() type: string;
   collaboraterForm: FormGroup;
@@ -21,6 +21,12 @@ export class CollaboraterSearchComponent implements OnInit {
 
   constructor(private formBuilderCollaborater: FormBuilder,
               private collaboraterService: CollaboraterService) { }
+
+    ngOnDestroy(): void {
+        if (this.collaboraterSubcribe !== null && this.collaboraterSubcribe!== undefined) {
+            this.collaboraterSubcribe.unsubscribe();
+        }
+    }
 
   ngOnInit(): void {
 
@@ -34,6 +40,9 @@ export class CollaboraterSearchComponent implements OnInit {
         this.initializeForm();
     }
 
+    /**
+     * Méthode appelée sur clic du bouton Rechercher
+     */
   onSearch() {
       this.initCollaboraterSearch();
       this.collaboraterService.getCollaboratersFromServer(this.collaboraterSearch);
@@ -41,11 +50,17 @@ export class CollaboraterSearchComponent implements OnInit {
           (collaboraters: Collaborater[]) => {
               this.collaboraterListResult = collaboraters;
               console.log('liste collaborateurs', this.collaboraterListResult);
+              // Pas d'affichage du tableau si aucun résultat trouvé
+              if (this.collaboraterService.countApi > 0) {
+                  this.isSearched = true;
+              }
           }
       );
-      this.isSearched = true;
   }
 
+    /**
+     * Récupération des données de recherche issues du formulaire
+     */
     initCollaboraterSearch() {
         this.collaboraterSearch = new Collaborater(
             this.collaboraterForm.value.collaboraterId,
@@ -65,6 +80,9 @@ export class CollaboraterSearchComponent implements OnInit {
         );
     }
 
+    /**
+     * Initialisation des données du formulaire
+     */
     initializeForm() {
         this.collaboraterForm = this.formBuilderCollaborater.group({
                 collaboraterId: '',

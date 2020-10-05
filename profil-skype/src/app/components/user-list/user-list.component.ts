@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Subscription, Subject } from 'rxjs';
 import {UserResult} from '../../models/user-result';
-import {debounceTime} from "rxjs/operators";
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-list',

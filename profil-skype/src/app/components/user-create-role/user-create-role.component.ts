@@ -7,7 +7,7 @@ import {UserService} from '../../services/user.service';
 import {UserCreate} from '../../models/user-create';
 import {debounceTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {UserResult} from "../../models/user-result";
+import {UserResult} from '../../models/user-result';
 
 @Component({
   selector: 'app-user-create-role',

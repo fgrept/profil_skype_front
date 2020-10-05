@@ -57,14 +57,14 @@ export class UserService {
     this.httpClient.get<any[]>(urlUserGet, {observe: 'response'})
         .subscribe(
             (response) => {
-              console.log('header values', response.headers.keys());
+              console.log('header', response.headers.keys());
               console.log('count', response.headers.get('count'));
               this.users = response.body;
               this.getRoles();
               this.usersSubject.next(response.body);
             },
             (error) => {
-              console.log('erreur back-end ', error );
+                console.log('erreur back-end ', error );
             }
         );
   }

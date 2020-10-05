@@ -1,5 +1,6 @@
 <div class="col-12 custom-style">
-    <a class="row clickable-row text-center" *ngIf="isExists()" [routerLink]="idUser">
+ <!--   <a class="row clickable-row text-center" *ngIf="isExists()" [routerLink]="idUser">-->
+    <a class="row clickable-row text-center" [style.cursor]="'pointer'" (click)="getRoute(idUser)">
         <td class="col-1">{{collaborater.collaboraterId}}</td>
         <td class="col-2">{{collaborater.firstName}}</td>
         <td class="col-2">{{collaborater.lastName}}</td>

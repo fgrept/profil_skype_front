@@ -30,6 +30,8 @@ export class ProfilDetailComponent implements OnInit {
     statusProfile = [{name : 'actif', value : 'ENABLED', checked : false, disabled: false},
         {name : 'désactivé', value: 'DISABLED', checked : false, disabled: false},
         {name : 'expiré', value: 'EXPIRED', checked: false, disabled: true}];
+    exchUser = [{name : 'Non renseigné', value : '', checked : false},
+        {name : 'Linked Mailbox', value: 'Linked Mailbox', checked : true}];
 
     currentUserType;
     changedNotAuthorized: boolean;
@@ -63,6 +65,7 @@ export class ProfilDetailComponent implements OnInit {
 
         this.profilToShow.enterpriseVoiceEnabled === 'true' ? this.voiceEnabled[0].checked = true : this.voiceEnabled[1].checked = true;
         this.profilToShow.exUmEnabled === 'true' ? this.exUmEnabled[0].checked = true : this.exUmEnabled[1].checked = true;
+        this.profilToShow.exchUser === '' ? this.exchUser[0].checked = true : this.exchUser[1].checked = true;
 
         if (this.profilToShow.statusProfile === 'ENABLED') {
             this.statusProfile[0].checked = true;
@@ -81,7 +84,7 @@ export class ProfilDetailComponent implements OnInit {
                     Validators.pattern('^sip:.*$')]],
             voiceEnabled: [{value : this.profilToShow.enterpriseVoiceEnabled, disabled : this.profilInputDesactivated},
                 Validators.required],
-            voicepolicy: [{value : this.profilToShow.voicePolicy, disabled : this.profilInputDesactivated},
+            voicePolicy: [{value : this.profilToShow.voicePolicy, disabled : this.profilInputDesactivated},
                 [Validators.required]],
             dialPlan: [{value : this.profilToShow.dialPlan, disabled : this.profilInputDesactivated},
                 Validators.required],
@@ -98,9 +101,12 @@ export class ProfilDetailComponent implements OnInit {
             status: [{value : this.profilToShow.statusProfile, disabled : this.changedNotAuthorized},
                 Validators.required]
         });
-        
+
         this.profilForm.valueChanges.subscribe(form => this.checkUpdateAuthorized(form));
         this.profilForm.get('status').valueChanges.subscribe(form => this.checkActiveInput2(form));
+        if (this.profilForm.get('voiceEnabled').value === 'false') {
+            this.profilForm.controls['voicePolicy'].disable();
+        }
     }
 
     /**
@@ -114,7 +120,7 @@ export class ProfilDetailComponent implements OnInit {
             // we reset to intial value the input form
             this.profilForm.get('sip').setValue(this.profilToShow.sip);
             this.profilForm.get('voiceEnabled').setValue(this.profilToShow.enterpriseVoiceEnabled);
-            this.profilForm.get('voicepolicy').setValue(this.profilToShow.voicePolicy);
+            this.profilForm.get('voicePolicy').setValue(this.profilToShow.voicePolicy);
             this.profilForm.get('dialPlan').setValue(this.profilToShow.dialPlan);
             this.profilForm.get('samAccount').setValue(this.profilToShow.samAccountName);
             this.profilForm.get('exUmEnabled').setValue(this.profilToShow.exUmEnabled);
@@ -139,7 +145,7 @@ export class ProfilDetailComponent implements OnInit {
 
         (form.sip !== this.profilToShow.sip) ? changedDetected = true : null;
         (form.voiceEnabled !== this.profilToShow.enterpriseVoiceEnabled) ? changedDetected = true : null;
-        (form.voicepolicy !== this.profilToShow.voicePolicy) ? changedDetected = true : null;
+        (form.voicePolicy !== this.profilToShow.voicePolicy) ? changedDetected = true : null;
         (form.dialPlan !== this.profilToShow.dialPlan) ? changedDetected = true : null;
         (form.samAccount !== this.profilToShow.samAccountName) ? changedDetected = true : null;
         (form.exUmEnabled !== this.profilToShow.exUmEnabled) ? changedDetected = true : null;
@@ -153,6 +159,17 @@ export class ProfilDetailComponent implements OnInit {
         if (changedDetected && this.profilForm.value['status'] === 'EXPIRED') {
             this.profilForm.get('status').setValue('ENABLED');
         }
+
+        // activation/désactivation du voice Policy
+        if (this.profilForm.get('voiceEnabled').value === 'false' && this.profilForm.controls['voicePolicy'].enabled) {
+            console.log('Voice Enabled, passage à non');
+            this.profilForm.controls['voicePolicy'].disable();
+            this.profilForm.get('voicePolicy').setValue('');
+        }
+        if (this.profilForm.get('voiceEnabled').value === 'true' && this.profilForm.controls['voicePolicy'].disabled) {
+            console.log('Voice Enabled, passage à oui');
+            this.profilForm.controls['voicePolicy'].enable();
+        }
     }
 
     /**
@@ -164,7 +181,7 @@ export class ProfilDetailComponent implements OnInit {
         const profilChanged = new ProfilRaw (
             this.profilForm.get('sip').value,
             this.profilForm.get('voiceEnabled').value,
-            this.profilForm.get('voicepolicy').value,
+            this.profilForm.get('voicePolicy').value,
             this.profilForm.get('dialPlan').value,
             this.profilForm.get('samAccount').value,
             this.profilForm.get('exUmEnabled').value,

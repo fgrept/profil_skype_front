@@ -15,19 +15,22 @@ export class CollaboraterService {
   private collaboraters: Collaborater[];
   private collaboraterGetSubject = new Subject();
   private collaborater: Collaborater;
+  countApi: number;
 
   constructor(private httpClient: HttpClient) { }
 
-  getCollaboratersFromServer(collaboratersSearch: Collaborater) {
+   getCollaboratersFromServer(collaboratersSearch: Collaborater) {
     this.httpClient.post<any[]>(urlCollaboraterSearch + '0/100/collaboraterId', collaboratersSearch, {observe: 'response'}).subscribe(
         (response) => {
-          console.log('réponse Get collaborateur', response.body);
+          console.log('headers', response.headers.keys());
           console.log('count', response.headers.get('count'));
           this.collaboraters = response.body;
+          this.countApi = Number(response.headers.get('count'));
           this.collaboraterGetSubject.next(response.body);
         },
         (error) => {
-          console.log('erreur backend', error.status);
+            this.collaboraterGetSubject.next(error);
+            console.log('erreur backend', error.status);
         }
     );
   }

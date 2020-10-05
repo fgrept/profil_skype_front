@@ -10,6 +10,8 @@ const baseUrl2 = 'http://localhost:8181/v1/profile/update';
 const baseUrl3 = 'http://localhost:8181/v1/profile/delete/';
 const baseUrl4 = 'http://localhost:8181/v1/profile/count/';
 const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria/';
+const urlGet = 'http://localhost:8181/v1/profile/get/';
+const urlCreate = 'http://localhost:8181/v1/profile/create/';
 
 /*const headers = new HttpHeaders()
       .append('Content-Type', 'application/json')
@@ -23,17 +25,23 @@ const baseUrl5 = 'http://localhost:8181/v1/profile/list/criteria/';
 export class ProfilsService  {
 
   private profils: ProfilFromList[];
+
+
+  profilFromServer: ProfilFromList;
+
   private numberProfil: number;
   //private buttonFilter:boolean=false;
   public profilsSubject = new Subject<ProfilFromList[]>();
   public updateSubject = new Subject();
   public deleteSubject = new Subject();
+  public  getProfilSubject = new Subject();
+  public  createSubject = new Subject();
   public numberProfilSubject = new Subject<number>();
   public buttonFilterSubject = new Subject<boolean>();
   // variables when we go back to the list from the detail
-  public profilListToReload:boolean=true;
-  public profilListToCount:boolean=true;
-  public pageListToShow:number=1;
+  public profilListToReload = true;
+  public profilListToCount = true;
+  public pageListToShow = 1;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -46,14 +54,29 @@ export class ProfilsService  {
     }
   }
 
+  createProfil(profilForChange: ProfilForChange) {
+      this.httpClient.post<any>(urlCreate, profilForChange, {observe: 'response'})
+          .subscribe(
+              (result) => {
+                  console.log(result);
+                  this.createSubject.next(result.body);
+              },
+              (error) => {
+                  console.log('erreur back-end ' + error.status );
+                  this.createSubject.next(error);
+              }
+          );
+  }
+
   getNumberOfProfilFromServer() {
+
     if (this.profilListToCount) {
       this.httpClient.get<any>(baseUrl4, {observe: 'response'})
       .subscribe(
         (result) => {
           console.log(result);
           this.numberProfil = result.body;
-          this.profilListToCount=false;
+          this.profilListToCount = false;
           this.numberProfilSubject.next(result.body);
         },
         (error) => {
@@ -69,6 +92,7 @@ export class ProfilsService  {
    * method for reload the list of profil or to re-emit thus in memory
    */
   getProfilsFromServer(pageAsked: number) {
+
     this.pageListToShow = pageAsked;
     if (this.profilListToReload) {
       const url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
@@ -87,10 +111,10 @@ export class ProfilsService  {
       this.profilsSubject.next(this.profils);
       this.profilListToReload = true;
     }
-    
   }
 
   getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
+
     this.pageListToShow = pageAsked;
     if (this.profilListToReload) {
       const url = baseUrl5 + (pageAsked - 1) + '/10/0/ASC';
@@ -110,7 +134,6 @@ export class ProfilsService  {
       this.profilsSubject.next(this.profils);
       this.profilListToReload = true;
     }
-    
   }
 
   updateProfilToServer(profilRaw: ProfilRaw, idAnnuaire: string , idCil: string, comment: string) {
@@ -158,4 +181,19 @@ export class ProfilsService  {
     return null;
   }
 
+    getProfilFromServerByCollaboraterId(collaboraterId: string) {
+
+        this.httpClient.get<any>(urlGet + collaboraterId, {observe: 'response'})
+            .subscribe(
+                (result) => {
+//                    console.log('headers', result.headers.keys());
+                    this.profilFromServer = result.body;
+                    this.getProfilSubject.next(result.body);
+                },
+                (error) => {
+                    this.getProfilSubject.next(error);
+                    console.log('erreur back-end ' + error.status );
+                }
+            );
+    }
 }
