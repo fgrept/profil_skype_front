@@ -20,7 +20,7 @@ export class ProfilListComponent implements OnInit {
   profilNumbersuscribe: Subscription;
   searchSuscribe: Subscription;
   searchText:string;
-  page:number = 1;
+  page:number;
   numberOfProfil:number;
   searchForm:FormGroup;
 
@@ -33,19 +33,21 @@ export class ProfilListComponent implements OnInit {
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
 
-    this.profilsService.getNumberOfProfilFromServer();
     this.profilNumbersuscribe = this.profilsService.numberProfilSubject.subscribe(
-      (total:number) => {
-        this.numberOfProfil = total;
-      }
-    );
+          (total:number) => {
+            this.numberOfProfil = total;
+          }
+        );
+    this.profilsService.getNumberOfProfilFromServer();
 
-    this.profilsService.getProfilsFromServer(this.page);
     this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
         (profils: ProfilFromList[]) => {
           this.profilList2 = profils;
         }
       );
+
+    this.page = this.profilsService.pageListToShow;
+    this.profilsService.getProfilsFromServer(this.profilsService.pageListToShow);
 
     this.searchSuscribe = this.searchService.searchSubject.subscribe(
         (inputText:string) => {
@@ -63,6 +65,16 @@ export class ProfilListComponent implements OnInit {
         searchStatus : new FormControl()
       }
       );
+
+      /* var el = document.getElementById('tata');
+      document.addEventListener('scroll', (e) => {
+        console.log('scroll : ' , document.documentElement.scrollHeight,
+        ' - ' , document.documentElement.scrollTop, ' -' ,
+        document.documentElement.scrollHeight);
+        let pos:number = document.documentElement.scrollHeight - document.documentElement.scrollTop;
+         el.style.top = pos.toString();
+      }) */
+
   }
 
   /**
@@ -110,11 +122,7 @@ export class ProfilListComponent implements OnInit {
     // in case of activation criteria, we reset the list at the first page => 1
     let p = 1;
     // the filtrer on boolean must not be "" but null
-    
     if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
-
-    // actually, the back don't work if status is not set => ENABLED by default
-    //if (profilSearch.statusProfile === '') {profilSearch.statusProfile = 'ENABLED'};
 
     this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
     

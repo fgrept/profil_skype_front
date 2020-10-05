@@ -228,6 +228,14 @@ export class ProfilDetailComponent implements OnInit {
     }
 
     /**
+     * method for return to the list and demand to the service not to callback server
+     */
+    returnToList() {
+        this.profilService.profilListToReload = false;
+        this.router.navigate(['/profils']);
+    }
+
+    /**
     * Paramétrage de la fenêtre modale de suppression
     */
     openModal(): NgbModalRef {
