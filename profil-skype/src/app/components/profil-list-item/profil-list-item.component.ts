@@ -26,12 +26,10 @@ export class ProfilListItemComponent implements OnInit {
     this.currentUserType = this.userService.getCurrentRole();
   }
 
-// A FINALISER
-  /* routingTo() {
+  routingTo() {
     let url = '/profils/' + this.idProfil;
     this.profilService.buttonFilterSubject.next(false);
     this.router.navigate([url]);
-
-  } */
+  }
 
 }

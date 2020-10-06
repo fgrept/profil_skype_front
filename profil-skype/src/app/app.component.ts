@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy, AfterContentChecked, ChangeDetectorRef} from '@angular/core';
 import { FormGroup, FormBuilder, FormControl} from '@angular/forms';
 import { UserService } from './services/user.service';
 import { from, Subscription } from 'rxjs';
@@ -17,6 +17,8 @@ export class AppComponent  implements OnInit, OnDestroy {
   searchForm:FormGroup;
   private showSidebar:boolean=false;
   showFilterButton:boolean=false;
+  // properties for the additional actions button in the navbar
+  button2Name:string;
 
   constructor(private userService: UserService,
               private formBuilder: FormBuilder,
@@ -41,7 +43,10 @@ export class AppComponent  implements OnInit, OnDestroy {
     this.searchForm.valueChanges.subscribe(form => this.onSearchInput(form));
 
     this.profilService.buttonFilterSubject.subscribe(
-      (status) => (status) ? this.showFilterButton = true : this.showFilterButton = false
+      (status) => {
+        (status) ? this.showFilterButton = true : this.showFilterButton = false;
+        this.button2Name = "Creer"
+      }
     );
   }
 
@@ -54,6 +59,10 @@ export class AppComponent  implements OnInit, OnDestroy {
    * @param route 
    */
   routingTo(route:string) {
+    this.profilService.buttonFilterSubject.subscribe(
+      () => this.router.navigate([route])
+    );
+
     if (route === 'profils') {
       this.profilService.buttonFilterSubject.next(true);
     } else {
@@ -61,7 +70,7 @@ export class AppComponent  implements OnInit, OnDestroy {
       $('#sidebar').hide();
       this.profilService.buttonFilterSubject.next(false);
     }
-    this.router.navigate([route]);
+    
   }
 
   /**
@@ -72,6 +81,11 @@ export class AppComponent  implements OnInit, OnDestroy {
     // use jquery for the slideshow effect, waiting of other best UI components   
     this.showSidebar ? $('#sidebar').slideDown("slow"): $('#sidebar').slideUp();
     
+  }
+
+  actionButtonTwo() {
+    this.profilService.buttonFilterSubject.next(false);
+    this.router.navigate(['/profils/create']);
   }
 
 }

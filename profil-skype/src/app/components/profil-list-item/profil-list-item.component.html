@@ -1,6 +1,7 @@
 <!--with all the row clickable, the suppress button will be on the other component-->
 <div class="col-12 custom-style">
-    <a class="row stretched-link " [routerLink]="idProfil">
+    <!-- <a class="row stretched-link " [routerLink]="idProfil"> -->
+    <a class="row stretched-link " (click)="routingTo()">
         <td class="col-3 d-none d-lg-block">{{profil.sip}}</td>
         <td class="col-4 col-sm-2">{{profil.firstName}}</td>
         <td class="col-4 col-sm-2">{{profil.lastName}}</td>
