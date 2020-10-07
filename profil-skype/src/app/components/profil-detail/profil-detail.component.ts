@@ -250,7 +250,10 @@ export class ProfilDetailComponent implements OnInit {
      */
     returnToList() {
         this.profilService.profilListToReload = false;
-        this.router.navigate(['/profils']);
+        this.profilService.buttonFilterSubject.subscribe(
+            () => this.router.navigate(['/profils'])
+        );
+        this.profilService.buttonFilterSubject.next(true);  
     }
 
     /**

@@ -30,12 +30,14 @@ export class ProfilsService  {
   profilFromServer: ProfilFromList;
 
   private numberProfil: number;
+  //private buttonFilter:boolean=false;
   public profilsSubject = new Subject<ProfilFromList[]>();
   public updateSubject = new Subject();
   public deleteSubject = new Subject();
   public  getProfilSubject = new Subject();
   public  createSubject = new Subject();
   public numberProfilSubject = new Subject<number>();
+  public buttonFilterSubject = new Subject<boolean>();
   // variables when we go back to the list from the detail
   public profilListToReload = true;
   public profilListToCount = true;
@@ -71,14 +73,14 @@ export class ProfilsService  {
     if (this.profilListToCount) {
       this.httpClient.get<any>(baseUrl4, {observe: 'response'})
       .subscribe(
-        (result) => {
-          console.log(result);
-          this.numberProfil = result.body;
+        (response) => {
+          console.log('retour back-end Ok : ', response);
+          this.numberProfil = response.body;
           this.profilListToCount = false;
-          this.numberProfilSubject.next(result.body);
+          this.numberProfilSubject.next(response.body);
         },
         (error) => {
-          console.log('erreur back-end ' + error.status );
+          console.log('retour back-end Ko : ', error );
         }
       );
     } else {
@@ -97,12 +99,12 @@ export class ProfilsService  {
       this.httpClient.get<any[]>(url, {observe: 'response'})
       .subscribe(
         (response) => {
-          console.log(response);
+          console.log('retour back-end Ok : ', response);
           this.profils = response.body;
           this.profilsSubject.next(response.body);
         },
         (error) => {
-          console.log('erreur back-end ' + error.status );
+          console.log('retour back-end Ko : ', error);
         }
       );
     } else {
@@ -133,6 +135,7 @@ export class ProfilsService  {
       this.profilListToReload = true;
     }
   }
+
   updateProfilToServer(profilRaw: ProfilRaw, idAnnuaire: string , idCil: string, comment: string) {
     const profilChanged = new ProfilForChange (
           profilRaw.sip, profilRaw.enterpriseVoiceEnabled, profilRaw.voicePolicy, profilRaw.dialPlan,
@@ -176,7 +179,7 @@ export class ProfilsService  {
           }
         }
     return null;
-    }
+  }
 
     getProfilFromServerByCollaboraterId(collaboraterId: string) {
 

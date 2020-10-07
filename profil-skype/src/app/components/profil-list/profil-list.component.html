@@ -1,51 +1,76 @@
-<form [formGroup]="searchForm" class="form-group">
-    <main class="container">
-        <table class="table table-striped">
-            <thead>
-                <tr class="row">
-                    <th class="col-3 d-none d-lg-block">adresse sip</th>
-                    <th class="col-4 col-sm-2">prénom</th>
-                    <th class="col-4 col-sm-2">nom</th>
-                    <th class="col-sm-2 col-lg-1 d-none d-sm-block">uo</th>
-                    <th class="col-sm-2 col-lg-1 d-none d-sm-block">site</th>  
-                    <th class="col-1">dial plan</th>              
-                    <th class="col-1">status</th>
-                </tr>
-                <tr class="row">              
-                    <td class="col-3 d-none d-lg-block">
-                        <input type="text" class="form-control" formControlName="searchSip" placeholder="..."></td>
-                    <td class="col-4 col-sm-2">
-                        <input type="text" class="form-control" formControlName="searchFirstname" placeholder="..."></td>
-                    <td class="col-4 col-sm-2">
-                        <input type="text" class="form-control" formControlName="searchLastname" placeholder="..."></td>
-                    <td class="col-sm-2 col-lg-1 d-none d-sm-block">
-                        <input type="text" class="form-control" formControlName="searchUo" placeholder="..."></td>
-                    <td class="col-sm-2 col-lg-1 d-none d-sm-block">
-                        <input type="text" class="form-control" formControlName="searchSite" placeholder="..."></td>
-                    <td class="col-1">
-                        <input type="text" class="form-control" formControlName="searchDialPlan" placeholder="..."></td>
-                    <td class="col-1">
-                        <input type="text" class="form-control" formControlName="searchStatus" placeholder="..."></td> 
-                    <button class="btn btn-light btn-sm my-2" (click)="onSearchFilterClick()"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"></path>
-                    </svg></button>
-                </tr>
-            </thead>
-            <tbody>     
-                <app-profil-list-item *ngFor="let item of profilList2 | paginate: 
-                    { itemsPerPage: 10, currentPage: page, totalItems:numberOfProfil } | filterProfil : searchText,
-                    let index = index"
-                    [profil]="item" [idProfil]="index">
-                </app-profil-list-item>
-            </tbody>
-            <!-- ajout de 2 lignes vides pour pouvoir les scroller avec le footer -->
-            <br/><br/><br/>
-            <footer>
-                <a routerLink="create">
-                    <button class="btn btn-success" *ngIf="currentUserType==2 || currentUserType==3">Créer</button>
-                </a>
-                <pagination-controls (pageChange)="onPageChanged($event)"></pagination-controls>
-            </footer>
-        </table>
-    </main> 
-</form>
+<div class="container">
+    <div class="row flex-xl-nowrap">
+      <div class="col-2 bd-sidebar" id="sidebar" style="display:none">
+        <nav class="nav row">
+          <p class="mx-auto font-weight-bold mt-3">Filtres</p>
+          <div class="form-group form-group-sm mx-4" [formGroup]="filterForm">
+                <input type="text" class="form-control my-2" formControlName="searchSip"
+                    placeholder="sip">
+                <input type="text" class="form-control my-2" formControlName="searchFirstname"
+                    placeholder="prénom">
+                <input type="text" class="form-control my-2" formControlName="searchLastname" 
+                    placeholder="nom">
+                <input type="text" class="form-control my-2" formControlName="searchUo"
+                    placeholder="uo">
+                <input type="text" class="form-control my-2" formControlName="searchSite"
+                    placeholder="site">
+                <input type="text" class="form-control my-2" formControlName="searchDialPlan"
+                    placeholder="dialplan">
+                <input type="text" class="form-control my-2" formControlName="searchStatus"
+                    placeholder="status">
+                <input type="text" class="form-control my-2" formControlName="searchSamAccount"
+                    placeholder="sam account">
+                <input type="text" class="form-control my-2" formControlName="searchVoiceEnabled"
+                    placeholder="voice enabled"> 
+                <input type="text" class="form-control my-2" formControlName="searchVoicePolicy"
+                    placeholder="voice policy">
+                <input type="text" class="form-control my-2" formControlName="searchDialPlan"
+                    placeholder="dial plan">
+                <input type="text" class="form-control my-2" formControlName="searchExUm"
+                    placeholder="exum enabled">
+                <input type="text" class="form-control my-2" formControlName="searchExchUser"
+                    placeholder="exch User">
+                <input type="text" class="form-control my-2" formControlName="searchObjectClass"
+                    placeholder="object class">
+                <button class="btn btn-info ml-4 mt-2" (click)="onSearchFilterClick()">Appliquer</button>
+            </div>
+        </nav>
+      </div>
+  
+      <div class="col-10 bd-content">
+        <form [formGroup]="filterForm" class="form-group">
+            <main class="container">
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="row">
+                            <th class="col-3 d-none d-lg-block">adresse sip</th>
+                            <th class="col-4 col-sm-2">prénom</th>
+                            <th class="col-4 col-sm-2">nom</th>
+                            <th class="col-sm-2 col-lg-1 d-none d-sm-block">uo</th>
+                            <th class="col-sm-2 col-lg-1 d-none d-sm-block">site</th>  
+                            <th class="col-1">dial plan</th>              
+                            <th class="col-1">status</th>
+                        </tr>
+                    </thead>
+                    <tbody>     
+                        <app-profil-list-item *ngFor="let item of profilList2 | paginate: 
+                            { itemsPerPage: 10, currentPage: page, totalItems:numberOfProfil } | filterProfil : searchText,
+                            let index = index"
+                            [profil]="item" [idProfil]="index">
+                        </app-profil-list-item>
+                    </tbody>
+                    <!-- ajout de 2 lignes vides pour pouvoir les scroller avec le footer -->
+                    <br/><br/><br/>
+                    <footer>
+                        <pagination-controls (pageChange)="onPageChanged($event)"></pagination-controls>
+                    </footer>>
+                </table>
+            </main>
+        </form>
+      </div>
+  
+    </div>
+  </div>
+
+
+

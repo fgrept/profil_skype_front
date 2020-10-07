@@ -118,13 +118,13 @@
                 </button>
             </div>
             <div class="col-2 mx-4">
-                <button type ="submit" class="btn btn-secondary"
+                <button type ="submit" class="btn btn-success"
                 *ngIf="currentUserType==2 || currentUserType==3"
                 (click)="updateProfil()"
                 [disabled]="profilForm.invalid || (!updateAuthorized)">Modifier</button>
             </div>
             <div class="col-2">
-                <button class="btn btn-secondary" *ngIf="currentUserType==2 || currentUserType==3" (click)="deleteProfil()">Supprimer</button>
+                <button class="btn btn-danger" *ngIf="currentUserType==2 || currentUserType==3" (click)="deleteProfil()">Supprimer</button>
             </div>
         </div> 
     </div>

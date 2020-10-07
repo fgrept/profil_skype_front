@@ -22,7 +22,7 @@ export class ProfilListComponent implements OnInit {
   searchText:string;
   page:number;
   numberOfProfil:number;
-  searchForm:FormGroup;
+  filterForm:FormGroup;
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
@@ -54,17 +54,25 @@ export class ProfilListComponent implements OnInit {
           this.searchText = inputText;
         }
       );
-
-    this.searchForm = this.formBuilder.group(
-        {searchSip : new FormControl(),
-        searchFirstname : new FormControl(),
-        searchLastname : new FormControl(),
-        searchUo : new FormControl(),
-        searchSite : new FormControl(),
-        searchDialPlan : new FormControl(),
-        searchStatus : new FormControl()
+    
+    this.profilsService.buttonFilterSubject.next(true);
+    
+    this.filterForm = this.formBuilder.group(
+      {searchSip : new FormControl(),
+      searchFirstname : new FormControl(),
+      searchLastname : new FormControl(),
+      searchUo : new FormControl(),
+      searchSite : new FormControl(),
+      searchDialPlan : new FormControl(),
+      searchStatus : new FormControl(),
+      searchSamAccount: new FormControl(),
+      searchVoiceEnabled : new FormControl(),
+      searchVoicePolicy : new FormControl(),
+      searchExUm : new FormControl(),
+      searchExchUser : new FormControl(),
+      searchObjectClass : new FormControl()
       }
-      );
+    );
 
       /* var el = document.getElementById('tata');
       document.addEventListener('scroll', (e) => {
@@ -102,21 +110,21 @@ export class ProfilListComponent implements OnInit {
     // - count the new number of profil with the criteria
     // TESTS : filtre ne marche pas sur dialplan
     let profilSearch = new ProfilFromList (
-      this.searchForm.get('searchSip').value,
-      null,
-      null,
-      this.searchForm.get('searchDialPlan').value,
-      null,
-      null,
-      null,
-      null,
-      this.searchForm.get('searchStatus').value,
-      null,
-      null,
-      this.searchForm.get('searchFirstname').value,
-      this.searchForm.get('searchLastname').value,
-      this.searchForm.get('searchUo').value,
-      this.searchForm.get('searchSite').value
+      this.filterForm.get('searchSip').value,
+      this.filterForm.get('searchVoiceEnabled').value,
+      this.filterForm.get('searchVoicePolicy').value,
+      this.filterForm.get('searchDialPlan').value,
+      this.filterForm.get('searchSamAccount').value, // +
+      this.filterForm.get('searchExUm').value,
+      this.filterForm.get('searchExchUser').value,
+      this.filterForm.get('searchObjectClass').value,
+      this.filterForm.get('searchStatus').value,
+      null, // collaboraterId
+      null, // expirationDate
+      this.filterForm.get('searchFirstname').value,
+      this.filterForm.get('searchLastname').value,
+      this.filterForm.get('searchUo').value,
+      this.filterForm.get('searchSite').value
     );
 
     // in case of activation criteria, we reset the list at the first page => 1
