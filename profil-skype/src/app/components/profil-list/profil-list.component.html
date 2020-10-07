@@ -21,19 +21,32 @@
                 </div>
                 <div class="form-group d-flex">
                     <label for="searchSite" class="col-5">Site :</label>
-                    <input placeholder="0602030405" type="tel" id="searchSite" class="col-7 form-control" formControlName="searchSite">
+                    <input placeholder="00123" type="tel" id="searchSite" class="col-7 form-control" formControlName="searchSite">
                 </div>
                 <div class="form-group d-flex">
                     <label for="searchSamAccount" class="col-5">Account Name :</label>
                     <input placeholder="M000012345" type="email" id="searchSamAccount" class="col-7 form-control" formControlName="searchSamAccount">
                 </div>
                 <div class="form-group d-flex">
-                    <label for="searchVoiceEnabled" class="col-5">Voice Enabled :</label>
-                    <input placeholder="true" type="text" id="searchVoiceEnabled" class="col-7 form-control" formControlName="searchVoiceEnabled">
+                    <div class="col-5">
+                        <input type="checkbox" class="form-check-input ml-1" formControlName="searchVoiceActivate"
+                            (click)=onVoiceClick()>
+                        <label class="ml-4" for="searchVoiceEnabled" id="voiceLabel"
+                                style="white-space: nowrap;">Voice Enabled :</label>
+                    </div>
+                    <div class="col-7 ml-2 custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1"
+                        formControlName="searchVoiceEnabled" (click)=onVoiceEnabledClick()>
+                        <label class="custom-control-label" for="customSwitch1"></label>
+                    </div>
                 </div>
                 <div class="form-group d-flex">
-                    <label for="searchVoicePolicy" class="col-5">Voice Policy :</label>
-                    <input placeholder="true" type="text" id="searchVoicePolicy" class="col-7 form-control" formControlName="searchVoicePolicy">
+                    <label for="searchVoiceEnabled" class="col-5">Accès international :</label>
+                    <div class="custom-control custom-switch ml-2">
+                        <input type="checkbox" class="col-7 custom-control-input" id="customSwitch2"
+                        formControlName="searchVoicePolicy" (click)="onEnterpriseClick(this.filterForm.get('searchVoicePolicy').value)">
+                        <label class="custom-control-label" for="customSwitch2"></label>
+                    </div>
                 </div>
                 <div class="form-group d-flex">
                     <label for="searchExpirationDate" class="col-5">Date expiration :</label>

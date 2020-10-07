@@ -24,6 +24,9 @@ export class ProfilListComponent implements OnInit {
   numberOfProfil:number;
   filterForm:FormGroup;
   navDisplayed:boolean=false;
+  //for search filter:
+  voiceChecked:boolean=false;
+  voiceEnabled:boolean=false;
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
@@ -67,11 +70,16 @@ export class ProfilListComponent implements OnInit {
       searchUo : new FormControl(),
       searchSite : new FormControl(),
       searchSamAccount: new FormControl(),
+      searchVoiceActivate: new FormControl(),
       searchVoiceEnabled : new FormControl(),
       searchVoicePolicy : new FormControl(),
       searchExpirationDate : new FormControl(),
       }
     );
+    this.filterForm.controls['searchVoiceEnabled'].setValue(false);
+    this.filterForm.controls['searchVoicePolicy'].setValue(false);
+    this.filterForm.controls['searchVoiceEnabled'].disable();
+    this.filterForm.controls['searchVoicePolicy'].disable();
 
       /* var el = document.getElementById('tata');
       document.addEventListener('scroll', (e) => {
@@ -126,6 +134,12 @@ export class ProfilListComponent implements OnInit {
     let p = 1;
     // the filtrer on boolean must not be "" but null
     if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
+    // filter on users having international option 
+    if (profilSearch.voicePolicy.toString() === 'true') { //the value has a boolean type !
+      profilSearch.voicePolicy = 'EMEA-VP-FR_BDDF_InternationalAuthorized'
+    } else {
+      profilSearch.voicePolicy = null;
+    }
 
     this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
     
@@ -145,7 +159,31 @@ export class ProfilListComponent implements OnInit {
         this.profilList2 = profils;
       }
     );
+  }
 
-}
+  onVoiceClick() {
+    // internal boolean because of problem for catching the value of the control
+    this.voiceChecked = ! this.voiceChecked;
+    if (this.voiceChecked) {
+      this.filterForm.get('searchVoiceEnabled').enable();
+    } else {
+      this.filterForm.get('searchVoiceEnabled').disable();
+      this.filterForm.get('searchVoicePolicy').disable();
+    }
+  }
+
+  onVoiceEnabledClick() {
+    // internal boolean because of problem for catching the value of the control
+    this.voiceEnabled = ! this.voiceEnabled;
+    if (this.voiceEnabled) {
+      this.filterForm.get('searchVoicePolicy').enable();
+    } else {
+      this.filterForm.get('searchVoicePolicy').disable();
+    }
+  }
+
+  onEnterpriseClick(value) {
+    console.log(value);
+  }
 
 }
