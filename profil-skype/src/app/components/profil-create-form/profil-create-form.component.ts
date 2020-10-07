@@ -91,7 +91,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
         this.profilFormCreate.get('objectClass').value,
         'ENABLED',
         this.profilFormCreate.get('collaboraterId').value,
-        '000000',
+        localStorage.getItem('userId'),
         'création du profil'
     );
     this.profilService.createSubject.subscribe(

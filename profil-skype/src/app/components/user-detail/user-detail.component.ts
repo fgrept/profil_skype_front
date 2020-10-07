@@ -27,6 +27,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   updateAuthorized: boolean;
   roles: string[];
 
+  // variables pour l'affichage d'une popup
   successSubject = new Subject<string>();
   successMessage: string;
   availableMessage = false;

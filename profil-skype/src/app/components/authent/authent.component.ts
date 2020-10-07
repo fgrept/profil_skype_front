@@ -24,7 +24,14 @@ export class AuthentComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
+
+    localStorage.setItem('userId', '300004');
+    localStorage.setItem('lastName', 'NomTutu');
+    localStorage.setItem('firstName', 'PrenomTutu');
+    localStorage.setItem('userRoles', 'Administrateur, Responsable, Utilisateur');
+
     this.profilService.buttonFilterSubject.next(false);
+
     // méthode inutile à part ajouter une couche d'abstraction et de la complexité
     /*this.userSuscribe = this.userService.userSubject.subscribe(
       (user) => {

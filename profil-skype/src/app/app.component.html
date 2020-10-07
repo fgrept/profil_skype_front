@@ -17,6 +17,9 @@
         <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType===3">
           <a class="btn btn-toolbar ml-2" (click)="routingTo('users')">Utilisateur</a>
         </li>
+        <li routerLinkActive="active" class="nav-item">
+          <a class="nav-link" routerLink="account">Mon compte</a>
+        </li>
       </ul>
       <button class="btn btn-info ml-4"
           *ngIf="showFilterButton" (click)="collapseSideBar()">Filtres</button>

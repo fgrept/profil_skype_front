@@ -1,0 +1,87 @@
+<form [formGroup]="formAccount">
+    <div class="container">
+        <p><br/><strong>Détail du compte utilisateur</strong></p>
+
+        <div class="formGroup row">
+            <label class="col-3" for="collaboraterId">Id de connexion :</label>
+            <div class="col-4">
+                <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-3" for="lastName">Nom :</label>
+            <div class="col-4">
+                <input type="text" id="lastName" class="form-control" formControlName="lastName" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-3" for="firstName">Prénom :</label>
+            <div class="col-4">
+                <input type="text" id="firstName" class="form-control" formControlName="firstName" disabled>
+            </div>
+        </div>
+        <div class="formGroup row">
+            <label class="col-3" for="userRoles">Roles :</label>
+            <div class="col-4">
+                <input type="text" id="userRoles" class="form-control" formControlName="userRoles" disabled>
+            </div>
+        </div>
+        <br/>
+        <div *ngIf="updateAvailable">
+            <div class="formGroup row">
+                <label class="col-3" for="actualPassword">Mot de passe :</label>
+                <div class="col-4">
+                    <input type="password" id="actualPassword" class="form-control" formControlName="actualPassword" >
+                </div>
+            </div>
+            <div *ngIf="formAccount.controls['actualPassword'].hasError('required')">
+                <label class="text-danger">doit être renseigné</label>
+            </div>
+            <div class="formGroup row">
+                <label class="col-3" for="newPassword">Nouveau mot de passe :</label>
+                <div class="col-4">
+                    <input type="password" id="newPassword" class="form-control" formControlName="newPassword" >
+                </div>
+            </div>
+            <div *ngIf="formAccount.controls['newPassword'].hasError('isContainsNumber')">
+                <label class="text-danger">doit contenir un caractère numérique</label>
+            </div>
+            <div *ngIf="formAccount.controls['newPassword'].hasError('required') ||
+                formAccount.controls['newPassword'].hasError('minlength') ||
+                formAccount.controls['newPassword'].hasError('maxlength')">
+                <label class="text-danger">doit être compris entre 8 et 12 caractères</label>
+            </div>
+            <div *ngIf="formAccount.controls['newPassword'].hasError('isContainsSpecialCharacter')">
+                <label class="text-danger">doit contenir un caractère spécial</label>
+            </div>
+            <div *ngIf="formAccount.controls['newPassword'].hasError('isContainsUpperCase')">
+                <label class="text-danger">doit contenir une lettre majuscule</label>
+            </div>
+            <div *ngIf="formAccount.controls['newPassword'].hasError('isContainsLowerCase')">
+                <label class="text-danger">doit contenir une lettre minuscule</label>
+            </div>
+            <div class="formGroup row">
+                <label class="col-3" for="newPasswordConfirmed">Confirmation mot de passe :</label>
+                <div class="col-4">
+                    <input type="password" id="newPasswordConfirmed" class="form-control" formControlName="newPasswordConfirmed" >
+                </div>
+            </div>
+            <div *ngIf="formAccount.controls['newPasswordConfirmed'].hasError('mustMatch')">
+                <label class="text-danger">les mots de passe doivent être identiques</label>
+            </div>
+        </div>
+        <br/>
+        <div *ngIf="!updateAvailable" class="col-md-6 text-center">
+            <button class="btn btn-success mr-3" (click)="activeChangePassword()">Changer mot de passe</button>
+            <button class="btn btn-danger" [routerLink]="['/users']">Retour</button>
+        </div>
+        <div *ngIf="updateAvailable" class="col-md-6 text-center">
+            <button class="btn btn-success mr-3" [disabled]="formAccount.invalid" (click)="updatePassword()">Valider</button>
+            <button class="btn btn-danger" (click)="desactiveChangePassword()">Annuler</button>
+        </div>
+        <br/>
+        <div class="col-md-6">
+            <ngb-alert *ngIf="availableMessage" [type]="type" (close)="successMessage = ''">{{ successMessage }}</ngb-alert>
+        </div>
+    </div>
+</form>

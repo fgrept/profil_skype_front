@@ -7,7 +7,7 @@ import {UserCreate} from '../models/user-create';
 
 const urlUserCreate = 'http://localhost:8181/v1/user/create';
 const urlUserUprole = 'http://localhost:8181/v1/user/uprole/';
-const urlUserUppassword = 'http://localhost:8181/v1/user/updatepassword';
+const urlUserUppassword = 'http://localhost:8181/v1/user/updatepassword/';
 const urlUserGet = 'http://localhost:8181/v1/user/list';
 const urlUserDelete = 'http://localhost:8181/v1/user/delete/';
 
@@ -33,6 +33,7 @@ export class UserService {
   private userUpdateSubject = new Subject();
   private userDeleteSubject = new Subject();
   private userCreateSubject = new Subject();
+  private userUpdatePasswordSubject = new Subject();
 
   constructor(private httpClient: HttpClient) {
     this.userAuth = userType.userUnknown;
@@ -71,6 +72,10 @@ export class UserService {
 
   getUserDeleteSubject() {
         return this.userDeleteSubject;
+  }
+
+  getUpdatePasswordSubject(){
+        return this.userUpdatePasswordSubject;
   }
 
 
@@ -131,6 +136,21 @@ export class UserService {
       this.getRole(userResult);
     }
 
+    /**
+     * Mise à jour du mot de passe
+     */
+    updatePasswordToServer(userId: string, oldPassword: string, newPassword){
+       this.httpClient.put(urlUserUppassword + userId + '/' + oldPassword + '/' + newPassword, null, {observe : 'response'})
+           .subscribe(
+               (response) => {
+                   this.userUpdatePasswordSubject.next(response);
+               },
+                   (error) => {
+                   this.userUpdatePasswordSubject.next(error);
+                   console.log('erreur back end', error);
+                   }
+           );
+    }
     /**
      * Formatage des rôles avant envoi aux back end
      * @param rolesForm
