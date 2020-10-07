@@ -23,6 +23,7 @@ export class ProfilListComponent implements OnInit {
   page:number;
   numberOfProfil:number;
   filterForm:FormGroup;
+  navDisplayed:boolean=false;
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
@@ -56,21 +57,19 @@ export class ProfilListComponent implements OnInit {
       );
     
     this.profilsService.buttonFilterSubject.next(true);
-    
+    this.profilsService.buttonFilterSubject.subscribe(
+      (value) => (value) ? this.navDisplayed = true : this.navDisplayed = false
+    );
     this.filterForm = this.formBuilder.group(
-      {searchSip : new FormControl(),
-      searchFirstname : new FormControl(),
-      searchLastname : new FormControl(),
+      {searchId : new FormControl(),
+      searchFirstName : new FormControl(),
+      searchLastName : new FormControl(),
       searchUo : new FormControl(),
       searchSite : new FormControl(),
-      searchDialPlan : new FormControl(),
-      searchStatus : new FormControl(),
       searchSamAccount: new FormControl(),
       searchVoiceEnabled : new FormControl(),
       searchVoicePolicy : new FormControl(),
-      searchExUm : new FormControl(),
-      searchExchUser : new FormControl(),
-      searchObjectClass : new FormControl()
+      searchExpirationDate : new FormControl(),
       }
     );
 
@@ -105,24 +104,20 @@ export class ProfilListComponent implements OnInit {
    */
   onSearchFilterClick() {
 
-    // TODO :
-    // - activate the other filters according to the available template fields
-    // - count the new number of profil with the criteria
-    // TESTS : filtre ne marche pas sur dialplan
     let profilSearch = new ProfilFromList (
-      this.filterForm.get('searchSip').value,
+      null,
       this.filterForm.get('searchVoiceEnabled').value,
       this.filterForm.get('searchVoicePolicy').value,
-      this.filterForm.get('searchDialPlan').value,
-      this.filterForm.get('searchSamAccount').value, // +
-      this.filterForm.get('searchExUm').value,
-      this.filterForm.get('searchExchUser').value,
-      this.filterForm.get('searchObjectClass').value,
-      this.filterForm.get('searchStatus').value,
-      null, // collaboraterId
-      null, // expirationDate
-      this.filterForm.get('searchFirstname').value,
-      this.filterForm.get('searchLastname').value,
+      null,
+      this.filterForm.get('searchSamAccount').value,
+      null,
+      null,
+      null,
+      null,
+      this.filterForm.get('searchId').value, // collaboraterId
+      this.filterForm.get('searchExpirationDate').value,
+      this.filterForm.get('searchFirstName').value,
+      this.filterForm.get('searchLastName').value,
       this.filterForm.get('searchUo').value,
       this.filterForm.get('searchSite').value
     );
@@ -141,5 +136,16 @@ export class ProfilListComponent implements OnInit {
     );
 
   }
+
+  onResetForm(): void {
+    this.filterForm.reset();
+    this.profilsService.getProfilsFromServer(this.page);
+    this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
+      (profils: ProfilFromList[]) => {
+        this.profilList2 = profils;
+      }
+    );
+
+}
 
 }

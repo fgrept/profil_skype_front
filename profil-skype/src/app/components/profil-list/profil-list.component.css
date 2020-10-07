@@ -28,3 +28,6 @@ footer {
 #sidebar {
     background-color: #F8F9FA;
 }
+#filterForm > .form-group {
+    width : 350px;
+}
