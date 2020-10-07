@@ -153,6 +153,8 @@ export class ProfilListComponent implements OnInit {
 
   onResetForm(): void {
     this.filterForm.reset();
+    this.voiceChecked = false;
+    this.voiceEnabled = false;
     this.profilsService.getProfilsFromServer(this.page);
     this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
       (profils: ProfilFromList[]) => {
@@ -180,10 +182,6 @@ export class ProfilListComponent implements OnInit {
     } else {
       this.filterForm.get('searchVoicePolicy').disable();
     }
-  }
-
-  onEnterpriseClick(value) {
-    console.log(value);
   }
 
 }
