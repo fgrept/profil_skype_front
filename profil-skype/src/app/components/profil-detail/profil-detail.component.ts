@@ -45,6 +45,7 @@ export class ProfilDetailComponent implements OnInit {
     successSubject = new Subject<string>();
     successMessage: string;
     availableMessage = false;
+    type = 'success';
 
     constructor(private route: ActivatedRoute,
                 private profilService: ProfilsService,
@@ -205,7 +206,7 @@ export class ProfilDetailComponent implements OnInit {
                     this.profilService.updateProfilToServer(
                         profilChanged,
                         this.profilToShow.collaboraterId, 
-                        '000000',
+                        localStorage.getItem('userId'),
                         confirm['comment']);
                 }
               }, dismiss => {
@@ -255,8 +256,9 @@ export class ProfilDetailComponent implements OnInit {
     /**
     * Paramétrage de la fenêtre modale de suppression
     */
+
     openModal(): NgbModalRef {
-    
+
         this.modalOptions.backdrop = 'static';
         this.modalOptions.keyboard = false;
         this.modalOptions.centered = true;

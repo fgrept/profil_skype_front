@@ -30,6 +30,7 @@ import { CollaboraterSearchItemComponent } from './components/collaborater-searc
 import { DialogModalFormComponent } from './components/dialog-modal-form/dialog-modal-form.component';
 import { ProfilCreateComponent } from './components/profil-create/profil-create.component';
 import { ProfilCreateFormComponent } from './components/profil-create-form/profil-create-form.component';
+import { UserAccountComponent } from './components/user-account/user-account.component';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -42,6 +43,7 @@ const appRoutes: Routes = [
   {path: 'users/create',component:UserCreateComponent},
   {path: 'users/create/:idUser',component:UserCreateRoleComponent},
   {path: 'users/:idUser',component:UserDetailComponent},
+  {path: 'account',component:UserAccountComponent},
   {path: '', component:ProfilListComponent,},
   {path: 'not-found', component:UrlNotFoundComponent},
   {path: '**', redirectTo: 'not-found'}
@@ -67,7 +69,8 @@ const appRoutes: Routes = [
     CollaboraterSearchItemComponent,
     DialogModalFormComponent,
     ProfilCreateComponent,
-    ProfilCreateFormComponent
+    ProfilCreateFormComponent,
+    UserAccountComponent
   ],
   imports: [
     BrowserModule,
