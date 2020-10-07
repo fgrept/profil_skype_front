@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { ProfilFromList } from 'src/app/models/profil-to-show';
@@ -31,7 +31,7 @@ export class ProfilDetailComponent implements OnInit {
         {name : 'désactivé', value: 'DISABLED', checked : false, disabled: false},
         {name : 'expiré', value: 'EXPIRED', checked: false, disabled: true}];
     exchUser = [{name : 'Non renseigné', value : '', checked : false},
-        {name : 'Linked Mailbox', value: 'Linked Mailbox', checked : true}];
+        {name : 'Linked Mailbox', value: 'Linked Mailbox', checked : false}];
 
     currentUserType;
     changedNotAuthorized: boolean;
@@ -62,7 +62,7 @@ export class ProfilDetailComponent implements OnInit {
         this.currentUserType === 1 ? this.changedNotAuthorized = true : this.changedNotAuthorized = false;
         this.profilToShow.statusProfile === 'DISABLED' ? this.profilInputDesactivated = true : this.profilInputDesactivated = false;
         this.profilInputDesactivated = this.changedNotAuthorized || this.profilInputDesactivated;
-
+        this.updateAuthorized = false;
         this.profilToShow.enterpriseVoiceEnabled === 'true' ? this.voiceEnabled[0].checked = true : this.voiceEnabled[1].checked = true;
         this.profilToShow.exUmEnabled === 'true' ? this.exUmEnabled[0].checked = true : this.exUmEnabled[1].checked = true;
         this.profilToShow.exchUser === '' ? this.exchUser[0].checked = true : this.exchUser[1].checked = true;
@@ -104,8 +104,26 @@ export class ProfilDetailComponent implements OnInit {
 
         this.profilForm.valueChanges.subscribe(form => this.checkUpdateAuthorized(form));
         this.profilForm.get('status').valueChanges.subscribe(form => this.checkActiveInput2(form));
+        this.profilForm.get('voiceEnabled').valueChanges.subscribe(form => this.checkVoicePolicy(form));
         if (this.profilForm.get('voiceEnabled').value === 'false') {
             this.profilForm.controls['voicePolicy'].disable();
+        }
+    }
+
+    /**
+     * method pour check the voice Policy when the VoiceEnbaled has changed
+     * @param valueOfVoiceEnabled 
+     */
+    checkVoicePolicy(valueOfVoiceEnabled) {
+        if (valueOfVoiceEnabled === 'false') {
+            this.profilForm.controls['voicePolicy'].disable();
+            this.profilForm.get('voicePolicy').setValue('');
+        } else {
+            this.profilForm.controls['voicePolicy'].enable();
+            if (this.profilForm.get('voiceEnabled').value === this.profilToShow.enterpriseVoiceEnabled) {
+                // we reset to the initial value
+                this.profilForm.get('voicePolicy').setValue(this.profilToShow.voicePolicy)
+            }
         }
     }
 
@@ -117,7 +135,7 @@ export class ProfilDetailComponent implements OnInit {
      */
     checkActiveInput2(value) {
         if (value === 'DISABLED') {
-            // we reset to intial value the input form
+            // we reset to initial value the input form
             this.profilForm.get('sip').setValue(this.profilToShow.sip);
             this.profilForm.get('voiceEnabled').setValue(this.profilToShow.enterpriseVoiceEnabled);
             this.profilForm.get('voicePolicy').setValue(this.profilToShow.voicePolicy);
@@ -154,22 +172,18 @@ export class ProfilDetailComponent implements OnInit {
         (form.status !== this.profilToShow.statusProfile) ? changedDetected = true : null;
 
         changedDetected === true ? this.updateAuthorized = true : this.updateAuthorized = false;
+        // the property binding don't work all the times ...
+        (changedDetected) ?
+            $("#updateButton").removeAttr('disabled') : $("#updateButton").attr('disabled','true');  
 
+        /* console.log("changedDetected : " , changedDetected);
+        console.log("updateAuthorized : " , this.updateAuthorized); */
+        
         // set the status in case of change
         if (changedDetected && this.profilForm.value['status'] === 'EXPIRED') {
             this.profilForm.get('status').setValue('ENABLED');
         }
 
-        // activation/désactivation du voice Policy
-        if (this.profilForm.get('voiceEnabled').value === 'false' && this.profilForm.controls['voicePolicy'].enabled) {
-            console.log('Voice Enabled, passage à non');
-            this.profilForm.controls['voicePolicy'].disable();
-            this.profilForm.get('voicePolicy').setValue('');
-        }
-        if (this.profilForm.get('voiceEnabled').value === 'true' && this.profilForm.controls['voicePolicy'].disabled) {
-            console.log('Voice Enabled, passage à oui');
-            this.profilForm.controls['voicePolicy'].enable();
-        }
     }
 
     /**
