@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { Subscription } from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import {UserResult} from '../../models/user-result';
 
 @Component({
   selector: 'app-authent',
@@ -15,7 +16,10 @@ export class AuthentComponent implements OnInit {
   currentUserType;
   userSuscribe: Subscription;
   urlAuthent = 'http://localhost:8181/v1/user/create';
-  authentForm:FormGroup;
+  authentForm: FormGroup;
+  userId: string;
+  userResult: UserResult = null;
+  roles = '';
 
   constructor(private userService: UserService,
               private profilService: ProfilsService,
@@ -24,11 +28,8 @@ export class AuthentComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
-
-    localStorage.setItem('userId', '300004');
-    localStorage.setItem('lastName', 'NomTutu');
-    localStorage.setItem('firstName', 'PrenomTutu');
-    localStorage.setItem('userRoles', 'Administrateur, Responsable, Utilisateur');
+    this.userId = '300004';
+    this.getUser(this.userId);
 
     this.profilService.buttonFilterSubject.next(false);
 
@@ -56,7 +57,7 @@ export class AuthentComponent implements OnInit {
 
     this.authentForm.get('username').value
 
-    let routeAuthent="http://localhost:8181/login"
+    const routeAuthent = 'http://localhost:8181/login';
     this.httpClient.post(routeAuthent, credential)
     .subscribe(
       (response) => {
@@ -66,5 +67,39 @@ export class AuthentComponent implements OnInit {
         console.log('retour back-end Ok : ', error);
       }
     );
+  }
+
+  getUser(userId: string) {
+    this.userService.getGetSubject().subscribe(
+        (response: any) => {
+
+          this.userResult = this.userService.getUser();
+          this.updateLocalStorage();
+          console.log('response authent :', response);
+          console.log('valeur http status', response.status);
+        }
+    );
+    this.userService.GetUserFromServerById(userId);
+  }
+
+  updateLocalStorage() {
+    console.log('update local storage', this.userResult);
+    if (this.userResult === null || this.userResult === undefined){
+      localStorage.setItem('userId', '000000');
+      localStorage.setItem('lastName', 'Nom inconnu');
+      localStorage.setItem('firstName', 'Prenom inconnu');
+      localStorage.setItem('userRoles', '');
+    } else {
+      localStorage.setItem('userId', this.userResult.collaboraterId);
+      localStorage.setItem('lastName', this.userResult.lastName);
+      localStorage.setItem('firstName', this.userResult.firstName);
+      console.log('user Result', this.userResult);
+      if (this.userResult !== null || this.userResult !== undefined) {
+        this.roles = this.userService.getRole(this.userResult).roles.toString();
+      }
+
+      localStorage.setItem('userRoles', this.roles);
+    }
+
   }
 }

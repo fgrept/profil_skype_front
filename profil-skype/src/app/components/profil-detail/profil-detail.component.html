@@ -20,24 +20,24 @@
             </div>       
         </div>
 
+        <div class="form-group row">
+            <label class="col-3" for="voice">Enterprise Voice Enabled :</label>
+            <div class="col-4">
+                <div class="form-check form-check-inline" *ngFor="let item of voiceEnabled">
+                        <label class="form-check-label">{{item.name}}</label>
+                        <input type="radio" id="item.name" class="form-check-input" [value]="item.value"
+                        [checked]="item.checked" formControlName="voiceEnabled"
+                        [attr.disabled]="(!profilInputDesactivated === true) ? null : true"/>
+                </div>
+            </div>           
+        </div>
+
         <div class="form-group row" >
             <label class="col-3" for="voicePolicy">Voice Policy :</label>
             <div class="col-4">
                 <input type="text" id="voicePolicy" class="form-control" formControlName="voicePolicy"
                 [attr.disabled]="(!profilInputDesactivated === true) ? null : true">
             </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-3" for="voice">Enterprise Voice Enabled :</label>
-            <div class="col-4">
-                <div class="form-check form-check-inline" *ngFor="let item of voiceEnabled">
-                        <label class="form-check-label">{{item.name}}</label>
-                        <input type="radio" class="form-check-input" [value]="item.value"
-                        [checked]="item.checked" formControlName="voiceEnabled"
-                        [attr.disabled]="(!profilInputDesactivated === true) ? null : true"/>
-                </div>
-            </div>           
         </div>
 
         <div class="form-group row" >
@@ -60,7 +60,7 @@
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of exUmEnabled">
                         <label class="form-check-label">{{item.name}}</label>
-                        <input type="radio" class="form-check-input" [value]="item.value"
+                        <input type="radio" id="item.name" class="form-check-input" [value]="item.value"
                         [checked]="item.checked" formControlName="exUmEnabled"
                         [attr.disabled]="(!profilInputDesactivated === true) ? null : true"/>                     
                 </div>
@@ -72,7 +72,7 @@
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of exchUser">
                     <label class="form-check-label">{{item.name}}</label>
-                    <input type="radio" class="form-check-input" id="exchUser" [value]="item.value"
+                    <input type="radio" id="item.name" class="form-check-input" [value]="item.value"
                            [checked]="item.checked" formControlName="exchUser"
                            [attr.disabled]="(!profilInputDesactivated === true) ? null : true"/>
                 </div>
@@ -89,7 +89,7 @@
         <div class="form-group row" >        
             <label  class="col-3" for="expirationDate">Date d'expiration :</label>
             <div class="col-4">
-                <input type="text" id="expirationDate" class="form-control" formControlName="expirationDate"
+                <input type="text" id="expirationDate"  class="form-control" formControlName="expirationDate"
                 >
             </div>
         </div>
@@ -99,7 +99,7 @@
             <div class="col-4">
                 <div class="form-check form-check-inline" *ngFor="let item of statusProfile">
                         <label class="form-check-label">{{item.name}}</label>
-                        <input type="radio" id={{item.name}} class="form-check-input"
+                        <input type="radio" id="item.name" class="form-check-input"
                         [value]="item.value" [checked]="item.checked"
                         [attr.disabled]="item.disabled == false ? null : true"
                         formControlName="status"/>
@@ -118,10 +118,10 @@
                 </button>
             </div>
             <div class="col-2 mx-4">
-                <button type ="submit" class="btn btn-success"
+                <button type ="submit" class="btn btn-success" id="updateButton"
                 *ngIf="currentUserType==2 || currentUserType==3"
                 (click)="updateProfil()"
-                [disabled]="profilForm.invalid || (!updateAuthorized)">Modifier</button>
+                [attr.disabled]="(profilForm.invalid || (!updateAuthorized)) ? true : null">Modifier</button>
             </div>
             <div class="col-2">
                 <button class="btn btn-danger" *ngIf="currentUserType==2 || currentUserType==3" (click)="deleteProfil()">Supprimer</button>

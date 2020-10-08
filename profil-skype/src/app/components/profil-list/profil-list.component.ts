@@ -23,6 +23,10 @@ export class ProfilListComponent implements OnInit {
   page:number;
   numberOfProfil:number;
   filterForm:FormGroup;
+  navDisplayed:boolean=false;
+  //for search filter:
+  voiceChecked:boolean=false;
+  voiceEnabled:boolean=false;
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
@@ -56,23 +60,26 @@ export class ProfilListComponent implements OnInit {
       );
     
     this.profilsService.buttonFilterSubject.next(true);
-    
+    this.profilsService.buttonFilterSubject.subscribe(
+      (value) => (value) ? this.navDisplayed = true : this.navDisplayed = false
+    );
     this.filterForm = this.formBuilder.group(
-      {searchSip : new FormControl(),
-      searchFirstname : new FormControl(),
-      searchLastname : new FormControl(),
+      {searchId : new FormControl(),
+      searchFirstName : new FormControl(),
+      searchLastName : new FormControl(),
       searchUo : new FormControl(),
       searchSite : new FormControl(),
-      searchDialPlan : new FormControl(),
-      searchStatus : new FormControl(),
       searchSamAccount: new FormControl(),
+      searchVoiceActivate: new FormControl(),
       searchVoiceEnabled : new FormControl(),
       searchVoicePolicy : new FormControl(),
-      searchExUm : new FormControl(),
-      searchExchUser : new FormControl(),
-      searchObjectClass : new FormControl()
+      searchExpirationDate : new FormControl(),
       }
     );
+    this.filterForm.controls['searchVoiceEnabled'].setValue(false);
+    this.filterForm.controls['searchVoicePolicy'].setValue(false);
+    this.filterForm.controls['searchVoiceEnabled'].disable();
+    this.filterForm.controls['searchVoicePolicy'].disable();
 
       /* var el = document.getElementById('tata');
       document.addEventListener('scroll', (e) => {
@@ -105,24 +112,20 @@ export class ProfilListComponent implements OnInit {
    */
   onSearchFilterClick() {
 
-    // TODO :
-    // - activate the other filters according to the available template fields
-    // - count the new number of profil with the criteria
-    // TESTS : filtre ne marche pas sur dialplan
     let profilSearch = new ProfilFromList (
-      this.filterForm.get('searchSip').value,
+      null,
       this.filterForm.get('searchVoiceEnabled').value,
       this.filterForm.get('searchVoicePolicy').value,
-      this.filterForm.get('searchDialPlan').value,
-      this.filterForm.get('searchSamAccount').value, // +
-      this.filterForm.get('searchExUm').value,
-      this.filterForm.get('searchExchUser').value,
-      this.filterForm.get('searchObjectClass').value,
-      this.filterForm.get('searchStatus').value,
-      null, // collaboraterId
-      null, // expirationDate
-      this.filterForm.get('searchFirstname').value,
-      this.filterForm.get('searchLastname').value,
+      null,
+      this.filterForm.get('searchSamAccount').value,
+      null,
+      null,
+      null,
+      null,
+      this.filterForm.get('searchId').value, // collaboraterId
+      this.filterForm.get('searchExpirationDate').value,
+      this.filterForm.get('searchFirstName').value,
+      this.filterForm.get('searchLastName').value,
       this.filterForm.get('searchUo').value,
       this.filterForm.get('searchSite').value
     );
@@ -131,6 +134,12 @@ export class ProfilListComponent implements OnInit {
     let p = 1;
     // the filtrer on boolean must not be "" but null
     if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
+    // filter on users having international option 
+    if (profilSearch.voicePolicy.toString() === 'true') { //the value has a boolean type !
+      profilSearch.voicePolicy = 'EMEA-VP-FR_BDDF_InternationalAuthorized'
+    } else {
+      profilSearch.voicePolicy = null;
+    }
 
     this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
     
@@ -140,6 +149,39 @@ export class ProfilListComponent implements OnInit {
       }
     );
 
+  }
+
+  onResetForm(): void {
+    this.filterForm.reset();
+    this.voiceChecked = false;
+    this.voiceEnabled = false;
+    this.profilsService.getProfilsFromServer(this.page);
+    this.profilSuscribe = this.profilsService.profilsSubject.subscribe(
+      (profils: ProfilFromList[]) => {
+        this.profilList2 = profils;
+      }
+    );
+  }
+
+  onVoiceClick() {
+    // internal boolean because of problem for catching the value of the control
+    this.voiceChecked = ! this.voiceChecked;
+    if (this.voiceChecked) {
+      this.filterForm.get('searchVoiceEnabled').enable();
+    } else {
+      this.filterForm.get('searchVoiceEnabled').disable();
+      this.filterForm.get('searchVoicePolicy').disable();
+    }
+  }
+
+  onVoiceEnabledClick() {
+    // internal boolean because of problem for catching the value of the control
+    this.voiceEnabled = ! this.voiceEnabled;
+    if (this.voiceEnabled) {
+      this.filterForm.get('searchVoicePolicy').enable();
+    } else {
+      this.filterForm.get('searchVoicePolicy').disable();
+    }
   }
 
 }
