@@ -8,7 +8,8 @@ import {UserCreate} from '../models/user-create';
 const urlUserCreate = 'http://localhost:8181/v1/user/create';
 const urlUserUprole = 'http://localhost:8181/v1/user/uprole/';
 const urlUserUppassword = 'http://localhost:8181/v1/user/updatepassword/';
-const urlUserGet = 'http://localhost:8181/v1/user/list';
+const urlUserGetList = 'http://localhost:8181/v1/user/list';
+const urlUserGet = 'http://localhost:8181/v1/user/get/';
 const urlUserDelete = 'http://localhost:8181/v1/user/delete/';
 
 enum userType {
@@ -27,6 +28,7 @@ enum userType {
 export class UserService {
 
   private users: UserResult[] = null;
+  private userGet: UserResult = null;
   private usersSubject = new Subject<UserResult[]>();
   private userAuth;
   public userSubject = new Subject<userType>();
@@ -34,6 +36,7 @@ export class UserService {
   private userDeleteSubject = new Subject();
   private userCreateSubject = new Subject();
   private userUpdatePasswordSubject = new Subject();
+  private userGetSubject = new Subject();
 
   constructor(private httpClient: HttpClient) {
     this.userAuth = userType.userUnknown;
@@ -51,11 +54,15 @@ export class UserService {
       return this.users;
     }
 
+    getUser(): UserResult{
+      return this.userGet;
+    }
+
     /**
      * Récupère la liste des utilisateurs sans critères de filtre ni pagination
      */
     getUsersFromServer(){
-    this.httpClient.get<any[]>(urlUserGet, {observe: 'response'})
+    this.httpClient.get<any[]>(urlUserGetList, {observe: 'response'})
         .subscribe(
             (response) => {
               console.log('header', response.headers.keys());
@@ -76,6 +83,10 @@ export class UserService {
 
   getUpdatePasswordSubject(){
         return this.userUpdatePasswordSubject;
+  }
+
+  getGetSubject(){
+        return this.userGetSubject;
   }
 
 
@@ -102,7 +113,8 @@ export class UserService {
       }
   }
 
-  getRole(userList: UserResult) {
+  getRole(userList: UserResult): UserResult {
+      console.log('get role user service');
       for (let index in userList.roles) {
           if (userList.roles[index] === 'ROLE_USER') {
               userList.roles[index] = 'Utilisateur';
@@ -114,6 +126,8 @@ export class UserService {
               userList.roles[index] = 'Administrateur';
           }
       }
+      console.log('userList', userList);
+      return userList;
   }
 
     /**
@@ -134,6 +148,23 @@ export class UserService {
           }
       );
       this.getRole(userResult);
+    }
+
+    /**
+     * Récupére un utilisateur à partir de l'id annuaire
+     */
+    GetUserFromServerById(userId: string){
+        this.httpClient.get<any>(urlUserGet + userId, {observe : 'response'})
+            .subscribe(
+                (response) => {
+                    this.userGetSubject.next(response);
+                    console.log('user récupéré', response.body);
+                    this.userGet = response.body;
+                },
+                (error) => {
+                    this.userGetSubject.next(error);
+                }
+            );
     }
 
     /**
