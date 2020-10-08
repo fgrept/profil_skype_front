@@ -1,3 +1,10 @@
 .form-group {
     width : 310px;
 }
+footer {
+    position: fixed;
+    width: inherit;
+    bottom: 0;
+    background-color: #F8F9FA;
+    z-index: 1;
+} 
