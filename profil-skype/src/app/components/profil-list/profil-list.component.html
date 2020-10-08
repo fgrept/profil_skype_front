@@ -60,17 +60,40 @@
  
       <div class="col-12">
         <form [formGroup]="filterForm" class="form-group">
-            <!-- not possible for using bootsrap style because of the sub-component-->
+            <!-- not possible for using bootsrap style because of the sub-component
+                same pb with the sorting functionnality -->
             <table class="table">              <!--table-striped-->
                 <thead>
                     <tr class="row">
-                        <th class="col-3 d-none d-lg-block">adresse sip</th>
-                        <th class="col-2">uid</th>
-                        <th class="col-4 col-sm-3 col-lg-2">prénom</th>
-                        <th class="col-4 col-sm-3 col-lg-2">nom</th>
-                        <th class="col-md-2 col-lg-1 d-none d-lg-block">uo</th>
-                        <th class="col-2 col-md-3 col-lg-1 d-none d-sm-block">site</th>                
-                        <th class="col-1">status</th>
+                        <th class="col-3 d-none d-lg-block" (click)=onSortClick(0)>adresse sip 
+                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[0]===1"></fa-icon>
+                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[0]===(-1)"></fa-icon>
+                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[0]===0"></fa-icon>
+                        </th>
+                        <th class="col-2" (click)=onSortClick(1)>uid 
+                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[1]===1"></fa-icon>
+                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[1]===(-1)"></fa-icon>
+                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[1]===0"></fa-icon>                        </th>
+                        <th class="col-4 col-sm-3 col-lg-2" (click)=onSortClick(2)>prénom 
+                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[2]===1"></fa-icon>
+                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[2]===(-1)"></fa-icon>
+                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[2]===0"></fa-icon>                        </th>
+                        <th class="col-4 col-sm-3 col-lg-2" (click)=onSortClick(3)>nom 
+                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[3]===1"></fa-icon>
+                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[3]===(-1)"></fa-icon>
+                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[3]===0"></fa-icon>                        </th>
+                        <th class="col-md-2 col-lg-1 d-none d-lg-block" (click)=onSortClick(4)>uo 
+                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[4]===1"></fa-icon>
+                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[4]===(-1)"></fa-icon>
+                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[4]===0"></fa-icon>                        </th>
+                        <th class="col-2 col-md-3 col-lg-1 d-none d-sm-block" (click)=onSortClick(5)>site 
+                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[5]===1"></fa-icon>
+                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[5]===(-1)"></fa-icon>
+                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[5]===0"></fa-icon>                        </th>                
+                        <th class="col-1" (click)=onSortClick(6)>status 
+                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[6]===1"></fa-icon>
+                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[6]===(-1)"></fa-icon>
+                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[6]===0"></fa-icon>                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,6 +114,8 @@
       
     </div>
   </div>
+
+ 
 
 
 

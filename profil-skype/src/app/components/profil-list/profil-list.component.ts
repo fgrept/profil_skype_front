@@ -6,6 +6,7 @@ import { ProfilsService } from 'src/app/services/profils.service';
 import { SearchService } from 'src/app/services/search.service';
 import { FilterProfilPipe } from '../../pipes/filter-profil.pipe';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { faArrowsAltV, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-profil-list',
@@ -27,6 +28,11 @@ export class ProfilListComponent implements OnInit {
   //for search filter:
   voiceChecked:boolean=false;
   voiceEnabled:boolean=false;
+  //for column filter
+  sortColum=Array<number>();
+  faArrowsAltV = faArrowsAltV;
+  faArrowDown = faArrowDown;
+  faArrowUp = faArrowUp;
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
@@ -80,6 +86,8 @@ export class ProfilListComponent implements OnInit {
     this.filterForm.controls['searchVoicePolicy'].setValue(false);
     this.filterForm.controls['searchVoiceEnabled'].disable();
     this.filterForm.controls['searchVoicePolicy'].disable();
+
+    this.sortColum=[0,0,0,0,0,0,0];
 
       /* var el = document.getElementById('tata');
       document.addEventListener('scroll', (e) => {
@@ -181,6 +189,73 @@ export class ProfilListComponent implements OnInit {
       this.filterForm.get('searchVoicePolicy').enable();
     } else {
       this.filterForm.get('searchVoicePolicy').disable();
+    }
+  }
+
+  /**
+   * method for filtering the column of the list 
+   * @param col 
+   */
+  onSortClick(col:number) {
+    this.sortColum[col] == 0 ? this.sortColum[col] = 1 : this.sortColum[col]=-this.sortColum[col];
+    
+    switch (col) {
+      case 0:
+        if (this.sortColum[col]==1) {
+          this.profilList2.sort((a,b) => ('' + a.sip).localeCompare(b.sip));
+        } else {
+          this.profilList2.sort((a,b) => ('' + b.sip).localeCompare(a.sip));
+        }
+        break;
+      case 1:
+        if (this.sortColum[col]==1) {
+          this.profilList2.sort((a,b) => ('' + a.collaboraterId).localeCompare(b.collaboraterId));
+        } else {
+          this.profilList2.sort((a,b) => ('' + b.collaboraterId).localeCompare(a.collaboraterId));
+        }
+        
+        break;
+      case 2:
+        if (this.sortColum[col]==1) {
+          this.profilList2.sort((a,b) => ('' + a.firstName).localeCompare(b.firstName));
+        } else {
+          this.profilList2.sort((a,b) => ('' + b.firstName).localeCompare(a.firstName));
+        }
+        break;
+      case 3:
+        if (this.sortColum[col]==1) {
+          this.profilList2.sort((a,b) => ('' + a.lastName).localeCompare(b.lastName));
+        } else {
+          this.profilList2.sort((a,b) => ('' + b.lastName).localeCompare(a.lastName));
+        }
+        break;
+      case 4:
+        if (this.sortColum[col]==1) {
+          this.profilList2.sort((a,b) => ('' + a.orgaUnityCode).localeCompare(b.orgaUnityCode));
+        } else {
+          this.profilList2.sort((a,b) => ('' + b.orgaUnityCode).localeCompare(a.orgaUnityCode));
+        }
+        break;
+      case 5:
+        if (this.sortColum[col]==1) {
+          this.profilList2.sort((a,b) => ('' + a.siteCode).localeCompare(b.siteCode));
+        } else {
+          this.profilList2.sort((a,b) => ('' + b.siteCode).localeCompare(a.siteCode));
+        }
+        break;
+      case 6:
+        if (this.sortColum[col]==1) {
+          this.profilList2.sort((a,b) => ('' + a.statusProfile).localeCompare(b.statusProfile));
+        } else {
+          this.profilList2.sort((a,b) => ('' + b.statusProfile).localeCompare(a.statusProfile));
+        }
+        break;
+      default:
+        break;
+    }
+    //reset the others
+    for (let index = 0; index < this.sortColum.length; index++) {
+      if (index !== col) {this.sortColum[index]=0;}
     }
   }
 

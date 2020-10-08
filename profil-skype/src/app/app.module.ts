@@ -31,6 +31,7 @@ import { DialogModalFormComponent } from './components/dialog-modal-form/dialog-
 import { ProfilCreateComponent } from './components/profil-create/profil-create.component';
 import { ProfilCreateFormComponent } from './components/profil-create-form/profil-create-form.component';
 import { UserAccountComponent } from './components/user-account/user-account.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -79,7 +80,8 @@ const appRoutes: Routes = [
     HttpClientModule,
     ReactiveFormsModule,
     NgxPaginationModule,
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
   ],
   providers: [AuthentGuardService,
               UserService,
