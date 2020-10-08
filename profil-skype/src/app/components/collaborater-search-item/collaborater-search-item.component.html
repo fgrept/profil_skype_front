@@ -1,12 +1,12 @@
-<div class="col-12 custom-style">
+<div class="col-12">
  <!--   <a class="row clickable-row text-center" *ngIf="isExists()" [routerLink]="idUser">-->
-    <a class="row clickable-row text-center" [style.cursor]="'pointer'" (click)="getRoute(idUser)">
-        <td class="col-1">{{collaborater.collaboraterId}}</td>
-        <td class="col-2">{{collaborater.firstName}}</td>
-        <td class="col-2">{{collaborater.lastName}}</td>
-        <th class="col-2">{{collaborater.deskPhoneNumber}}</th>
-        <th class="col-2">{{collaborater.mobilePhoneNumber}}</th>
-        <th class="col-2">{{collaborater.mailAdress}}</th>
+    <a class="row clickable-row" [style.cursor]="'pointer'" (click)="getRoute(idUser)">
+        <td class="col-2 col-lg-1">{{collaborater.collaboraterId}}</td>
+        <td class="col-2 custom-td">{{collaborater.firstName}}</td>
+        <td class="col-2 custom-td">{{collaborater.lastName}}</td>
+        <td class="col-2 d-none d-lg-block">{{collaborater.deskPhoneNumber}}</td>
+        <td class="col-2 d-none d-lg-block">{{collaborater.mobilePhoneNumber}}</td>
+        <td class="col-3 col-lg-2 custom-td">{{collaborater.mailAdress}}</td>
         <td class="col-1">{{collaborater.orgaUnitCode}}</td>
     </a>
 </div>

@@ -18,6 +18,7 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
   collaboraterListResult: Collaborater[];
   collaboraterSubcribe: Subscription;
   idUser: string;
+  page:number;
 
   constructor(private formBuilderCollaborater: FormBuilder,
               private collaboraterService: CollaboraterService) { }
@@ -32,6 +33,7 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
 
       this.isSearched = false;
       this.initializeForm();
+      this.page = 1;
 
   }
 

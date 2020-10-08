@@ -11,8 +11,8 @@ export class ProfilFromList {
                 public statusProfile: string,
                 public collaboraterId: string,
                 public expirationDate: string,
-                public firstname: string,
-                public lastname: string,
+                public firstName: string,
+                public lastName: string,
                 public orgaUnityCode: string,
                 public siteCode: string) {}
 }
