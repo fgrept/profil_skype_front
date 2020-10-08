@@ -79,7 +79,7 @@ export class AppComponent  implements OnInit, OnDestroy {
   collapseSideBar() {
     this.showSidebar = ! this.showSidebar;
     // use jquery for the slideshow effect, waiting of other best UI components   
-    this.showSidebar ? $('#sidebar').slideDown("slow"): $('#sidebar').slideUp();
+    this.showSidebar ? $('#sidebar').slideDown(300): $('#sidebar').slideUp(300);
     
   }
 
