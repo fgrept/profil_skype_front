@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs/';
 import { Subject } from 'rxjs';
-import {UserResult} from '../models/user-result';
+import {UserResult} from '../models/user/user-result';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {UserCreate} from '../models/user-create';
+import {UserCreate} from '../models/user/user-create';
 
 const urlUserCreate = 'http://localhost:8181/v1/user/create';
 const urlUserUprole = 'http://localhost:8181/v1/user/uprole/';

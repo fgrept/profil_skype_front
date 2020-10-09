@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {CollaboraterService} from '../../services/collaborater.service';
-import {Collaborater} from '../../models/collaborater';
+import {CollaboraterService} from '../../../../services/collaborater.service';
+import {Collaborater} from '../../../../models/collaborater/collaborater';
 import {Subscription} from 'rxjs';
 
 @Component({

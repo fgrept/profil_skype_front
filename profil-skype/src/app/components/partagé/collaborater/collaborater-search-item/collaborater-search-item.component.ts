@@ -1,8 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from '../../services/user.service';
+import {UserService} from '../../../../services/user.service';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
-import {ProfilsService} from '../../services/profils.service';
-import {ProfilFromList} from '../../models/profil-to-show';
+import {ProfilsService} from '../../../../services/profils.service';
+import {ProfilFromList} from '../../../../models/profil/profil-to-show';
 import {Subscription} from 'rxjs';
 
 @Component({

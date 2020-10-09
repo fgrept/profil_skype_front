@@ -1,4 +1,4 @@
-import {Collaborater} from './collaborater';
+import {Collaborater} from '../collaborater/collaborater';
 
 export class UserResult extends Collaborater {
     roles: string[];

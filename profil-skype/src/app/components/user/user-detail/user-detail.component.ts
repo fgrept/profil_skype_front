@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {UserService} from '../../services/user.service';
-import {UserResult} from '../../models/user-result';
+import {UserService} from '../../../services/user.service';
+import {UserResult} from '../../../models/user/user-result';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {DialogModalComponent} from '../dialog-modal/dialog-modal.component';
+import {DialogModalComponent} from '../../partagé/dialog-modal/dialog-modal.component';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 

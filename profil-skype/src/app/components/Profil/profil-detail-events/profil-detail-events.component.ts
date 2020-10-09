@@ -3,7 +3,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { Subscription } from 'rxjs';
-import { EventModel } from 'src/app/models/eventModel';
+import { EventModel } from 'src/app/models/profil/eventModel';
 
 
 @Component({

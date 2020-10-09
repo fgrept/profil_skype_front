@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from '../../services/user.service';
-import {ProfilsService} from '../../services/profils.service';
+import {UserService} from '../../../services/user.service';
+import {ProfilsService} from '../../../services/profils.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router } from '@angular/router';
-import {ProfilForChange} from '../../models/profil-for-change';
+import {ProfilForChange} from '../../../models/profil/profil-for-change';
 import {debounceTime} from 'rxjs/operators';
 import {Subject, Subscription} from 'rxjs';
 

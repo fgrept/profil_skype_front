@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { EventModel } from '../models/eventModel' ;
+import { EventModel } from '../models/profil/eventModel' ;
 
 
 const baseUrl = 'http://localhost:8181/v1/event/list/';

@@ -4,7 +4,7 @@ import {Subject, Subscription} from 'rxjs';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {UserResult} from '../../models/user-result';
+import {UserResult} from '../../../models/user/user-result';
 
 @Component({
   selector: 'app-authent',

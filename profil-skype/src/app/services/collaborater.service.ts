@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Collaborater} from '../models/collaborater';
+import {Collaborater} from '../models/collaborater/collaborater';
 import {Subject} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 

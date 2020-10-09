@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ProfilFromList } from '../models/profil-to-show';
+import { ProfilFromList } from '../models/profil/profil-to-show';
 
 @Pipe({
   name: 'filterProfil'

@@ -1,15 +1,15 @@
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfilsService } from 'src/app/services/profils.service';
-import { ProfilFromList } from 'src/app/models/profil-to-show';
+import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
-import { ProfilRaw } from 'src/app/models/profil-raw';
+import { ProfilRaw } from 'src/app/models/profil/profil-raw';
 import { Subscription } from 'rxjs';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { DialogModalComponent } from '../dialog-modal/dialog-modal.component';
-import { DialogModalFormComponent } from '../dialog-modal-form/dialog-modal-form.component';
+import { DialogModalComponent } from '../../partagé/dialog-modal/dialog-modal.component';
+import { DialogModalFormComponent } from '../../partagé/dialog-modal-form/dialog-modal-form.component';
 import {debounceTime} from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 

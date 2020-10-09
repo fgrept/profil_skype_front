@@ -1,9 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { ProfilFromList } from '../models/profil-to-show';
+import { ProfilFromList } from '../models/profil/profil-to-show';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { ProfilRaw } from '../models/profil-raw';
-import { ProfilForChange } from '../models/profil-for-change';
+import { ProfilRaw } from '../models/profil/profil-raw';
+import { ProfilForChange } from '../models/profil/profil-for-change';
 
 const baseUrl = 'http://localhost:8181/v1/profile/list/all';
 const baseUrl2 = 'http://localhost:8181/v1/profile/update';

@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ComparePassword} from '../../Validators/confirm-password-validator';
-import {CustomPasswordValidator} from '../../Validators/custom-password-validator';
+import {ComparePassword} from '../../../Validators/confirm-password-validator';
+import {CustomPasswordValidator} from '../../../Validators/custom-password-validator';
 import {debounceTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {UserService} from '../../services/user.service';
+import {UserService} from '../../../services/user.service';
 import {HttpResponseBase} from "@angular/common/http";
 
 @Component({

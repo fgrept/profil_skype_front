@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {CollaboraterService} from '../../services/collaborater.service';
+import {CollaboraterService} from '../../../services/collaborater.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Collaborater} from '../../models/collaborater';
-import {UserService} from '../../services/user.service';
-import {UserCreate} from '../../models/user-create';
+import {Collaborater} from '../../../models/collaborater/collaborater';
+import {UserService} from '../../../services/user.service';
+import {UserCreate} from '../../../models/user/user-create';
 import {debounceTime} from 'rxjs/operators';
 import {Subject, Subscription} from 'rxjs';
-import {UserResult} from '../../models/user-result';
+import {UserResult} from '../../../models/user/user-result';
 
 @Component({
   selector: 'app-user-create-role',

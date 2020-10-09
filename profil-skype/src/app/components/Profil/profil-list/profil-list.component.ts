@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../../services/user.service';
 import { Subscription } from 'rxjs';
-import { ProfilFromList } from 'src/app/models/profil-to-show';
+import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { SearchService } from 'src/app/services/search.service';
-import { FilterProfilPipe } from '../../pipes/filter-profil.pipe';
+import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
 
