@@ -43,6 +43,8 @@ export class ProfilsService  {
   public profilListToCount = true;
   public pageListToShow = 1;
 
+  private tokenId: string;
+
   constructor(private httpClient: HttpClient) {}
 
   getProfilById(id: number) {
@@ -55,7 +57,9 @@ export class ProfilsService  {
   }
 
   createProfil(profilForChange: ProfilForChange) {
-      this.httpClient.post<any>(urlCreate, profilForChange, {observe: 'response'})
+      this.tokenId = 'Bearer ' + localStorage.getItem('token');
+      this.httpClient.post<any>(urlCreate, profilForChange,
+          {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
           .subscribe(
               (result) => {
                   console.log(result);
@@ -69,9 +73,11 @@ export class ProfilsService  {
   }
 
   getNumberOfProfilFromServer() {
+      this.tokenId = 'Bearer ' + localStorage.getItem('token');
 
     if (this.profilListToCount) {
-      this.httpClient.get<any>(baseUrl4, {observe: 'response'})
+      this.httpClient.get<any>(baseUrl4,
+          {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
       .subscribe(
         (response) => {
           console.log('retour back-end Ok : ', response);
@@ -92,21 +98,23 @@ export class ProfilsService  {
    * method for reload the list of profil or to re-emit thus in memory
    */
   getProfilsFromServer(pageAsked: number) {
-
-    this.pageListToShow = pageAsked;
-    if (this.profilListToReload) {
-      const url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
-      this.httpClient.get<any[]>(url, {observe: 'response'})
-      .subscribe(
-        (response) => {
-          console.log('retour back-end Ok : ', response);
-          this.profils = response.body;
-          this.profilsSubject.next(response.body);
-        },
-        (error) => {
-          console.log('retour back-end Ko : ', error);
-        }
-      );
+      
+      this.tokenId = 'Bearer ' + localStorage.getItem('token');
+      this.pageListToShow = pageAsked;
+      if (this.profilListToReload) {
+          const url = baseUrl + '/' + (pageAsked - 1) + '/10/0';
+          this.httpClient.get<any[]>(url,
+              {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+          .subscribe(
+            (response) => {
+              console.log('retour back-end Ok : ', response);
+              this.profils = response.body;
+              this.profilsSubject.next(response.body);
+            },
+            (error) => {
+              console.log('retour back-end Ko : ', error);
+            }
+          );
     } else {
       this.profilsSubject.next(this.profils);
       this.profilListToReload = true;
@@ -115,11 +123,13 @@ export class ProfilsService  {
 
   getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
 
+      this.tokenId = 'Bearer ' + localStorage.getItem('token');
     this.pageListToShow = pageAsked;
     if (this.profilListToReload) {
       const url = baseUrl5 + (pageAsked - 1) + '/10/0/ASC';
       console.log(url);
-      this.httpClient.post<any[]>(url, searchprofil, {observe: 'response'})
+      this.httpClient.post<any[]>(url, searchprofil,
+          {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
       .subscribe(
         (response) => {
           console.log(response);
@@ -141,7 +151,9 @@ export class ProfilsService  {
           profilRaw.sip, profilRaw.enterpriseVoiceEnabled, profilRaw.voicePolicy, profilRaw.dialPlan,
           profilRaw.samAccountName, profilRaw.exUmEnabled, profilRaw.exchUser, profilRaw.objectClass, profilRaw.statusProfile,
           idAnnuaire, idCil, comment);
-    this.httpClient.post(baseUrl2, profilChanged)
+      this.tokenId = 'Bearer ' + localStorage.getItem('token');
+    this.httpClient.post(baseUrl2, profilChanged,
+        {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
     .subscribe(
       (response) => {
         console.log('Maj back-end Ok');
@@ -158,7 +170,9 @@ export class ProfilsService  {
   }
 
   deleteProfilToServer(sip: string) {
-    this.httpClient.post(baseUrl3 + sip, null)
+      this.tokenId = 'Bearer ' + localStorage.getItem('token');
+    this.httpClient.post(baseUrl3 + sip, null,
+        {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
     .subscribe(
       (response) => {
         this.numberProfil--;
@@ -183,7 +197,9 @@ export class ProfilsService  {
 
     getProfilFromServerByCollaboraterId(collaboraterId: string) {
 
-        this.httpClient.get<any>(urlGet + collaboraterId, {observe: 'response'})
+        this.tokenId = 'Bearer ' + localStorage.getItem('token');
+        this.httpClient.get<any>(urlGet + collaboraterId,
+            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
             .subscribe(
                 (result) => {
 //                    console.log('headers', result.headers.keys());

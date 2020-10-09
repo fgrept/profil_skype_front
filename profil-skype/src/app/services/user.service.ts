@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs/';
 import { Subject } from 'rxjs';
 import {UserResult} from '../models/user-result';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {UserCreate} from '../models/user-create';
 
 const urlUserCreate = 'http://localhost:8181/v1/user/create';
@@ -37,6 +37,7 @@ export class UserService {
   public userCreateSubject = new Subject();
   private userUpdatePasswordSubject = new Subject();
   private userGetSubject = new Subject();
+  private tokenId: string;
 
   constructor(private httpClient: HttpClient) {
     this.userAuth = userType.userUnknown;
@@ -62,19 +63,21 @@ export class UserService {
      * Récupère la liste des utilisateurs sans critères de filtre ni pagination
      */
     getUsersFromServer(){
-    this.httpClient.get<any[]>(urlUserGetList, {observe: 'response'})
-        .subscribe(
-            (response) => {
-              console.log('header', response.headers.keys());
-              console.log('count', response.headers.get('count'));
-              this.users = response.body;
-              this.getRoles();
-              this.usersSubject.next(response.body);
-            },
-            (error) => {
-                console.log('erreur back-end ', error );
-            }
-        );
+        this.tokenId = 'Bearer ' + localStorage.getItem('token');
+        this.httpClient.get<any[]>(urlUserGetList,
+            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+            .subscribe(
+                (response) => {
+                  console.log('header', response.headers.keys());
+                  console.log('count', response.headers.get('count'));
+                  this.users = response.body;
+                  this.getRoles();
+                  this.usersSubject.next(response.body);
+                },
+                (error) => {
+                    console.log('erreur back-end ', error );
+                }
+            );
   }
 
   getUserDeleteSubject() {
@@ -137,7 +140,10 @@ export class UserService {
     updateUserToServer(userResult: UserResult) {
       this.setRoles(userResult.roles);
       console.log('roles service User', userResult.roles);
-      this.httpClient.put(urlUserUprole + userResult.collaboraterId + '/' + userResult.roles, null, {observe: 'response'}).subscribe(
+      this.tokenId = 'Bearer ' + localStorage.getItem('token');
+      this.httpClient.put(urlUserUprole + userResult.collaboraterId + '/' + userResult.roles, null,
+          {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+          .subscribe(
           (response)  => {
               console.log ('Maj role user back end ok');
               this.userUpdateSubject.next(response.body);
@@ -154,7 +160,10 @@ export class UserService {
      * Récupére un utilisateur à partir de l'id annuaire
      */
     GetUserFromServerById(userId: string){
-        this.httpClient.get<any>(urlUserGet + userId, {observe : 'response'})
+        this.tokenId = 'Bearer ' + localStorage.getItem('token');
+        console.log('valeur de token', this.tokenId);
+        this.httpClient.get<any>(urlUserGet + userId,
+            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
             .subscribe(
                 (response) => {
                     this.userGetSubject.next(response);
@@ -171,7 +180,9 @@ export class UserService {
      * Mise à jour du mot de passe
      */
     updatePasswordToServer(userId: string, oldPassword: string, newPassword){
-       this.httpClient.put(urlUserUppassword + userId + '/' + oldPassword + '/' + newPassword, null, {observe : 'response'})
+        this.tokenId = 'Bearer ' + localStorage.getItem('token');
+       this.httpClient.put(urlUserUppassword + userId + '/' + oldPassword + '/' + newPassword, null,
+           {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
            .subscribe(
                (response) => {
                    this.userUpdatePasswordSubject.next(response);
@@ -206,7 +217,10 @@ export class UserService {
      * @param userResult
      */
     deleteUserToServer(userResult: UserResult) {
-        this.httpClient.delete(urlUserDelete + userResult.collaboraterId).subscribe(
+        this.tokenId = 'Bearer ' + localStorage.getItem('token');
+        this.httpClient.delete(urlUserDelete + userResult.collaboraterId,
+            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+            .subscribe(
             (response) => {
                 console.log('Suppression effectuée');
                 this.userDeleteSubject.next(response);
@@ -224,7 +238,10 @@ export class UserService {
      */
     createUserToServer(userCreate: UserCreate) {
         this.setRoles(userCreate.roles);
-        this.httpClient.post(urlUserCreate, userCreate).subscribe(
+        this.tokenId = 'Bearer ' + localStorage.getItem('token');
+        this.httpClient.post(urlUserCreate, userCreate,
+            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+            .subscribe(
             (response) => {
                 console.log('Création effectuée');
                 this.userCreateSubject.next(response);
