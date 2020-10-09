@@ -105,13 +105,24 @@
                 </tbody>
                 <!-- ajout de 2 lignes vides pour pouvoir scroller avec le footer -->
                 <br/><br/><br/>
-                <footer>
-                    <pagination-controls (pageChange)="onPageChanged($event)"></pagination-controls>
+                <footer class="w-75">
+                    <pagination-controls class="d-flex justify-content-center" (pageChange)="onPageChanged($event)"></pagination-controls>
+                    <!-- NE PAS SUPPRIMER : PROCHAINE POSITION DES BOUTONS -->
+                    <!-- <div class="d-flex justify-content-around">
+                        <button class="btn btn-info">Créer</button>
+                        <button class="btn btn-info">Retour</button>
+                    </div>
+                    <br/> -->
                 </footer>
+
             </table>
+
         </form>
+
       </div>
+
       
+
     </div>
   </div>
 

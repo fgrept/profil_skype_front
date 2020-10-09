@@ -1,8 +1,8 @@
 footer {
     position: fixed;
-    width: inherit;
+    /* width: inherit; */
     bottom: 0;
-    background-color: #F8F9FA;
+    /* background-color: #F8F9FA; */
     z-index: 1;
 }  
 .wrapper {
@@ -16,7 +16,9 @@ footer {
 #filterForm > .form-group {
     width : 360px;
 }
-
+/* container {
+    max-width: 800px;
+} */
 /*
 svg {
     font-size: 2em;

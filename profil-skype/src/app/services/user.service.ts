@@ -32,9 +32,9 @@ export class UserService {
   private usersSubject = new Subject<UserResult[]>();
   private userAuth;
   public userSubject = new Subject<userType>();
-  private userUpdateSubject = new Subject();
-  private userDeleteSubject = new Subject();
-  private userCreateSubject = new Subject();
+  public userUpdateSubject = new Subject();
+  public userDeleteSubject = new Subject();
+  public userCreateSubject = new Subject();
   private userUpdatePasswordSubject = new Subject();
   private userGetSubject = new Subject();
 

@@ -84,7 +84,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       localisation: this.localisation,
       userRolesForm: this.userRolesForm
     });
-    this.initAlert();
   }
 
   /**
@@ -145,8 +144,27 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       }
     }
     this.userResult.roles = this.roles;
-    this.userService.updateUserToServer(this.userResult);
-    this.changeSuccessMessage('Mise à jour effectuée');
+
+    this.userService.userUpdateSubject.subscribe(
+      (response: Object) => {
+        console.log(response);
+        // update server done : display confirm box then routing
+        this.emitAlertAndRouting('Mise à jour effectuée');
+      }
+    );
+    
+    const modalRef = this.openModal();
+    modalRef.result.then(
+        confirm => {
+          console.log('retour modal', confirm);
+          if (confirm.toString() === 'Confirm') {
+            this.userService.updateUserToServer(this.userResult);
+          }
+        }, dismiss => {
+          console.log('retour modal', dismiss);
+        }
+    );
+
   }
 
   /**
@@ -155,6 +173,14 @@ export class UserDetailComponent implements OnInit, OnDestroy {
    */
   deleteUser() {
 
+    this.userService.userDeleteSubject.subscribe(
+      (response: Object) => {
+        console.log(response);
+        // update server done : display confirm box then routing
+        this.emitAlertAndRouting('Suppression effectuée');
+      }
+    );
+
     const modalRef = this.openModal();
     modalRef.result.then(
         confirm => {
@@ -162,7 +188,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           if (confirm.toString() === 'Confirm') {
             this.userService.deleteUserToServer(this.userResult);
             this.userService.deleteUserFromList(this.userResult);
-            this.router.navigate(['users']);
           }
         }, dismiss => {
           console.log('retour modal', dismiss);
@@ -185,19 +210,18 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     return modalDiag;
   }
 
-  initAlert() {
-    this.successSubject.subscribe(message => this.successMessage = message);
-    this.successSubject.pipe(
-        debounceTime(2000)
-    ).subscribe(() => {
-      this.successMessage = '';
-      this.availableMessage = false;
-    });
+  emitAlertAndRouting(message:string) {
+    this.successMessage = message;
+    this.availableMessage = true;
+    this.successSubject.pipe(debounceTime(2000)).subscribe(
+        () => {
+            this.successMessage = '';
+            this.availableMessage = false;
+            this.router.navigate(['/users'])
+        }
+    );
+    this.successSubject.next();
   }
 
-  changeSuccessMessage(message: string) {
-    this.availableMessage = true;
-    this.successSubject.next(message);
-  }
 }
 
