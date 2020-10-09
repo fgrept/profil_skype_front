@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {ProfilsService} from '../../services/profils.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, ParamMap } from '@angular/router';
+import {ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {ProfilForChange} from '../../models/profil-for-change';
 import {debounceTime} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-profil-create-form',
@@ -36,7 +36,8 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService,
               private profilService: ProfilsService,
               private formBuilder: FormBuilder,
-              private routeProfil: ActivatedRoute) { }
+              private routeProfil: ActivatedRoute,
+              private router:Router) { }
 
   ngOnInit(): void {
     //   récupération de l'id sélectionnée
@@ -49,7 +50,6 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
     this.createAuthorized = false;
     this.isCreated = false;
     this.profilFormCreate.valueChanges.subscribe(form => this.checkCreateAuthorized(form));
-    this.initAlert();
   }
 
   private initForm() {
@@ -94,18 +94,20 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
         localStorage.getItem('userId'),
         'création du profil'
     );
+    console.log("avant suscribe");
     this.profilService.createSubject.subscribe(
-        (response) => {
+        (response:Object) => {
           console.log('reponse create ok ', response);
-          this.changeSuccessMessage('création du profil effectuée');
+          this.isCreated = true;
           this.disabledForm();
-
+          // update server done : display confirm box then routing
+          this.emitAlertAndRouting('Création du profil effectuée');
         },
         (error) => {
           console.log('reponse create error ', error);
         }
     );
-    this.isCreated = true;
+    console.log("après suscribe");
     this.profilService.createProfil(profilCreate);
   }
 
@@ -121,26 +123,17 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
     console.log('form.valide ', this.profilFormCreate.valid);
    }
 
-  /**
-   * Initialisation de l'alerte qui reste affichée pendant deux secondes
-   */
-  initAlert() {
-    this.successSubject.subscribe(message => this.successMessage = message);
-    this.successSubject.pipe(
-        debounceTime(2000)
-    ).subscribe(() => {
-      this.successMessage = '';
-      this.availableMessage = false;
-    });
-  }
-
-  /**
-   * activation de l'alerte
-   * @param message
-   */
-  changeSuccessMessage(message: string) {
+  emitAlertAndRouting(message:string) {
+    this.successMessage = message;
     this.availableMessage = true;
-    this.successSubject.next(message);
+    this.successSubject.pipe(debounceTime(2000)).subscribe(
+        () => {
+            this.successMessage = '';
+            this.availableMessage = false;
+            this.router.navigate(['/profils'])
+        }
+    );
+    this.successSubject.next();
   }
 
   private disabledForm() {
@@ -155,7 +148,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    console.log("destroyed");
     if (this.successSubject !== null && this.successSubject !== undefined){
       this.successSubject.unsubscribe();
     }

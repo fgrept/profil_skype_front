@@ -62,7 +62,10 @@
         </div>
         <br/>
         <div class="col-md-6 text-center">
-            <button [disabled]="!updateAuthorized" class="btn btn-success mr-3" (click)="updateUser()">Mettre à jour</button>
+            <a routerLink="/users">
+                <button class="btn btn-secondary">Retour</button>
+            </a>
+            <button [disabled]="!updateAuthorized" class="btn btn-success mx-3" (click)="updateUser()">Mettre à jour</button>
             <button class="btn btn-danger" (click)="deleteUser()">Supprimer</button>
         </div>
         <br/>

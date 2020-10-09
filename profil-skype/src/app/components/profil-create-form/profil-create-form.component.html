@@ -104,14 +104,11 @@
                 </div>
             </div>
         </div>
-
         <br/>
-        <div *ngIf="!isCreated" class="col-md-6 text-center">
-            <button [disabled]="!createAuthorized" class="btn btn-success mr-3" (click)="createProfil()">Créer</button>
+        <div class="col-md-6 text-center">
+            <button class="btn btn-secondary" [routerLink]="['/profils']">Retour</button>
+            <button [disabled]="!createAuthorized" class="btn btn-success mx-4" (click)="createProfil()">Créer</button>
             <button class="btn btn-danger" [routerLink]="['/profils']">Annuler</button>
-        </div>
-        <div *ngIf="isCreated" class="col-md-6 text-center">
-            <button class="btn btn-danger" [routerLink]="['/profils']">Retour</button>
         </div>
     </div>
 

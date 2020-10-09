@@ -2,7 +2,7 @@ footer {
     position: fixed;
     /* width: inherit; */
     bottom: 0;
-    /* background-color: #F8F9FA; */
+    background-color: white;
     z-index: 1;
 }  
 .wrapper {

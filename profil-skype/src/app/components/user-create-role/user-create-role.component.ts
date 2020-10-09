@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {CollaboraterService} from '../../services/collaborater.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Collaborater} from '../../models/collaborater';
@@ -26,14 +26,16 @@ export class UserCreateRoleComponent implements OnInit {
   userCreate: UserCreate;
   roles: string[];
   isCreated: boolean;
+  // variables pour l'affichage d'une popup
   private successSubject = new Subject<string>();
   successMessage: string;
-  isAvailableMessage = false;
+  availableMessage = false;
 
   constructor(private routeUser: ActivatedRoute,
               private collaboraterService: CollaboraterService,
               private userService: UserService,
-              private formBuilderUser: FormBuilder) { }
+              private formBuilderUser: FormBuilder,
+              private router: Router) { }
 
   ngOnInit(): void {
     //   récupération de l'id sélectionnée
@@ -46,7 +48,6 @@ export class UserCreateRoleComponent implements OnInit {
     this.initForm();
     this.createAuthorized = false;
     this.isCreated = false;
-    this.initAlert();
   }
 
     initForm() {
@@ -98,26 +99,28 @@ export class UserCreateRoleComponent implements OnInit {
       console.log('id', this.userFormCreate.value.collaboraterId);
       this.userCreate = new UserCreate(this.userFormCreate.value.collaboraterId, this.roles);
       console.log('Create User : id userCreate ', this.userCreate.collaboraterId);
-      this.userService.createUserToServer(this.userCreate);
-      this.userService.addUserToList(new UserResult(
-          this.collboraterSelect.collaboraterId,
-          this.collboraterSelect.lastName,
-          this.collboraterSelect.firstName,
-          this.collboraterSelect.deskPhoneNumber,
-          this.collboraterSelect.mobilePhoneNumber,
-          this.collboraterSelect.mailAdress,
-          this.collboraterSelect.orgaUnitCode,
-          this.collboraterSelect.orgaUnitType,
-          this.collboraterSelect.orgaUnitShortLabel,
-          this.collboraterSelect.siteCode,
-          this.collboraterSelect.siteName,
-          this.collboraterSelect.siteAddress,
-          this.collboraterSelect.sitePostalCode,
-          this.collboraterSelect.siteCity,
+
+      this.userService.userCreateSubject.subscribe(
+        (response: Object) => {
+          console.log(response);
+          this.userService.addUserToList(new UserResult(
+          this.collboraterSelect.collaboraterId, this.collboraterSelect.lastName,
+          this.collboraterSelect.firstName, this.collboraterSelect.deskPhoneNumber,
+          this.collboraterSelect.mobilePhoneNumber, this.collboraterSelect.mailAdress,
+          this.collboraterSelect.orgaUnitCode, this.collboraterSelect.orgaUnitType,
+          this.collboraterSelect.orgaUnitShortLabel, this.collboraterSelect.siteCode,
+          this.collboraterSelect.siteName, this.collboraterSelect.siteAddress,
+          this.collboraterSelect.sitePostalCode, this.collboraterSelect.siteCity,
           this.roles
-      ));
-      this.isCreated = true;
-      this.changeSuccessMessage('Création effectuée');
+          ));
+          this.isCreated = true;
+          // update server done : display confirm box then routing
+          this.emitAlertAndRouting('Création effectuée');
+        }
+      );
+
+      this.userService.createUserToServer(this.userCreate);
+
     }
 
     private getRolesForm() {
@@ -129,18 +132,16 @@ export class UserCreateRoleComponent implements OnInit {
         }
     }
 
-    initAlert() {
-        this.successSubject.subscribe(message => this.successMessage = message);
-        this.successSubject.pipe(
-            debounceTime(2000)
-        ).subscribe(() => {
-            this.successMessage = '';
-            this.isAvailableMessage = false;
-        });
-    }
-
-    changeSuccessMessage(message: string) {
-        this.isAvailableMessage = true;
-        this.successSubject.next(message);
+    emitAlertAndRouting(message:string) {
+      this.successMessage = message;
+      this.availableMessage = true;
+      this.successSubject.pipe(debounceTime(2000)).subscribe(
+          () => {
+              this.successMessage = '';
+              this.availableMessage = false;
+              this.router.navigate(['/users'])
+          }
+      );
+      this.successSubject.next();
     }
 }

@@ -61,15 +61,13 @@
             </div>
         </div>
         <br/>
-        <div *ngIf="!isCreated" class="col-md-6 text-center">
-            <button [disabled]="!createAuthorized" class="btn btn-success mr-3" (click)="createUser()">Créer</button>
+        <div class="col-md-6 text-center">
+            <button class="btn btn-secondary" [routerLink]="['/users']">Retour</button>
+            <button [disabled]="!createAuthorized" class="btn btn-success mx-4" (click)="createUser()">Créer</button>
             <button class="btn btn-danger" [routerLink]="['/users']">Annuler</button>
         </div>
-        <div *ngIf="isCreated" class="col-md-6 text-center">
-            <button class="btn btn-danger" [routerLink]="['/users']">Retour</button>
-        </div>
         <div class="col-md-6">
-            <ngb-alert *ngIf="isAvailableMessage" type="success" (close)="successMessage = ''">{{ successMessage }}</ngb-alert>
+            <ngb-alert *ngIf="availableMessage" type="success" (close)="successMessage = ''">{{ successMessage }}</ngb-alert>
         </div>
     </div>
 </form>
