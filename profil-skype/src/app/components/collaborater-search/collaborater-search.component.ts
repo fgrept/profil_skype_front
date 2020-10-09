@@ -16,26 +16,25 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
   collaboraterSearch: Collaborater;
   isSearched: boolean;
   collaboraterListResult: Collaborater[];
-  collaboraterSubcribe: Subscription;
+  private collaboraterSubscription: Subscription;
   idUser: string;
   page:number;
 
   constructor(private formBuilderCollaborater: FormBuilder,
               private collaboraterService: CollaboraterService) { }
 
-    ngOnDestroy(): void {
-        if (this.collaboraterSubcribe !== null && this.collaboraterSubcribe!== undefined) {
-            this.collaboraterSubcribe.unsubscribe();
+    ngOnDestroy () {
+        if (this.collaboraterSubscription !== null && this.collaboraterSubscription!== undefined) {
+            this.collaboraterSubscription.unsubscribe();
         }
     }
 
-  ngOnInit(): void {
-
-      this.isSearched = false;
-      this.initializeForm();
-      this.page = 1;
-
-  }
+    ngOnInit(): void {
+        this.isSearched = false;
+        this.initializeForm();
+        console.log(this.collaboraterSubscription);
+        this.page = 1;
+    }
 
     onResetForm(): void {
         this.isSearched = false;
@@ -48,10 +47,11 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
   onSearch() {
       this.initCollaboraterSearch();
       this.collaboraterService.getCollaboratersFromServer(this.collaboraterSearch);
-      this.collaboraterSubcribe = this.collaboraterService.getCollaboraterGetSubject().subscribe(
+      this.collaboraterSubscription = this.collaboraterService.getCollaboraterGetSubject().subscribe(
           (collaboraters: Collaborater[]) => {
               this.collaboraterListResult = collaboraters;
               console.log('liste collaborateurs', this.collaboraterListResult);
+              console.log(this.collaboraterSubscription);
               // Pas d'affichage du tableau si aucun résultat trouvé
               if (this.collaboraterService.countApi > 0) {
                   this.isSearched = true;

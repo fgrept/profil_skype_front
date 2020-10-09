@@ -5,7 +5,7 @@ import {UserResult} from '../../models/user-result';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {DialogModalComponent} from '../dialog-modal/dialog-modal.component';
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 
 
@@ -26,6 +26,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   // booléen dédié à l'action du bouton de mise à jour
   updateAuthorized: boolean;
   roles: string[];
+  private userUpdateSubscription:Subscription;
+  private userDeleteSubscription:Subscription;
+  private sucessSubscription:Subscription;
 
   // variables pour l'affichage d'une popup
   successSubject = new Subject<string>();
@@ -39,10 +42,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private formBuilderUser: FormBuilder,
               private modalService: NgbModal,
-              private router: Router)
-{
-
-  }
+              private router: Router) {}
 
   ngOnInit(): void {
  //   récupération de l'id sélectionnée
@@ -60,9 +60,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      if (this.successSubject !== null && this.successSubject !== undefined){
-        this.successSubject.unsubscribe();
-      }
+      if (this.sucessSubscription) {this.sucessSubscription.unsubscribe()};
+      if (this.userDeleteSubscription) {this.userDeleteSubscription.unsubscribe()};
+      if (this.userUpdateSubscription) {this.userUpdateSubscription.unsubscribe()};
   }
 
   /**
@@ -145,7 +145,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     }
     this.userResult.roles = this.roles;
 
-    this.userService.userUpdateSubject.subscribe(
+    this.userUpdateSubscription = this.userService.userUpdateSubject.subscribe(
       (response: Object) => {
         console.log(response);
         // update server done : display confirm box then routing
@@ -173,7 +173,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
    */
   deleteUser() {
 
-    this.userService.userDeleteSubject.subscribe(
+    this.userDeleteSubscription = this.userService.userDeleteSubject.subscribe(
       (response: Object) => {
         console.log(response);
         // update server done : display confirm box then routing
@@ -213,7 +213,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   emitAlertAndRouting(message:string) {
     this.successMessage = message;
     this.availableMessage = true;
-    this.successSubject.pipe(debounceTime(2000)).subscribe(
+    this.sucessSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
         () => {
             this.successMessage = '';
             this.availableMessage = false;

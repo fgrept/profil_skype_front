@@ -17,7 +17,7 @@ export class CollaboraterSearchItemComponent implements OnInit, OnDestroy {
   @Input() type: string;
 
   profilFromServer: ProfilFromList;
-  profilSuscribe: Subscription;
+  profilSubscription: Subscription;
   isAvailable: boolean;
   userIdRoute: string;
 
@@ -27,8 +27,8 @@ export class CollaboraterSearchItemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
         console.log('Destruction de la fenêtre');
-        if (this.profilSuscribe !== null && this.profilSuscribe !== undefined) {
-          this.profilSuscribe.unsubscribe();
+        if (this.profilSubscription !== null && this.profilSubscription !== undefined) {
+          this.profilSubscription.unsubscribe();
         }
     }
 
@@ -69,7 +69,7 @@ export class CollaboraterSearchItemComponent implements OnInit, OnDestroy {
   }
 
   private OnCreateProfil() {
-    this.profilSuscribe = this.profilService.getProfilSubject.subscribe(
+    this.profilSubscription = this.profilService.getProfilSubject.subscribe(
         (profil: ProfilFromList) => {
           this.profilFromServer = profil;
           if (profil !== null && profil !== undefined){

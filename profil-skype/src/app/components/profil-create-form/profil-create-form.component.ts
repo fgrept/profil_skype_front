@@ -27,6 +27,8 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
     {name : 'Linked Mailbox', value: 'Linked Mailbox', checked : true}];
   isVoiceDisabled = false;
   private profilCreate: ProfilForChange;
+  private profilSubscription:Subscription;
+  private successSubscription:Subscription;
 
   // variables pour le message de confirmation
   successSubject = new Subject<string>();
@@ -94,8 +96,8 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
         localStorage.getItem('userId'),
         'création du profil'
     );
-    console.log("avant suscribe");
-    this.profilService.createSubject.subscribe(
+    //console.log("avant suscribe");
+    this.profilSubscription = this.profilService.createSubject.subscribe(
         (response:Object) => {
           console.log('reponse create ok ', response);
           this.isCreated = true;
@@ -107,7 +109,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
           console.log('reponse create error ', error);
         }
     );
-    console.log("après suscribe");
+    //console.log("après suscribe");
     this.profilService.createProfil(profilCreate);
   }
 
@@ -126,7 +128,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
   emitAlertAndRouting(message:string) {
     this.successMessage = message;
     this.availableMessage = true;
-    this.successSubject.pipe(debounceTime(2000)).subscribe(
+    this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
         () => {
             this.successMessage = '';
             this.availableMessage = false;
@@ -148,12 +150,11 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log("destroyed");
-    if (this.successSubject !== null && this.successSubject !== undefined){
-      this.successSubject.unsubscribe();
+    if (this.successSubscription){
+      this.successSubscription.unsubscribe();
     }
-    if (this.profilService.createSubject !== null && this.profilService.createSubject !== undefined){
-      this.profilService.createSubject.unsubscribe();
+    if (this.profilSubscription) {
+      this.profilSubscription.unsubscribe();
     }
   }
 }

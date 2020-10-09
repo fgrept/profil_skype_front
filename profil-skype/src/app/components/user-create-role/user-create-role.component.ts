@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {CollaboraterService} from '../../services/collaborater.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
@@ -6,7 +6,7 @@ import {Collaborater} from '../../models/collaborater';
 import {UserService} from '../../services/user.service';
 import {UserCreate} from '../../models/user-create';
 import {debounceTime} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {UserResult} from '../../models/user-result';
 
 @Component({
@@ -14,7 +14,7 @@ import {UserResult} from '../../models/user-result';
   templateUrl: './user-create-role.component.html',
   styleUrls: ['./user-create-role.component.css']
 })
-export class UserCreateRoleComponent implements OnInit {
+export class UserCreateRoleComponent implements OnInit, OnDestroy {
 
   // index de la table des collaborateurs issu du formulaire
   idCollaborater: string;
@@ -26,6 +26,8 @@ export class UserCreateRoleComponent implements OnInit {
   userCreate: UserCreate;
   roles: string[];
   isCreated: boolean;
+  private userCreateSubscription:Subscription;
+  private successSubscription:Subscription;
   // variables pour l'affichage d'une popup
   private successSubject = new Subject<string>();
   successMessage: string;
@@ -36,6 +38,11 @@ export class UserCreateRoleComponent implements OnInit {
               private userService: UserService,
               private formBuilderUser: FormBuilder,
               private router: Router) { }
+
+  ngOnDestroy(): void {
+    if (this.successSubscription) {this.successSubscription.unsubscribe()};
+    if (this.userCreateSubscription) {this.userCreateSubscription.unsubscribe()};
+  }
 
   ngOnInit(): void {
     //   récupération de l'id sélectionnée
@@ -100,7 +107,7 @@ export class UserCreateRoleComponent implements OnInit {
       this.userCreate = new UserCreate(this.userFormCreate.value.collaboraterId, this.roles);
       console.log('Create User : id userCreate ', this.userCreate.collaboraterId);
 
-      this.userService.userCreateSubject.subscribe(
+      this.userCreateSubscription = this.userService.userCreateSubject.subscribe(
         (response: Object) => {
           console.log(response);
           this.userService.addUserToList(new UserResult(
@@ -135,7 +142,7 @@ export class UserCreateRoleComponent implements OnInit {
     emitAlertAndRouting(message:string) {
       this.successMessage = message;
       this.availableMessage = true;
-      this.successSubject.pipe(debounceTime(2000)).subscribe(
+      this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
           () => {
               this.successMessage = '';
               this.availableMessage = false;

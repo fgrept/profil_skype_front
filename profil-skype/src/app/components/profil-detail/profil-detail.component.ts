@@ -18,7 +18,7 @@ import { Subject } from 'rxjs/internal/Subject';
     templateUrl: './profil-detail.component.html',
     styleUrls: ['./profil-detail.component.css']
 })
-export class ProfilDetailComponent implements OnInit {
+export class ProfilDetailComponent implements OnInit, OnDestroy {
 
     idProfil: number;
     profilToShow: ProfilFromList;
@@ -37,7 +37,13 @@ export class ProfilDetailComponent implements OnInit {
     changedNotAuthorized: boolean;
     profilDesactivated = false;
     profilInputDesactivated = false;
-    updateSuscribe: Subscription;
+    private updateSubscription: Subscription;
+    private deleteSubscription: Subscription;
+    private buttonFilterSubscription:Subscription;
+    private successSubscription:Subscription;
+    private valueChangesFormSubscription:Subscription;
+    private valueChangesStatusSubscription:Subscription;
+    private valueChangesVoiceEnabledSubscription:Subscription;
     updateAuthorized: boolean;
 
     // options pour la fenêtre modale
@@ -54,6 +60,16 @@ export class ProfilDetailComponent implements OnInit {
                 private router: Router,
                 private modalService: NgbModal
                 ) { }
+
+    ngOnDestroy(): void {
+        if (this.updateSubscription) {this.updateSubscription.unsubscribe();}
+        if (this.deleteSubscription) {this.deleteSubscription.unsubscribe();}
+        if (this.buttonFilterSubscription) {this.buttonFilterSubscription.unsubscribe();}
+        if (this.successSubscription) {this.successSubscription.unsubscribe();}
+        if (this.valueChangesFormSubscription) {this.valueChangesFormSubscription.unsubscribe()};
+        if (this.valueChangesStatusSubscription) {this.valueChangesStatusSubscription.unsubscribe()};
+        if (this.valueChangesVoiceEnabledSubscription) {this.valueChangesVoiceEnabledSubscription.unsubscribe()};
+    }
 
     ngOnInit(): void {
         this.idProfil = this.route.snapshot.params.idProfil;
@@ -103,9 +119,12 @@ export class ProfilDetailComponent implements OnInit {
                 Validators.required]
         });
 
-        this.profilForm.valueChanges.subscribe(form => this.checkUpdateAuthorized(form));
-        this.profilForm.get('status').valueChanges.subscribe(form => this.checkActiveInput2(form));
-        this.profilForm.get('voiceEnabled').valueChanges.subscribe(form => this.checkVoicePolicy(form));
+        this.valueChangesFormSubscription = this.profilForm.valueChanges.subscribe
+                                            (form => this.checkUpdateAuthorized(form));
+        this.valueChangesStatusSubscription = this.profilForm.get('status').valueChanges.subscribe
+                                            (form => this.checkActiveInput2(form));
+        this.valueChangesVoiceEnabledSubscription = this.profilForm.get('voiceEnabled').valueChanges.subscribe
+                                            (form => this.checkVoicePolicy(form));
         if (this.profilForm.get('voiceEnabled').value === 'false') {
             this.profilForm.controls['voicePolicy'].disable();
         }
@@ -204,7 +223,7 @@ export class ProfilDetailComponent implements OnInit {
             this.profilForm.get('objectClass').value,
             this.profilForm.get('status').value);
 
-        this.profilService.updateSubject.subscribe(
+        this.updateSubscription = this.profilService.updateSubject.subscribe(
             (response: Object) => {
                 console.log(response);
                 // update server done : display confirm box then routing
@@ -234,7 +253,7 @@ export class ProfilDetailComponent implements OnInit {
      * method for delete the Skype Profil in the server with a confirmation box
      */
     deleteProfil() {
-        this.profilService.deleteSubject.subscribe(
+        this.deleteSubscription = this.profilService.deleteSubject.subscribe(
             (response: Object) => {
                 console.log(response);
                 // update server done : display confirm box then routing
@@ -264,7 +283,7 @@ export class ProfilDetailComponent implements OnInit {
      */
     returnToList() {
         this.profilService.profilListToReload = false;
-        this.profilService.buttonFilterSubject.subscribe(
+        this.buttonFilterSubscription = this.profilService.buttonFilterSubject.subscribe(
             () => this.router.navigate(['/profils'])
         );
         this.profilService.buttonFilterSubject.next(true);  
@@ -302,7 +321,7 @@ export class ProfilDetailComponent implements OnInit {
     emitAlertAndRouting(message:string) {
         this.successMessage = message;
         this.availableMessage = true;
-        this.successSubject.pipe(debounceTime(2000)).subscribe(
+        this.buttonFilterSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
             () => {
                 this.successMessage = '';
                 this.availableMessage = false;

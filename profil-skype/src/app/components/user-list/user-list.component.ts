@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Subscription, Subject } from 'rxjs';
 import {UserResult} from '../../models/user-result';
@@ -12,17 +12,23 @@ import {debounceTime} from 'rxjs/operators';
 /**
  * Classe parente pour l'affichage de la liste des utilisateurs
  */
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
 
-  currentUserType;
-  userListResult: UserResult[];
-  userSubscribe: Subscription;
-
+    currentUserType;
+    userListResult: UserResult[];
+    private userSubscription: Subscription;
+    private successSubscription:Subscription;
+    private getUserDeleteSubscription:Subscription;
     successSubject = new Subject<string>();
     successMessage: string;
     availableMessage = false;
 
   constructor(private userService: UserService) { }
+    ngOnDestroy(): void {
+        if (this.getUserDeleteSubscription) {this.getUserDeleteSubscription.unsubscribe()};
+        if (this.userSubscription) {this.userSubscription.unsubscribe()};
+        if (this.successSubscription) {this.successSubscription.unsubscribe()};
+    }
 
 
     /**
@@ -34,7 +40,7 @@ export class UserListComponent implements OnInit {
       console.log('users en cours', this.userService.getUsers());
       if (this.userListResult === null) {
           this.userService.getUsersFromServer();
-          this.userSubscribe = this.userService.getusersSubject().subscribe(
+          this.userSubscription = this.userService.getusersSubject().subscribe(
               (users: UserResult[]) => {
                   this.userListResult = users;
                   console.log(this.userListResult);
@@ -48,7 +54,7 @@ export class UserListComponent implements OnInit {
   }
 
     initAlert() {
-        this.successSubject.subscribe(message => this.successMessage = message);
+        this.successSubscription = this.successSubject.subscribe(message => this.successMessage = message);
         this.successSubject.pipe(
             debounceTime(2000)
         ).subscribe(() => {
@@ -58,7 +64,7 @@ export class UserListComponent implements OnInit {
     }
 
     isDeletedUser() {
-      this.userService.getUserDeleteSubject().subscribe(
+      this.getUserDeleteSubscription = this.userService.getUserDeleteSubject().subscribe(
           (response) => {
               console.log(response);
               this.changeSuccessMessage('Suppression effectuée');
