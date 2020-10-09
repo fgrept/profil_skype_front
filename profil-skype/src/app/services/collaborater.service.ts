@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Collaborater} from '../models/collaborater';
 import {Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 const urlCollaboraterSearch = 'http://localhost:8181/v1/collaborater/list/criteria/';
 
@@ -16,11 +16,16 @@ export class CollaboraterService {
   private collaboraterGetSubject = new Subject();
   private collaborater: Collaborater;
   countApi: number;
+    private tokenId: string;
 
   constructor(private httpClient: HttpClient) { }
 
    getCollaboratersFromServer(collaboratersSearch: Collaborater) {
-    this.httpClient.post<any[]>(urlCollaboraterSearch + '0/100/collaboraterId', collaboratersSearch, {observe: 'response'}).subscribe(
+
+       this.tokenId = 'Bearer ' + localStorage.getItem('token');
+    this.httpClient.post<any[]>(urlCollaboraterSearch + '0/100/collaboraterId', collaboratersSearch,
+        {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+        .subscribe(
         (response) => {
           console.log('headers', response.headers.keys());
           console.log('count', response.headers.get('count'));

@@ -20,6 +20,9 @@ export class AuthentComponent implements OnInit {
   userId: string;
   userResult: UserResult = null;
   roles = '';
+  username = '';
+  password = '';
+  userConnexionSubject = new Subject();
 
   constructor(private userService: UserService,
               private profilService: ProfilsService,
@@ -29,6 +32,7 @@ export class AuthentComponent implements OnInit {
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
     this.userId = '300004';
+    this.userConnect();
     this.getUser(this.userId);
 
     this.profilService.buttonFilterSubject.next(false);
@@ -51,20 +55,24 @@ export class AuthentComponent implements OnInit {
 
   userConnect() {
     let credential = {
-      username : this.authentForm.get('username').value,
-      password : this.authentForm.get('password').value
+      // username : this.authentForm.get('username').value,
+      // password : this.authentForm.get('password').value
+      username : '000000',
+      password : '000000'
     };
 
-    this.authentForm.get('username').value
+    // this.authentForm.get('username').value
 
-    const routeAuthent = 'http://localhost:8181/login';
-    this.httpClient.post(routeAuthent, credential)
+    const routeAuthent = 'http://localhost:8181/authenticate';
+    this.httpClient.post<{token: string}>(routeAuthent, credential, {observe: 'response'})
     .subscribe(
-      (response) => {
-        console.log('retour back-end Ok : ', response);
+      (response: any) => {
+//        console.log('retour userConnect back-end Ok : ', response.body);
+        console.log('token return', response.body.token);
+        localStorage.setItem('token', response.body.token);
       },
       (error) => {
-        console.log('retour back-end Ok : ', error);
+        console.log('retour userConnect back-end Ok : ', error);
       }
     );
   }
@@ -102,4 +110,5 @@ export class AuthentComponent implements OnInit {
     }
 
   }
+
 }
