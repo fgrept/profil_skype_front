@@ -43,8 +43,6 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
     private buttonFilterSubscription:Subscription;
     private successSubscription:Subscription;
     private valueChangesFormSubscription:Subscription;
-    private valueChangesStatusSubscription:Subscription;
-    private valueChangesVoiceEnabledSubscription:Subscription;
     updateAuthorized: boolean;
 
     // options pour la fenêtre modale
@@ -68,8 +66,6 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
         if (this.buttonFilterSubscription) {this.buttonFilterSubscription.unsubscribe();}
         if (this.successSubscription) {this.successSubscription.unsubscribe();}
         if (this.valueChangesFormSubscription) {this.valueChangesFormSubscription.unsubscribe()};
-        if (this.valueChangesStatusSubscription) {this.valueChangesStatusSubscription.unsubscribe()};
-        if (this.valueChangesVoiceEnabledSubscription) {this.valueChangesVoiceEnabledSubscription.unsubscribe()};
     }
 
     ngOnInit(): void {
@@ -85,12 +81,22 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
         this.profilToShow.exUmEnabled === 'true' ? this.exUmEnabled[0].checked = true : this.exUmEnabled[1].checked = true;
         this.profilToShow.exchUser === '' ? this.exchUser[0].checked = true : this.exchUser[1].checked = true;
 
-        
+        if (this.profilToShow.statusProfile === 'ENABLED') {
+            this.statusProfile[0].checked = true;
+        }
+        if (this.profilToShow.statusProfile === 'DISABLED') {
+            this.statusProfile[1].checked = true;
+        }
+        if (this.profilToShow.statusProfile === 'EXPIRED') {
+            this.statusProfile[1].disabled = true;
+            this.statusProfile[2].checked = true;
+            this.statusProfile[2].disabled = false;
+        }
 
         this.profilForm = this.formBuilder.group({
             sip: [{value : this.profilToShow.sip, disabled : this.profilInputDesactivated},
-                [Validators.required/* ,
-                    Validators.pattern('^sip:.*$') */
+                [Validators.required ,
+                    Validators.pattern('^sip:.*$')
                 ]],
             voiceEnabled: [{value : this.profilToShow.enterpriseVoiceEnabled, disabled : this.profilInputDesactivated},
                 Validators.required],
@@ -112,27 +118,15 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
                 Validators.required]
         });
 
-        if (this.profilToShow.statusProfile === 'ENABLED') {
-            this.statusProfile[0].checked = true;
-        }
-        if (this.profilToShow.statusProfile === 'DISABLED') {
-            this.statusProfile[1].checked = true;
-        }
-        if (this.profilToShow.statusProfile === 'EXPIRED') {
-            // ne fonctionne plus ...
-            this.statusProfile[1].disabled = true;
-            this.statusProfile[2].checked = true;
+        if (this.profilForm.get('voiceEnabled').value === 'false') {
+            this.profilForm.controls['voicePolicy'].disable();
+            this.profilForm.controls['voicePolicy'].setValue(this.profilToShow.voicePolicy); 
         }
 
         this.valueChangesFormSubscription = this.profilForm.valueChanges.subscribe
-                                            (form => this.checkUpdateAuthorized(form));
-        this.valueChangesStatusSubscription = this.profilForm.get('status').valueChanges.subscribe
-                                            (form => this.checkActiveInput2(form));
-        this.valueChangesVoiceEnabledSubscription = this.profilForm.get('voiceEnabled').valueChanges.subscribe
-                                            (form => this.checkVoicePolicy(form));
-        if (this.profilForm.get('voiceEnabled').value === 'false') {
-            this.profilForm.controls['voicePolicy'].disable();
-        }
+                                            (form => this.checkUpdateAuthorized2(form));
+
+        
     }
 
     /**
@@ -150,6 +144,8 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
                 this.profilForm.get('voicePolicy').setValue(this.profilToShow.voicePolicy)
             }
         }
+        this.updateAuthorized = true; // don't work always ...
+        $("#updateButton").removeAttr('disabled');
     }
 
     /**
@@ -159,6 +155,7 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
      * @param value 
      */
     checkActiveInput2(value) {
+        console.log("passage dans checkActiveInput2");
         if (value === 'DISABLED') {
             // we reset to initial value the input form
             this.profilForm.get('sip').setValue(this.profilToShow.sip);
@@ -169,46 +166,34 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
             this.profilForm.get('exUmEnabled').setValue(this.profilToShow.exUmEnabled);
             this.profilForm.get('exchUser').setValue(this.profilToShow.exchUser);
             this.profilForm.get('objectClass').setValue(this.profilToShow.objectClass);
-
+            this.statusProfile[0].checked = false;
+            this.statusProfile[1].checked = true;
             this.profilInputDesactivated = true;
+            (value === this.profilToShow.statusProfile) ? this.updateAuthorized = false : this.updateAuthorized = true;
         } else {
-            this.profilInputDesactivated = false;
+            if (value === 'ENABLED' && this.profilToShow.statusProfile === 'EXPIRED') { // we come from EXPIRED
+                this.statusProfile[0].disabled = false;
+                this.statusProfile[0].checked = true;
+                this.statusProfile[2].disabled = true;
+                this.statusProfile[2].checked = false;
+                this.profilInputDesactivated = false;
+                this.updateAuthorized = true;
+            } 
+            else {  // we come from DISABLED
+                this.statusProfile[0].checked = true;
+                this.statusProfile[1].checked = false;
+                this.profilInputDesactivated = false;
+                (value === this.profilToShow.statusProfile) ? this.updateAuthorized = false : this.updateAuthorized = true;
+            }
         }
+
+        
 
     }
 
-    /**
-     * method for detect if one input has been modified and therefore authorized
-     * the user to clickon the update button
-     * 
-     * @param form 
-     */
-    checkUpdateAuthorized(form) {
-        let changedDetected = false;
-
-        (form.sip !== this.profilToShow.sip) ? changedDetected = true : null;
-        (form.voiceEnabled !== this.profilToShow.enterpriseVoiceEnabled) ? changedDetected = true : null;
-        (form.voicePolicy !== this.profilToShow.voicePolicy) ? changedDetected = true : null;
-        (form.dialPlan !== this.profilToShow.dialPlan) ? changedDetected = true : null;
-        (form.samAccount !== this.profilToShow.samAccountName) ? changedDetected = true : null;
-        (form.exUmEnabled !== this.profilToShow.exUmEnabled) ? changedDetected = true : null;
-        (form.exchUser !== this.profilToShow.exchUser) ? changedDetected = true : null;
-        (form.objectClass !== this.profilToShow.objectClass) ? changedDetected = true : null;
-        (form.status !== this.profilToShow.statusProfile) ? changedDetected = true : null;
-
-        changedDetected === true ? this.updateAuthorized = true : this.updateAuthorized = false;
-        // the property binding don't work all the times ...
-        (changedDetected) ?
-            $("#updateButton").removeAttr('disabled') : $("#updateButton").attr('disabled','true');  
-
-        /* console.log("changedDetected : " , changedDetected);
-        console.log("updateAuthorized : " , this.updateAuthorized); */
-        
-        // set the status in case of change
-        if (changedDetected && this.profilForm.value['status'] === 'EXPIRED') {
-            this.profilForm.get('status').setValue('ENABLED');
-        }
-
+    checkUpdateAuthorized2(form) {
+        this.updateAuthorized = true; // don't work always ...
+        $("#updateButton").removeAttr('disabled');
     }
 
     /**
