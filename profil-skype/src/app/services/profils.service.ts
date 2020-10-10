@@ -1,9 +1,10 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable} from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { ProfilFromList } from '../models/profil/profil-to-show';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { ProfilRaw } from '../models/profil/profil-raw';
 import { ProfilForChange } from '../models/profil/profil-for-change';
+import { userMsg } from '../models/tech/user-msg';
 
 const baseUrl = 'http://localhost:8181/v1/profile/list/all';
 const baseUrl2 = 'http://localhost:8181/v1/profile/update';
@@ -59,16 +60,22 @@ export class ProfilsService  {
   createProfil(profilForChange: ProfilForChange) {
       this.tokenId = 'Bearer ' + localStorage.getItem('token');
       this.httpClient.post<any>(urlCreate, profilForChange,
-          {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+          {responseType: 'json', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
           .subscribe(
-              (result) => {
-                  console.log(result);
-                  this.createSubject.next(result.body);
-              },
-              (error) => {
-                  console.log('erreur back-end ' + error.status );
-                  this.createSubject.next(error);
+            (response:HttpResponse<Object>) => {
+              console.log('Maj back-end Ok');
+              console.log(response);
+              this.createSubject.next(new userMsg(true,null));
+            },
+            (error:HttpErrorResponse) => {
+              console.log('Maj back-end Ko' + error );
+              if (error.status === 200 || error.status === 201) {
+                this.createSubject.next(new userMsg(true,null));
+              } else {
+                let msg = this.errorHandler(error);
+                this.createSubject.next(new userMsg(false,msg));
               }
+            } 
           );
   }
 
@@ -123,23 +130,22 @@ export class ProfilsService  {
 
   getProfilsFromServerWithCriteria(pageAsked: number, searchprofil: ProfilFromList) {
 
-      this.tokenId = 'Bearer ' + localStorage.getItem('token');
+    this.tokenId = 'Bearer ' + localStorage.getItem('token');
     this.pageListToShow = pageAsked;
     if (this.profilListToReload) {
       const url = baseUrl5 + (pageAsked - 1) + '/10/0/ASC';
-      console.log(url);
       this.httpClient.post<any[]>(url, searchprofil,
           {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
-      .subscribe(
-        (response) => {
-          console.log(response);
-          this.profils = response.body;
-          this.profilsSubject.next(response.body);
-        },
-        (error) => {
-          console.log('erreur back-end ' + error );
-        }
-      );
+          .subscribe(
+            (response) => {
+              console.log('Maj back-end Ok');
+              this.profils = response.body;
+              this.profilsSubject.next(response.body);
+            },
+            (error) => {
+              console.log('Maj back-end Ko' + error );
+            }
+          );
     } else {
       this.profilsSubject.next(this.profils);
       this.profilListToReload = true;
@@ -151,38 +157,47 @@ export class ProfilsService  {
           profilRaw.sip, profilRaw.enterpriseVoiceEnabled, profilRaw.voicePolicy, profilRaw.dialPlan,
           profilRaw.samAccountName, profilRaw.exUmEnabled, profilRaw.exchUser, profilRaw.objectClass, profilRaw.statusProfile,
           idAnnuaire, idCil, comment);
-      this.tokenId = 'Bearer ' + localStorage.getItem('token');
+    this.tokenId = 'Bearer ' + localStorage.getItem('token');
     this.httpClient.post(baseUrl2, profilChanged,
-        {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
-    .subscribe(
-      (response) => {
-        console.log('Maj back-end Ok');
-        // this.route.navigate(['/profils']);
-        this.updateSubject.next(response);
-        // this.profils = response;
-        // this.profilsSubject.next(response);
-      },
-      (error) => {
-        console.log('erreur back-end ' + error );
-        this.updateSubject.next(error);
-      }
-    );
+        {responseType: 'json', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+        .subscribe(
+          (response:HttpResponse<Object>) => {
+            console.log('Maj back-end Ok');
+            console.log(response);
+            this.updateSubject.next(new userMsg(true,null));
+          },
+          (error:HttpErrorResponse) => {
+            console.log('Maj back-end Ko' + error );
+            if (error.status === 200 || error.status === 201) {
+              this.updateSubject.next(new userMsg(true,null));
+            } else {
+              let msg = this.errorHandler(error);
+              this.updateSubject.next(new userMsg(false,msg));
+            }
+          } 
+        );
   }
 
   deleteProfilToServer(sip: string) {
       this.tokenId = 'Bearer ' + localStorage.getItem('token');
     this.httpClient.post(baseUrl3 + sip, null,
-        {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
-    .subscribe(
-      (response) => {
-        this.numberProfil--;
-        this.deleteSubject.next(response);
-      },
-      (error) => {
-        console.log('erreur back-end ' + error.status );
-        this.deleteSubject.next(error);
-      }
-    );
+        {responseType: 'json', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+        .subscribe(
+          (response:HttpResponse<Object>) => {
+            console.log('Maj back-end Ok');
+            console.log(response);
+            this.deleteSubject.next(new userMsg(true,null));
+          },
+          (error:HttpErrorResponse) => {
+            console.log('Maj back-end Ko' + error );
+            if (error.status === 200 || error.status === 201) {
+              this.deleteSubject.next(new userMsg(true,null));
+            } else {
+              let msg = this.errorHandler(error);
+              this.deleteSubject.next(new userMsg(false,msg));
+            }
+          } 
+        );
   }
 
     getProfilFromListByCollaboraterId(collaboraterId: string): ProfilFromList {
@@ -211,5 +226,31 @@ export class ProfilsService  {
                     console.log('erreur back-end ' + error.status );
                 }
             );
+    }
+
+    errorHandler(error:HttpErrorResponse): string {
+      //
+      // these case below are handled by the back-end, so we just return the error msg formatted by the back
+        if (error.status === 409) {
+          // conflict during the update server with other user
+          return "Un autre utilisateur a mis à jour le système entre temps." +
+              "Veuillez ressayer. ("  + error.error.message + ")";
+        }
+        if (error.status === 400) {
+          // the request has a correct syntax but bad values (validation control of the field
+          // like sip, email, size of fields)
+          return "Données saisies incorrectes. (" + error.error.message + ")";
+        }
+        if (error.status === 304) {
+          // the request has a incorrect syntax but because of the front, not the user : serious error
+          return "Incohérence des données envoyées. Contactez la MOE. (" + error.error.message + ")";
+        }
+        if (error.status === 404) {
+          // the request has a incorrect syntax but because of the front, not the user : serious error
+          let msg = error.error.message;
+          return "Incohérence des données en base. Contactez la MOE. (" + msg + ")";
+        }
+
+      return "Contactez la MOE. Erreur interne (" + error.status + ")";
     }
 }

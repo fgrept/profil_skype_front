@@ -6,6 +6,7 @@ import {ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {ProfilForChange} from '../../../models/profil/profil-for-change';
 import {debounceTime} from 'rxjs/operators';
 import {Subject, Subscription} from 'rxjs';
+import { userMsg } from 'src/app/models/tech/user-msg';
 
 @Component({
   selector: 'app-profil-create-form',
@@ -33,7 +34,8 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
   // variables pour le message de confirmation
   successSubject = new Subject<string>();
   successMessage: string;
-  availableMessage = false;
+  availableMessage:boolean = false;
+  typeMessage = 'success';
 
   constructor(private userService: UserService,
               private profilService: ProfilsService,
@@ -98,16 +100,10 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
     );
     //console.log("avant suscribe");
     this.profilSubscription = this.profilService.createSubject.subscribe(
-        (response:Object) => {
-          console.log('reponse create ok ', response);
-          this.isCreated = true;
-          this.disabledForm();
-          // update server done : display confirm box then routing
-          this.emitAlertAndRouting('Création du profil effectuée');
-        },
-        (error) => {
-          console.log('reponse create error ', error);
-        }
+      (response: userMsg) => {
+        // update server done : display confirm box then routing
+        this.emitAlertAndRouting('Création du profil effectuée',response);
+        }        
     );
     //console.log("après suscribe");
     this.profilService.createProfil(profilCreate);
@@ -125,18 +121,27 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
     console.log('form.valide ', this.profilFormCreate.valid);
    }
 
-  emitAlertAndRouting(message:string) {
-    this.successMessage = message;
-    this.availableMessage = true;
-    this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
-        () => {
-            this.successMessage = '';
-            this.availableMessage = false;
-            this.router.navigate(['/profils'])
-        }
-    );
-    this.successSubject.next();
-  }
+  
+   emitAlertAndRouting(message:string, response:userMsg) {
+        
+    if (response.success) {
+        this.successMessage = message;
+        this.typeMessage = 'success';
+        this.availableMessage = true;
+        this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
+            () => {
+                this.successMessage = '';
+                this.availableMessage = false;
+                this.router.navigate(['/profils'])
+            }
+        );
+        this.successSubject.next();
+    } else {
+        this.successMessage = response.msg;
+        this.typeMessage = 'danger';
+        this.availableMessage = true;
+    }  
+}
 
   private disabledForm() {
     this.profilFormCreate.controls['sip'].disable();

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs/';
 import { Subject } from 'rxjs';
 import {UserResult} from '../models/user/user-result';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {UserCreate} from '../models/user/user-create';
+import { userMsg } from '../models/tech/user-msg';
 
 const urlUserCreate = 'http://localhost:8181/v1/user/create';
 const urlUserUprole = 'http://localhost:8181/v1/user/uprole/';
@@ -144,15 +145,21 @@ export class UserService {
       this.httpClient.put(urlUserUprole + userResult.collaboraterId + '/' + userResult.roles, null,
           {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
           .subscribe(
-          (response)  => {
-              console.log ('Maj role user back end ok');
-              this.userUpdateSubject.next(response.body);
-          },
-          (error) => {
-              console.log('erreur back-end ', error);
-              this.userUpdateSubject.next(error);
-          }
-      );
+            (response:HttpResponse<Object>) => {
+              console.log('Maj back-end Ok');
+              console.log(response);
+              this.userUpdateSubject.next(new userMsg(true,null));
+            },
+            (error:HttpErrorResponse) => {
+              console.log('Maj back-end Ko' + error );
+              if (error.status === 200 || error.status === 201) {
+                this.userUpdateSubject.next(new userMsg(true,null));
+              } else {
+                let msg = this.errorHandler(error);
+                this.userUpdateSubject.next(new userMsg(false,msg));
+              }
+            } 
+          );
       this.getRole(userResult);
     }
 
@@ -220,17 +227,23 @@ export class UserService {
     deleteUserToServer(userResult: UserResult) {
         this.tokenId = 'Bearer ' + localStorage.getItem('token');
         this.httpClient.delete(urlUserDelete + userResult.collaboraterId,
-            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+            {headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
             .subscribe(
-            (response) => {
-                console.log('Suppression effectuée');
-                this.userDeleteSubject.next(response);
-            },
-            (error) => {
-                console.log('Erreur back end', error);
-                this.userDeleteSubject.next(error);
-            }
-        );
+                (response:HttpResponse<Object>) => {
+                  console.log('Maj back-end Ok');
+                  console.log(response);
+                  this.userDeleteSubject.next(new userMsg(true,null));
+                },
+                (error:HttpErrorResponse) => {
+                  console.log('Maj back-end Ko' + error );
+                  if (error.status === 200 || error.status === 201) {
+                    this.userDeleteSubject.next(new userMsg(true,null));
+                  } else {
+                    let msg = this.errorHandler(error);
+                    this.userDeleteSubject.next(new userMsg(false,msg));
+                  }
+                } 
+            );
     }
 
     /**
@@ -241,17 +254,23 @@ export class UserService {
         this.setRoles(userCreate.roles);
         this.tokenId = 'Bearer ' + localStorage.getItem('token');
         this.httpClient.post(urlUserCreate, userCreate,
-            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
+            {headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
             .subscribe(
-            (response) => {
-                console.log('Création effectuée');
-                this.userCreateSubject.next(response);
-            },
-            (error) => {
-                console.log('Erreur back end', error);
-                this.userCreateSubject .next(error);
-            }
-        );
+                (response:HttpResponse<Object>) => {
+                  console.log('Maj back-end Ok');
+                  console.log(response);
+                  this.userCreateSubject.next(new userMsg(true,null));
+                },
+                (error:HttpErrorResponse) => {
+                  console.log('Maj back-end Ko' + error );
+                  if (error.status === 200 || error.status === 201) {
+                    this.userCreateSubject.next(new userMsg(true,null));
+                  } else {
+                    let msg = this.errorHandler(error);
+                    this.userCreateSubject.next(new userMsg(false,msg));
+                  }
+                } 
+            );
     }
 
     deleteUserFromList(userResult: UserResult) {
@@ -274,4 +293,31 @@ export class UserService {
         }
         return null;
     }
+
+    
+    errorHandler(error:HttpErrorResponse): string {
+        //
+        // these case below are handled by the back-end, so we just return the error msg formatted by the back
+          if (error.status === 409) {
+            // conflict during the update server with other user
+            return "Un autre utilisateur a mis à jour le système entre temps." +
+                "Veuillez ressayer. ("  + error.error.message + ")";
+          }
+          if (error.status === 400) {
+            // the request has a correct syntax but bad values (validation control of the field
+            // like sip, email, size of fields)
+            return "Données saisies incorrectes. (" + error.error.message + ")";
+          }
+          if (error.status === 304) {
+            // the request has a incorrect syntax but because of the front, not the user : serious error
+            return "Incohérence des données envoyées. Contactez la MOE. (" + error.error.message + ")";
+          }
+          if (error.status === 404) {
+            // the request has a incorrect syntax but because of the front, not the user : serious error
+            let msg = error.error.message;
+            return "Incohérence des données en base. Contactez la MOE. (" + msg + ")";
+          }
+  
+        return "Contactez la MOE. Erreur interne (" + error.status + ")";
+      }
 }

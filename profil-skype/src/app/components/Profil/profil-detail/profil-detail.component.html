@@ -97,12 +97,13 @@
         <div class="form-group row">
             <label class="col-3" for="voice">Status du profil :</label>
             <div class="col-4">
-                <div class="form-check form-check-inline" *ngFor="let item of statusProfile">
+                <div class="form-check form-check-inline" *ngFor="let item of statusProfile; let index = index">
                         <label class="form-check-label">{{item.name}}</label>
-                        <input type="radio" id="item.name" class="form-check-input"
-                        [value]="item.value" [checked]="item.checked"
-                        [attr.disabled]="item.disabled == false ? null : true"
-                        formControlName="status"/>
+                        <input type="radio"  name="status" formControlName="status"
+                        [id]="item.value" class="form-check-input"
+                        [value]="item.value" [checked]="this.statusProfile[index].checked"
+                        [attr.disabled]="item.disabled === false ? null : true"
+                        />
                 </div>  
             </div>           
         </div>
@@ -129,7 +130,7 @@
         </div> 
     </div>
     <div class="col-md-6">
-        <ngb-alert *ngIf="availableMessage" type="success" dismissible="false">{{ successMessage }}</ngb-alert>
+        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true (close)="availableMessage=false">{{ successMessage }}</ngb-alert>
     </div>
 </form>
 

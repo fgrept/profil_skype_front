@@ -31,7 +31,8 @@ export class UserCreateRoleComponent implements OnInit, OnDestroy {
   // variables pour l'affichage d'une popup
   private successSubject = new Subject<string>();
   successMessage: string;
-  availableMessage = false;
+  availableMessage:boolean = false;
+  typeMessage = 'success';
 
   constructor(private routeUser: ActivatedRoute,
               private collaboraterService: CollaboraterService,
