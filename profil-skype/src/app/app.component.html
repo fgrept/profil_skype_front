@@ -1,4 +1,4 @@
-<div class="container">
+  <div class="container">
 
   <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
     <p class="navbar-brand">Gestion des profils Skype</p>
@@ -10,7 +10,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav">
-        <li routerLinkActive="active" class="nav-item">
+        <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType===0">
           <a class="nav-link btn btn-toolbar" (click)="routingTo('auth')">Authentification</a>
         </li>
         <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType!==0">
@@ -19,15 +19,18 @@
         <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType===3">
           <a class="nav-link btn btn-toolbar ml-2" (click)="routingTo('users')">Utilisateur</a>
         </li>
-        <li routerLinkActive="active" class="nav-item">
+        <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType!==0">
           <a class="nav-link btn btn-toolbar ml-2" (click)="routingTo('account')">Mon compte</a>
+        </li>
+        <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType!==0">
+          <a class="nav-link btn btn-toolbar ml-2" (click)="OnDisconnect()">Déconnexion</a>
         </li>
       </ul>
       <button class="btn btn-info ml-4"
-          *ngIf="showFilterButton" (click)="collapseSideBar()">Filtres</button>
+          *ngIf="showFilterButton && currentUserType!==0" (click)="collapseSideBar()">Filtres</button>
       <button class="btn btn-info ml-4"
           *ngIf="showFilterButton && (currentUserType==2 || currentUserType==3)" (click)="actionButtonTwo()">{{button2Name}}</button>
-      <form [formGroup]="searchForm" class="my-2 my-lg-0" *ngIf="showFilterButton">
+      <form [formGroup]="searchForm" class="my-2 my-lg-0" *ngIf="showFilterButton && currentUserType!==0">
           <input class="form-control ml-4" type="search" placeholder="Recherche dans la page"
           aria-label="Search" formControlName="search">
       </form>

@@ -1,39 +1,58 @@
 <main class="container">
-  <div class="custom-control custom-radio">
-    <input type="radio" class="custom-control-input" id="unknown" name="defaultExampleRadios"
-            (click)="updateUserRole(0)"
-            [checked]="currentUserType==0">
-    <label class="custom-control-label" for="unknown">pas authentifié</label>
-  </div>
+<!--  <div class="custom-control custom-radio">-->
+<!--    <input type="radio" class="custom-control-input" id="unknown" name="defaultExampleRadios"-->
+<!--            (click)="updateUserRole(0)"-->
+<!--            [checked]="currentUserType==0">-->
+<!--    <label class="custom-control-label" for="unknown">pas authentifié</label>-->
+<!--  </div>-->
 
-  <div class="custom-control custom-radio">
-    <input type="radio" class="custom-control-input" id="collaborateur" name="defaultExampleRadios"
-            (click)="updateUserRole(1)"
-            [checked]="currentUserType==1">
-    <label class="custom-control-label" for="collaborateur">collaborateur</label>
-  </div>
-  
-  <div class="custom-control custom-radio">
-    <input type="radio" class="custom-control-input" id="cil" name="defaultExampleRadios"
-    (click)="updateUserRole(2)"
-    [checked]="currentUserType==2">
-    <label class="custom-control-label" for="cil">cil</label>
-  </div>
-  
-  <div class="custom-control custom-radio">
-    <input type="radio" class="custom-control-input" id="admin" name="defaultExampleRadios"
-    (click)="updateUserRole(3)"
-    [checked]="currentUserType==3">
-    <label class="custom-control-label" for="admin">admin</label>
-  </div>
+<!--  <div class="custom-control custom-radio">-->
+<!--    <input type="radio" class="custom-control-input" id="collaborateur" name="defaultExampleRadios"-->
+<!--            (click)="updateUserRole(1)"-->
+<!--            [checked]="currentUserType==1">-->
+<!--    <label class="custom-control-label" for="collaborateur">collaborateur</label>-->
+<!--  </div>-->
+<!--  -->
+<!--  <div class="custom-control custom-radio">-->
+<!--    <input type="radio" class="custom-control-input" id="cil" name="defaultExampleRadios"-->
+<!--    (click)="updateUserRole(2)"-->
+<!--    [checked]="currentUserType==2">-->
+<!--    <label class="custom-control-label" for="cil">cil</label>-->
+<!--  </div>-->
+<!--  -->
+<!--  <div class="custom-control custom-radio">-->
+<!--    <input type="radio" class="custom-control-input" id="admin" name="defaultExampleRadios"-->
+<!--    (click)="updateUserRole(3)"-->
+<!--    [checked]="currentUserType==3">-->
+<!--    <label class="custom-control-label" for="admin">admin</label>-->
+<!--  </div>-->
 
-  <!-- // PROTO de connexion sur login
+  <!-- // PROTO de connexion sur login-->
   <form [formGroup]="authentForm">
-    <input type="text" class="formControl" formControlName="username">
-    <input type="text" class="formControl" formControlName="password">
-    <button class="btn-info" (click)="userConnect()">Se connecter</button>
-  </form> -->
-  
+    <p><br/><strong>Connexion à l'application profil skype</strong></p>
+    <div class="formGroup row">
+      <label class="col-3" for="username">Nom utilisateur :</label>
+      <div class="col-4">
+        <input type="text" id="username" class="form-control" formControlName="username">
+      </div>
+    </div>
+    <div class="formGroup row">
+      <label class="col-3" for="password">Mot de passe :</label>
+      <div class="col-4">
+        <input type="password" id="password" class="form-control" formControlName="password">
+      </div>
+    </div>
+    <br/>
+    <div class="col-md-6 text-center">
+      <button [disabled]="!isAutorized" class="btn btn-success mx-3" (click)="userConnect()">Se connecter</button>
+      <button class="btn btn-danger" (click)="reset()">Réinitialiser</button>
+    </div>
+    <br/>
+    <div class="col-md-6">
+      <ngb-alert *ngIf="availableMessage" type="danger" (close)="errorMessage = ''">{{ errorMessage }}</ngb-alert>
+    </div>
+  </form>
+
 </main>
   
 

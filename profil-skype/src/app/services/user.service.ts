@@ -40,7 +40,7 @@ export class UserService {
   private tokenId: string;
 
   constructor(private httpClient: HttpClient) {
-    this.userAuth = userType.userUnknown;
+
   }
 
   getUserById(id: number) {
@@ -161,17 +161,18 @@ export class UserService {
      */
     GetUserFromServerById(userId: string){
         this.tokenId = 'Bearer ' + localStorage.getItem('token');
-        console.log('valeur de token', this.tokenId);
-        this.httpClient.get<any>(urlUserGet + userId,
+        // console.log('valeur de token', this.tokenId);
+        this.httpClient.get<UserResult>(urlUserGet + userId,
             {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
             .subscribe(
                 (response) => {
                     this.userGetSubject.next(response);
-                    console.log('user récupéré', response.body);
+                    console.log('user.service - GetUserFromServerById -> response', response);
                     this.userGet = response.body;
                 },
                 (error) => {
-                    this.userGetSubject.next(error);
+                    // this.userGetSubject.next(error);
+                    console.log('user.service - GetUserFromServerById -> Error', error);
                 }
             );
     }
