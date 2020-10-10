@@ -13,7 +13,7 @@ import { UserService} from './services/user.service';
 import { ProfilsService} from './services/profils.service';
 import { AuthentGuardService } from './services/authent-guard.service';
 import { UrlNotFoundComponent } from './components/partagé/url-not-found/url-not-found.component';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { ProfilDetailComponent } from './components/Profil/profil-detail/profil-detail.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ProfilDetailEventsComponent } from './components/Profil/profil-detail-events/profil-detail-events.component';
@@ -32,6 +32,8 @@ import { ProfilCreateComponent } from './components/Profil/profil-create/profil-
 import { ProfilCreateFormComponent } from './components/Profil/profil-create-form/profil-create-form.component';
 import { UserAccountComponent } from './components/user/user-account/user-account.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {HttpErrorInterceptor} from './interceptor/http-error.interceptor';
+import {TokenInterceptor} from "./interceptor/token.interceptor";
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -85,7 +87,10 @@ const appRoutes: Routes = [
   ],
   providers: [AuthentGuardService,
               UserService,
-              ProfilsService],
+              ProfilsService,
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi:true}
+//    ,{provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
