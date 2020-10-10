@@ -113,7 +113,7 @@
     </div>
 
     <div class="col-md-6">
-        <ngb-alert *ngIf="availableMessage" type="success" dismissible="false">{{ successMessage }}</ngb-alert>
+        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true (close)="availableMessage=false">{{ successMessage }}</ngb-alert>
     </div>
 
 </form>

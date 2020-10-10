@@ -67,7 +67,7 @@
             <button class="btn btn-danger" [routerLink]="['/users']">Annuler</button>
         </div>
         <div class="col-md-6">
-            <ngb-alert *ngIf="availableMessage" type="success" (close)="successMessage = ''">{{ successMessage }}</ngb-alert>
+            <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true (close)="availableMessage=false">{{ successMessage }}</ngb-alert>
         </div>
     </div>
 </form>

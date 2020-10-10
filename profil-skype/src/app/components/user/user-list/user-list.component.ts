@@ -49,11 +49,13 @@ export class UserListComponent implements OnInit, OnDestroy {
       } else {
           console.log('liste en cours', this.userService.getUsers());
       }
-      this.initAlert();
-      this.isDeletedUser();
+      /* this.initAlert();
+      this.isDeletedUser(); */
   }
+  // Normalement ce code ne sert plus car la suppression est effectuée dans le détail et le message s'affiche
+  // avant d'effectuer le routing
 
-    initAlert() {
+    /* initAlert() {
         this.successSubscription = this.successSubject.subscribe(message => this.successMessage = message);
         this.successSubject.pipe(
             debounceTime(2000)
@@ -67,7 +69,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       this.getUserDeleteSubscription = this.userService.getUserDeleteSubject().subscribe(
           (response) => {
               console.log(response);
-              this.changeSuccessMessage('Suppression effectuée');
+              this.changeSuccessMessage('Suppression effectuée ICI');
           }
       );
     }
@@ -75,6 +77,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     changeSuccessMessage(message: string) {
         this.availableMessage = true;
         this.successSubject.next(message);
-    }
+    } */
 
 }

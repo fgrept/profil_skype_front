@@ -1,8 +1,8 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
+import { FormBuilder, FormGroup} from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { ProfilRaw } from 'src/app/models/profil/profil-raw';
@@ -12,6 +12,7 @@ import { DialogModalComponent } from '../../partagé/dialog-modal/dialog-modal.c
 import { DialogModalFormComponent } from '../../partagé/dialog-modal-form/dialog-modal-form.component';
 import {debounceTime} from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
+import { userMsg } from 'src/app/models/tech/user-msg';
 
 @Component({
     selector: 'app-profil-detail',
@@ -50,8 +51,8 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
     modalOptions: NgbModalOptions = {};
     successSubject = new Subject<string>();
     successMessage: string;
-    availableMessage = false;
-    type = 'success';
+    availableMessage:boolean = false;
+    typeMessage = 'success';
 
     constructor(private route: ActivatedRoute,
                 private profilService: ProfilsService,
@@ -77,28 +78,20 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
         this.currentUserType = this.userService.getCurrentRole();
 
         this.currentUserType === 1 ? this.changedNotAuthorized = true : this.changedNotAuthorized = false;
-        this.profilToShow.statusProfile === 'DISABLED' ? this.profilInputDesactivated = true : this.profilInputDesactivated = false;
+        this.profilToShow.statusProfile === 'EXPIRED' ? this.profilInputDesactivated = true : this.profilInputDesactivated = false;
         this.profilInputDesactivated = this.changedNotAuthorized || this.profilInputDesactivated;
         this.updateAuthorized = false;
         this.profilToShow.enterpriseVoiceEnabled === 'true' ? this.voiceEnabled[0].checked = true : this.voiceEnabled[1].checked = true;
         this.profilToShow.exUmEnabled === 'true' ? this.exUmEnabled[0].checked = true : this.exUmEnabled[1].checked = true;
         this.profilToShow.exchUser === '' ? this.exchUser[0].checked = true : this.exchUser[1].checked = true;
 
-        if (this.profilToShow.statusProfile === 'ENABLED') {
-            this.statusProfile[0].checked = true;
-        }
-        if (this.profilToShow.statusProfile === 'DISABLED') {
-            this.statusProfile[1].checked = true;
-        }
-        if (this.profilToShow.statusProfile === 'EXPIRED') {
-            this.statusProfile[2].checked = true;
-            this.statusProfile[1].disabled = true;
-        }
+        
 
         this.profilForm = this.formBuilder.group({
             sip: [{value : this.profilToShow.sip, disabled : this.profilInputDesactivated},
-                [Validators.required,
-                    Validators.pattern('^sip:.*$')]],
+                [Validators.required/* ,
+                    Validators.pattern('^sip:.*$') */
+                ]],
             voiceEnabled: [{value : this.profilToShow.enterpriseVoiceEnabled, disabled : this.profilInputDesactivated},
                 Validators.required],
             voicePolicy: [{value : this.profilToShow.voicePolicy, disabled : this.profilInputDesactivated},
@@ -118,6 +111,18 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
             status: [{value : this.profilToShow.statusProfile, disabled : this.changedNotAuthorized},
                 Validators.required]
         });
+
+        if (this.profilToShow.statusProfile === 'ENABLED') {
+            this.statusProfile[0].checked = true;
+        }
+        if (this.profilToShow.statusProfile === 'DISABLED') {
+            this.statusProfile[1].checked = true;
+        }
+        if (this.profilToShow.statusProfile === 'EXPIRED') {
+            // ne fonctionne plus ...
+            this.statusProfile[1].disabled = true;
+            this.statusProfile[2].checked = true;
+        }
 
         this.valueChangesFormSubscription = this.profilForm.valueChanges.subscribe
                                             (form => this.checkUpdateAuthorized(form));
@@ -224,13 +229,12 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
             this.profilForm.get('status').value);
 
         this.updateSubscription = this.profilService.updateSubject.subscribe(
-            (response: Object) => {
-                console.log(response);
+            (response: userMsg) => {
                 // update server done : display confirm box then routing
-                this.emitAlertAndRouting('Mise à jour effectuée');
+                this.emitAlertAndRouting('Mise à jour effectuée',response);
             }
         );
-
+        
         const modalForm =  this.openModalForm();
         modalForm.result.then(
             confirm => {
@@ -254,10 +258,9 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
      */
     deleteProfil() {
         this.deleteSubscription = this.profilService.deleteSubject.subscribe(
-            (response: Object) => {
-                console.log(response);
+            (response: userMsg) => {
                 // update server done : display confirm box then routing
-                this.emitAlertAndRouting('Suppression effectuée');
+                this.emitAlertAndRouting('Suppression effectuée', response);
             }
         );
         
@@ -318,17 +321,25 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
         return modalDiag;
     }
 
-    emitAlertAndRouting(message:string) {
-        this.successMessage = message;
-        this.availableMessage = true;
-        this.buttonFilterSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
-            () => {
-                this.successMessage = '';
-                this.availableMessage = false;
-                this.router.navigate(['/profils'])
-            }
-        );
-        this.successSubject.next();
+    emitAlertAndRouting(message:string, response:userMsg) {
+        
+        if (response.success) {
+            this.successMessage = message;
+            this.typeMessage = 'success';
+            this.availableMessage = true;
+            this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
+                () => {
+                    this.successMessage = '';
+                    this.availableMessage = false;
+                    this.router.navigate(['/profils'])
+                }
+            );
+            this.successSubject.next();
+        } else {
+            this.successMessage = response.msg;
+            this.typeMessage = 'danger';
+            this.availableMessage = true;
+        }  
     }
 
 }

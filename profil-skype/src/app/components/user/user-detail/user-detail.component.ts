@@ -7,6 +7,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {DialogModalComponent} from '../../partagé/dialog-modal/dialog-modal.component';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+import { userMsg } from 'src/app/models/tech/user-msg';
 
 
 @Component({
@@ -28,12 +29,13 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   roles: string[];
   private userUpdateSubscription:Subscription;
   private userDeleteSubscription:Subscription;
-  private sucessSubscription:Subscription;
+  private successSubscription:Subscription;
 
   // variables pour l'affichage d'une popup
   successSubject = new Subject<string>();
   successMessage: string;
-  availableMessage = false;
+  availableMessage:boolean = false;
+  typeMessage = 'success';
 
   // options pour la fenêtre modale
   modalOptions: NgbModalOptions = {};
@@ -60,7 +62,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      if (this.sucessSubscription) {this.sucessSubscription.unsubscribe()};
+      if (this.successSubscription) {this.successSubscription.unsubscribe()};
       if (this.userDeleteSubscription) {this.userDeleteSubscription.unsubscribe()};
       if (this.userUpdateSubscription) {this.userUpdateSubscription.unsubscribe()};
   }
@@ -146,24 +148,13 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.userResult.roles = this.roles;
 
     this.userUpdateSubscription = this.userService.userUpdateSubject.subscribe(
-      (response: Object) => {
-        console.log(response);
+      (response: userMsg) => {
         // update server done : display confirm box then routing
-        this.emitAlertAndRouting('Mise à jour effectuée');
-      }
+        this.emitAlertAndRouting('Mise à jour effectuée',response);
+    }
     );
     
-    const modalRef = this.openModal();
-    modalRef.result.then(
-        confirm => {
-          console.log('retour modal', confirm);
-          if (confirm.toString() === 'Confirm') {
-            this.userService.updateUserToServer(this.userResult);
-          }
-        }, dismiss => {
-          console.log('retour modal', dismiss);
-        }
-    );
+    this.userService.updateUserToServer(this.userResult);
 
   }
 
@@ -172,17 +163,15 @@ export class UserDetailComponent implements OnInit, OnDestroy {
    * Après suppression,
    */
   deleteUser() {
-
     this.userDeleteSubscription = this.userService.userDeleteSubject.subscribe(
-      (response: Object) => {
-        console.log(response);
+      (response: userMsg) => {
         // update server done : display confirm box then routing
-        this.emitAlertAndRouting('Suppression effectuée');
-      }
+        this.emitAlertAndRouting('Suppression effectuée', response);
+    }
     );
 
     const modalRef = this.openModal();
-    modalRef.result.then(
+    modalRef.result.then( 
         confirm => {
           console.log('retour modal', confirm);
           if (confirm.toString() === 'Confirm') {
@@ -210,18 +199,28 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     return modalDiag;
   }
 
-  emitAlertAndRouting(message:string) {
-    this.successMessage = message;
-    this.availableMessage = true;
-    this.sucessSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
-        () => {
-            this.successMessage = '';
-            this.availableMessage = false;
-            this.router.navigate(['/users'])
-        }
-    );
-    this.successSubject.next();
-  }
+ 
+  emitAlertAndRouting(message:string, response:userMsg) {
+        
+    if (response.success) {
+        this.successMessage = message;
+        this.typeMessage = 'success';
+        this.availableMessage = true;
+        this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
+            () => {
+                this.successMessage = '';
+                this.availableMessage = false;
+                this.router.navigate(['/users'])
+            }
+        );
+        this.successSubject.next();
+    } else {
+        this.successMessage = response.msg;
+        this.typeMessage = 'danger';
+        this.availableMessage = true;
+    }  
+}
+
 
 }
 
