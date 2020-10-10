@@ -39,6 +39,9 @@ export class UserService {
   private userUpdatePasswordSubject = new Subject();
   private userGetSubject = new Subject();
   private tokenId: string;
+  // pour l'affichage de la popup lors de la création
+  public userIdExist: string;
+  public userExistSubject = new Subject<string>();
 
   constructor(private httpClient: HttpClient) {
 
@@ -98,6 +101,10 @@ export class UserService {
     this.userAuth = roleChosen;
     // méthode suivante nécessaire pour les components qui ecoutent la maj du role
     this.userSubject.next(roleChosen);
+  }
+  userExist(idUser: string) {
+        this.userIdExist = idUser;
+        this.userExistSubject.next(idUser);
   }
 
   getCurrentRole() {

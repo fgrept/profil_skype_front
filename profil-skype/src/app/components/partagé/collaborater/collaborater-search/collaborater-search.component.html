@@ -35,7 +35,9 @@
 <button class="btn btn-danger" (click)="onResetForm()">Réinitialiser</button>
 
 <br/><br />
-
+<div class="col-md-6">
+    <ngb-alert *ngIf="availableMessage" type="danger" (close)="errorMessage = ''">{{ errorMessage }}</ngb-alert>
+</div>
 <div class="container">
     <div class="col-12">
         <table class="table" *ngIf="isSearched">

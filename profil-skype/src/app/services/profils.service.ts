@@ -46,6 +46,10 @@ export class ProfilsService  {
 
   private tokenId: string;
 
+  // variable pour permettre l'affichage de la popup si le profil skype existe à la création
+  public profilIdExist: string;
+  public profilExistSubject = new Subject<string>();
+
   constructor(private httpClient: HttpClient) {}
 
   getProfilById(id: number) {
@@ -210,6 +214,11 @@ export class ProfilsService  {
     return null;
   }
 
+    profilExist(idUser: string) {
+        this.profilIdExist = idUser;
+        this.profilExistSubject.next(idUser);
+    }
+
     getProfilFromServerByCollaboraterId(collaboraterId: string) {
 
         this.tokenId = 'Bearer ' + localStorage.getItem('token');
@@ -219,7 +228,7 @@ export class ProfilsService  {
                 (result) => {
 //                    console.log('headers', result.headers.keys());
                     this.profilFromServer = result.body;
-                    this.getProfilSubject.next(result.body);
+                    this.getProfilSubject.next(result);
                 },
                 (error) => {
                     this.getProfilSubject.next(error);

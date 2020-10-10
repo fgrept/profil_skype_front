@@ -2,7 +2,10 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {CollaboraterService} from '../../../../services/collaborater.service';
 import {Collaborater} from '../../../../models/collaborater/collaborater';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
+import {debounceTime} from "rxjs/operators";
+import {UserService} from "../../../../services/user.service";
+import {ProfilsService} from "../../../../services/profils.service";
 
 @Component({
   selector: 'app-collaborater-search',
@@ -20,8 +23,16 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
   idUser: string;
   page:number;
 
+    // variables pour l'affichage d'une popup
+    errorSubject = new Subject<string>();
+    errorMessage: string;
+    availableMessage = false;
+    private errorSubscription: Subscription;
+
   constructor(private formBuilderCollaborater: FormBuilder,
-              private collaboraterService: CollaboraterService) { }
+              private collaboraterService: CollaboraterService,
+              private userService: UserService,
+              private profilService: ProfilsService) { }
 
     ngOnDestroy () {
         if (this.collaboraterSubscription !== null && this.collaboraterSubscription!== undefined) {
@@ -34,6 +45,18 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
         this.initializeForm();
         console.log(this.collaboraterSubscription);
         this.page = 1;
+        // Emission d'un message à la création dès que le collaborateur sélectionné est déjà un utilisateur
+        this.userService.userExistSubject.subscribe(
+            user => {
+                this.emitAlertAndRouting('L\'utilisateur ' + user + ' existe déjà');
+            }
+        );
+        // Emission d'un message à la création dès que l'utilisateur sélectionné a déjà un profil
+        this.profilService.profilExistSubject.subscribe(
+            user => {
+                this.emitAlertAndRouting('L\'utilisateur ' + user + ' a déjà un profil skype');
+            }
+        );
     }
 
     onResetForm(): void {
@@ -96,5 +119,21 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
                 orgaUnitCode: ''
             }
         );
+    }
+
+    /**
+     * Emission d'un message de type popup en cas de problème de connexion
+     * @param message
+     */
+    emitAlertAndRouting(message: string) {
+        this.errorMessage = message;
+        this.availableMessage = true;
+        this.errorSubscription = this.errorSubject.pipe(debounceTime(5000)).subscribe(
+            () => {
+                this.errorMessage = '';
+                this.availableMessage = false;
+            }
+        );
+        this.errorSubject.next();
     }
 }
