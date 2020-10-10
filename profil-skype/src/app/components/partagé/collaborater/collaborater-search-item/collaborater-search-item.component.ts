@@ -4,6 +4,7 @@ import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {ProfilsService} from '../../../../services/profils.service';
 import {ProfilFromList} from '../../../../models/profil/profil-to-show';
 import {Subscription} from 'rxjs';
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-collaborater-search-item',
@@ -57,7 +58,7 @@ export class CollaboraterSearchItemComponent implements OnInit, OnDestroy {
   getRoute(collaboraterId: string) {
     if (this.type === 'user') {
       if (this.isExistsUser()) {
-        alert('user existe déjà');
+        this.userService.userExist(this.idUser);
       } else {
         this.router.navigate(['users/create/' + this.userIdRoute]);
       }
@@ -70,25 +71,20 @@ export class CollaboraterSearchItemComponent implements OnInit, OnDestroy {
 
   private OnCreateProfil() {
     this.profilSubscription = this.profilService.getProfilSubject.subscribe(
-        (profil: ProfilFromList) => {
-          this.profilFromServer = profil;
-          if (profil !== null && profil !== undefined){
-            console.log('le profil n\'existe pas');
-            this.router.navigate(['profils/create/' + this.userIdRoute]);
-          }else {
-            console.log('le profil existe déjà !');
+        (response: HttpResponse<ProfilFromList>) => {
+          console.log('collaborater - onCreateProfil, response get: ', response);
+          this.profilFromServer = response.body;
+          if (response.status === 200) {
+            console.log('le profil existe déjà');
+            this.profilService.profilExist(this.idUser);
+          }
+          if (response.status === 404) {
+              console.log('le profil n\'existe pas');
+              this.router.navigate(['profils/create/' + this.userIdRoute]);
           }
         },
         (error) => {
           console.log('error code : ', error.status);
-          if (error.status === '404') {
-            console.log('erreur 404 suite appel backend');
-            this.router.navigate(['profils/create/' + this.userIdRoute]);
-//            this.router.navigate(['profils/create/' + this.idUser]);
-          } else {
-            console.log('Erreur bloquante', error.status);
-            alert('Erreur bloquante' + error.status);
-          }
         }
     );
   }
