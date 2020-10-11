@@ -77,7 +77,6 @@ export class ProfilListComponent implements OnInit, OnDestroy {
       searchExpirationDate : new FormControl(),
       }
     );
-    this.filterForm.controls['searchVoiceEnabled'].setValue(false);
     this.filterForm.controls['searchVoicePolicy'].setValue(false);
     this.filterForm.controls['searchVoiceEnabled'].disable();
     this.filterForm.controls['searchVoicePolicy'].disable();
@@ -161,9 +160,10 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   }
 
   onResetForm(): void {
-    this.filterForm.reset();
-    this.voiceChecked = false;
-    this.voiceEnabled = false;
+    this.filterForm.reset({value : ''});
+    this.filterForm.controls['searchVoicePolicy'].setValue(false);
+    this.filterForm.controls['searchVoiceEnabled'].disable();
+    this.filterForm.controls['searchVoicePolicy'].disable();
     this.profilsService.getProfilsFromServer(this.page);
   }
 
@@ -172,6 +172,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.voiceChecked = ! this.voiceChecked;
     if (this.voiceChecked) {
       this.filterForm.get('searchVoiceEnabled').enable();
+      this.filterForm.controls['searchVoiceEnabled'].setValue(false);
     } else {
       this.filterForm.get('searchVoiceEnabled').disable();
       this.filterForm.get('searchVoicePolicy').disable();

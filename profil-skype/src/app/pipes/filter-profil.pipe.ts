@@ -11,11 +11,14 @@ export class FilterProfilPipe implements PipeTransform {
     if(!searchText) return items;
 
     searchText = searchText.toLowerCase();
-    return items.filter( (profil) => {  
+    return items.filter( (profil:ProfilFromList) => {  
         if (profil.sip.includes(searchText)) {return true};
-        if (profil.samAccountName.toLowerCase().includes(searchText)) {return true};
+        if (profil.collaboraterId.includes(searchText)) {return true};
         if (profil.firstName.toLowerCase().includes(searchText)) {return true};
         if (profil.lastName.toLowerCase().includes(searchText)) {return true};
+        if (profil.orgaUnityCode.toLowerCase().includes(searchText)) {return true};
+        if (profil.siteCode.toLowerCase().includes(searchText)) {return true};
+        if (profil.statusProfile.toLowerCase().includes(searchText)) {return true};
         return false;
         });
   }

@@ -50,7 +50,7 @@
                 </div>
                 <div class="form-group d-flex">
                     <label for="searchExpirationDate" class="col-5">Date expiration :</label>
-                    <input placeholder="jj/mm/aaaa" type="text" id="searchExpirationDate" class="col-7 form-control" formControlName="searchExpirationDate">
+                    <input placeholder="jj/mm/aaaa" type="date" id="searchExpirationDate" class="col-7 form-control" formControlName="searchExpirationDate">
                 </div>
             </form>
             <button class="btn btn-success mx-3" (click)="onSearchFilterClick()">Appliquer</button>
@@ -90,7 +90,7 @@
                             <fa-icon [icon]="faArrowDown" *ngIf="sortColum[5]===1"></fa-icon>
                             <fa-icon [icon]="faArrowUp" *ngIf="sortColum[5]===(-1)"></fa-icon>
                             <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[5]===0"></fa-icon>                        </th>                
-                        <th class="col-1" (click)=onSortClick(6)>status 
+                        <th class="col-1" (click)=onSortClick(6)>status
                             <fa-icon [icon]="faArrowDown" *ngIf="sortColum[6]===1"></fa-icon>
                             <fa-icon [icon]="faArrowUp" *ngIf="sortColum[6]===(-1)"></fa-icon>
                             <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[6]===0"></fa-icon>                        </th>
@@ -107,7 +107,6 @@
                 <br/><br/><br/><br/><br/>
                 <footer class="w-100">
                     <br/>
-                    <!-- NE PAS SUPPRIMER : PROCHAINE POSITION DES BOUTONS -->
                     <div class="d-flex justify-content-start">
                         <a><button class="btn btn-secondary mx-2" (click)=collapseSideBar()>Filtres</button></a>
                         <a routerLink="create"><button class="btn btn-success mx-2">Créer</button></a>

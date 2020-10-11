@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { faCheckCircle, faTimesCircle, faClock} from '@fortawesome/free-solid-svg-icons';
+import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
 
 @Component({
   selector: 'app-profil-list-item',
@@ -15,7 +16,7 @@ import { faCheckCircle, faTimesCircle, faClock} from '@fortawesome/free-solid-sv
  */
 export class ProfilListItemComponent implements OnInit {
 
-  @Input() profil;
+  @Input() profil:ProfilFromList;
   @Input() idProfil: number;
   currentUserType;
   faCheckCircle = faCheckCircle;
