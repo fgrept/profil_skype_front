@@ -44,6 +44,7 @@ export class AuthentComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit(): void {
+    this.verifyDisconnect();
     this.currentUserType = this.userService.getCurrentRole();
 
 
@@ -181,5 +182,12 @@ export class AuthentComponent implements OnInit, OnDestroy {
         }
     );
     this.errorSubject.next();
+  }
+
+   verifyDisconnect() {
+    if (localStorage.getItem('token')) {
+      this.emitAlertAndRouting('Vous avez déconnecté de l\'application, veuillez vous reconnecter');
+      localStorage.clear();
+    }
   }
 }

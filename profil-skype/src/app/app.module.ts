@@ -33,7 +33,7 @@ import { ProfilCreateFormComponent } from './components/Profil/profil-create-for
 import { UserAccountComponent } from './components/user/user-account/user-account.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {HttpErrorInterceptor} from './interceptor/http-error.interceptor';
-import {TokenInterceptor} from "./interceptor/token.interceptor";
+import {TokenInterceptor} from './interceptor/token.interceptor';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
