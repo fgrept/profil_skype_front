@@ -20,10 +20,12 @@
           <a class="nav-link btn btn-toolbar ml-2" (click)="routingTo('users')">Utilisateur</a>
         </li>
         <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType!==0">
-          <a class="nav-link btn btn-toolbar ml-2" (click)="routingTo('account')">Mon compte</a>
+          <a class="nav-link btn btn-toolbar ml-2" (click)="routingTo('account')">
+            <fa-icon [icon]="faUser"></fa-icon></a>
         </li>
         <li routerLinkActive="active" class="nav-item" *ngIf="currentUserType!==0">
-          <a class="nav-link btn btn-toolbar ml-2" (click)="OnDisconnect()">Déconnexion</a>
+          <a class="nav-link btn btn-toolbar ml-2" (click)="OnDisconnect()">
+              <fa-icon [icon]="faSignOutAlt"></fa-icon></a>
         </li>
       </ul>
     </div>

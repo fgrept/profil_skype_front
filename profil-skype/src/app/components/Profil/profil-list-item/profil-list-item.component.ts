@@ -3,6 +3,7 @@ import { UserService } from '../../../services/user.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProfilsService } from 'src/app/services/profils.service';
+import { faCheckCircle, faTimesCircle, faClock} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-profil-list-item',
@@ -17,6 +18,10 @@ export class ProfilListItemComponent implements OnInit {
   @Input() profil;
   @Input() idProfil: number;
   currentUserType;
+  faCheckCircle = faCheckCircle;
+  faTimesCircle = faTimesCircle;
+  faClock=faClock;
+  
   constructor(private userService: UserService,
               private router: Router,
               private profilService: ProfilsService) {

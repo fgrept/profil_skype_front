@@ -4,6 +4,7 @@ import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {DialogModalComponent} from "./components/partagé/dialog-modal/dialog-modal.component";
+import { faSignOutAlt, faUser} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,8 @@ import {DialogModalComponent} from "./components/partagé/dialog-modal/dialog-mo
 export class AppComponent  implements OnInit{
   currentUserType;
   userSuscribe: Subscription;
+  faSignOutAlt = faSignOutAlt;
+  faUser = faUser;
   // options pour la fenêtre modale
   modalOptions: NgbModalOptions = {};
 
@@ -26,7 +29,6 @@ export class AppComponent  implements OnInit{
               ) { }
 
   ngOnInit(): void {
-
     this.currentUserType = this.userService.getCurrentRole();
     console.log('valeur init, currentUserType: ', this.currentUserType);
     this.userSuscribe = this.userService.userSubject.subscribe(
@@ -49,7 +51,6 @@ export class AppComponent  implements OnInit{
         this.routingTo('profils');
       }
     }
-
   }
 
   /**
@@ -77,13 +78,11 @@ export class AppComponent  implements OnInit{
           console.log('retour modal', dismiss);
         }
     );
-
   }
 
   /**
    * Paramétrage de la fenêtre modale
    */
-
   openModal(): NgbModalRef {
 
     this.modalOptions.backdrop = 'static';

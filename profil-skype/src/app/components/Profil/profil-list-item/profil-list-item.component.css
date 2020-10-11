@@ -10,3 +10,12 @@ a:hover, a:focus {
 .custom-td {
     word-wrap: break-word;
 }
+.status {
+    text-align: center
+}
+.disabled, .expired {
+    color: red;
+}
+.enabled {
+    color: green;
+}
