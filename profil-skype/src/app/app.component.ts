@@ -1,9 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {UserService} from './services/user.service';
 import {Subscription} from 'rxjs';
-import {SearchService} from './services/search.service';
-import {ProfilsService} from './services/profils.service';
 import {Router} from '@angular/router';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {DialogModalComponent} from "./components/partagé/dialog-modal/dialog-modal.component";
@@ -18,32 +15,15 @@ import {DialogModalComponent} from "./components/partagé/dialog-modal/dialog-mo
 export class AppComponent  implements OnInit{
   currentUserType;
   userSuscribe: Subscription;
-  searchForm:FormGroup;
-  private showSidebar:boolean=false;
-  showFilterButton: boolean=false;
-  // properties for the additional actions button in the navbar
-  button2Name: string;
   // options pour la fenêtre modale
   modalOptions: NgbModalOptions = {};
 
   constructor(private userService: UserService,
-              private formBuilder: FormBuilder,
-              private searchService: SearchService,
-              private profilService: ProfilsService,
               private modalService: NgbModal,
               private router: Router
               // ,
               // private cd: ChangeDetectorRef
-  )
-  {
-  }
-  //
-  // ngOnDestroy(): void {
-  //
-  //   this.userSuscribe.unsubscribe();
-  //   this.profilService.buttonFilterSubject.unsubscribe();
-  //   this.userService.userSubject.unsubscribe();
-  // }
+              ) { }
 
   ngOnInit(): void {
 
@@ -70,23 +50,6 @@ export class AppComponent  implements OnInit{
       }
     }
 
-
-    this.searchForm = this.formBuilder.group(
-      {search: new FormControl()}
-      );
-
-    this.searchForm.valueChanges.subscribe(form => this.onSearchInput(form));
-
-    this.profilService.buttonFilterSubject.subscribe(
-      (status) => {
-        (status) ? this.showFilterButton = true : this.showFilterButton = false;
-        this.button2Name = "Creer"
-      }
-    );
-  }
-
-  onSearchInput(form) {
-    this.searchService.searchSubject.next(form.search);
   }
 
   /**
@@ -94,33 +57,7 @@ export class AppComponent  implements OnInit{
    * @param route 
    */
   routingTo(route:string) {
-//    this.cd.detectChanges();
-    this.profilService.buttonFilterSubject.subscribe(
-      () => this.router.navigate([route])
-    );
-
-    if (route === 'profils') {
-      this.profilService.buttonFilterSubject.next(true);
-    } else {
-      this.showSidebar = false;
-      $('#sidebar').hide();
-      this.profilService.buttonFilterSubject.next(false);
-    }
-  }
-
-  /**
-   * method for moving sidebar
-   */
-  collapseSideBar() {
-    this.showSidebar = ! this.showSidebar;
-    // use jquery for the slideshow effect, waiting of other best UI components   
-    this.showSidebar ? $('#sidebar').slideDown(300): $('#sidebar').slideUp(300);
-    
-  }
-
-  actionButtonTwo() {
-    this.profilService.buttonFilterSubject.next(false);
-    this.router.navigate(['/profils/create']);
+    this.router.navigate([route]);
   }
 
   /**
@@ -128,8 +65,6 @@ export class AppComponent  implements OnInit{
    * On positionne le rôle à 0 pour que le composant parent redirige vers la fenêtre de connexion
    */
   OnDisconnect() {
-
-
     const modalRef = this.openModal();
     modalRef.result.then(
         confirm => {

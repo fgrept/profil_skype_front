@@ -3,7 +3,6 @@ import { UserService } from '../../../services/user.service';
 import { Subscription } from 'rxjs';
 import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
 import { ProfilsService } from 'src/app/services/profils.service';
-import { SearchService } from 'src/app/services/search.service';
 import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
@@ -19,13 +18,13 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   profilList2: ProfilFromList[];
   private profilSubscription: Subscription;
   private profilNumberSubscription: Subscription;
-  private searchSubscription: Subscription;
-  private buttonFilterSubscription:Subscription;
+  private search2Subscription: Subscription;
   searchText:string;
   page:number;
   numberOfProfil:number;
   filterForm:FormGroup;
-  navDisplayed:boolean=false;
+  searchForm:FormGroup;
+  showSidebar:boolean=false;
   //for search filter:
   voiceChecked:boolean=false;
   voiceEnabled:boolean=false;
@@ -37,13 +36,11 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
-              private searchService: SearchService,
               private formBuilder:FormBuilder) {
   }
 
   ngOnDestroy(): void {
-    if (this.buttonFilterSubscription) {this.buttonFilterSubscription.unsubscribe()};
-    if (this.searchSubscription) {this.searchSubscription.unsubscribe()};
+    if (this.search2Subscription) {this.search2Subscription.unsubscribe()};
     if (this.profilSubscription) {this.profilSubscription.unsubscribe()};
     if (this.profilNumberSubscription) {this.profilNumberSubscription.unsubscribe()};
   }
@@ -66,17 +63,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
     this.page = this.profilsService.pageListToShow;
     this.profilsService.getProfilsFromServer(this.profilsService.pageListToShow);
-
-    this.searchSubscription = this.searchService.searchSubject.subscribe(
-        (inputText:string) => {
-          this.searchText = inputText;
-        }
-      );
     
-    this.profilsService.buttonFilterSubject.next(true);
-    this.profilsService.buttonFilterSubject.subscribe(
-      (value) => (value) ? this.navDisplayed = true : this.navDisplayed = false
-    );
     this.filterForm = this.formBuilder.group(
       {searchId : new FormControl(),
       searchFirstName : new FormControl(),
@@ -97,6 +84,14 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
     this.sortColum=[0,0,0,0,0,0,0];
 
+    // for the search text in the page
+    this.searchForm = this.formBuilder.group(
+      {search: new FormControl()}
+      );
+    this.search2Subscription = this.searchForm.valueChanges.subscribe(
+      () => this.searchText = this.searchForm.get('search').value
+    );
+
       /* var el = document.getElementById('tata');
       document.addEventListener('scroll', (e) => {
         console.log('scroll : ' , document.documentElement.scrollHeight,
@@ -116,6 +111,15 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   onPageChanged(pageDemand:number) {
     this.page = pageDemand;
     this.profilsService.getProfilsFromServer(pageDemand);
+  }
+
+  /**
+   * method for moving sidebar
+   */
+  collapseSideBar() {
+    this.showSidebar = ! this.showSidebar;
+    // use jquery for the slideshow effect, waiting of other best UI components   
+    this.showSidebar ? $('#sidebar').slideDown(300): $('#sidebar').slideUp(300);
   }
 
   /**

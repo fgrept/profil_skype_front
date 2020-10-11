@@ -26,14 +26,6 @@
           <a class="nav-link btn btn-toolbar ml-2" (click)="OnDisconnect()">Déconnexion</a>
         </li>
       </ul>
-      <button class="btn btn-info ml-4"
-          *ngIf="showFilterButton && currentUserType!==0" (click)="collapseSideBar()">Filtres</button>
-      <button class="btn btn-info ml-4"
-          *ngIf="showFilterButton && (currentUserType==2 || currentUserType==3)" (click)="actionButtonTwo()">{{button2Name}}</button>
-      <form [formGroup]="searchForm" class="my-2 my-lg-0" *ngIf="showFilterButton && currentUserType!==0">
-          <input class="form-control ml-4" type="search" placeholder="Recherche dans la page"
-          aria-label="Search" formControlName="search">
-      </form>
     </div>
   </nav>
 

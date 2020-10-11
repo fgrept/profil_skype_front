@@ -40,7 +40,6 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
     profilInputDesactivated = false;
     private updateSubscription: Subscription;
     private deleteSubscription: Subscription;
-    private buttonFilterSubscription:Subscription;
     private successSubscription:Subscription;
     private valueChangesFormSubscription:Subscription;
     updateAuthorized: boolean;
@@ -63,7 +62,6 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if (this.updateSubscription) {this.updateSubscription.unsubscribe();}
         if (this.deleteSubscription) {this.deleteSubscription.unsubscribe();}
-        if (this.buttonFilterSubscription) {this.buttonFilterSubscription.unsubscribe();}
         if (this.successSubscription) {this.successSubscription.unsubscribe();}
         if (this.valueChangesFormSubscription) {this.valueChangesFormSubscription.unsubscribe()};
     }
@@ -271,10 +269,7 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
      */
     returnToList() {
         this.profilService.profilListToReload = false;
-        this.buttonFilterSubscription = this.profilService.buttonFilterSubject.subscribe(
-            () => this.router.navigate(['/profils'])
-        );
-        this.profilService.buttonFilterSubject.next(true);  
+        this.router.navigate(['/profils']);
     }
 
     /**

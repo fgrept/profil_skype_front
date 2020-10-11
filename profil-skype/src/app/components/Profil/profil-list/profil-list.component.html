@@ -103,16 +103,21 @@
                         [profil]="item" [idProfil]="index">
                     </app-profil-list-item>
                 </tbody>
-                <!-- ajout de 2 lignes vides pour pouvoir scroller avec le footer -->
-                <br/><br/><br/>
+                <!-- ajout de lignes vides pour pouvoir scroller avec le footer -->
+                <br/><br/><br/><br/><br/>
                 <footer class="w-100">
-                    <pagination-controls class="d-flex justify-content-center" (pageChange)="onPageChanged($event)"></pagination-controls>
+                    <br/>
                     <!-- NE PAS SUPPRIMER : PROCHAINE POSITION DES BOUTONS -->
-                    <!-- <div class="d-flex justify-content-around">
-                        <button class="btn btn-info">Créer</button>
-                        <button class="btn btn-info">Retour</button>
+                    <div class="d-flex justify-content-start">
+                        <a><button class="btn btn-secondary mx-2" (click)=collapseSideBar()>Filtres</button></a>
+                        <a routerLink="create"><button class="btn btn-success mx-2">Créer</button></a>
+                        <form [formGroup]="searchForm" class="my-2 my-lg-0">
+                            <input class="form-control mx-2" style="width: 210px;" type="search" placeholder="Recherche dans la page"
+                            formControlName="search">
+                        </form>
                     </div>
-                    <br/> -->
+                    <br/>
+                    <pagination-controls class="d-flex justify-content-center" (pageChange)="onPageChanged($event)"></pagination-controls>
                 </footer>
 
             </table>
