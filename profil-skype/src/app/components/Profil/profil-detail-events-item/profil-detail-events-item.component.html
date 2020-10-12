@@ -1,0 +1,13 @@
+
+<tr class="row stretched">
+    <td class="col-5 col-lg-3">{{event.dateEvent|date:'short'}}</td>
+    <td class="col-4 col-lg-2">{{event.typeEvent}}</td>
+    <td class="col-2">{{event.itCorrespondantId}}</td>
+    <td class="col-2 d-none d-lg-block">{{event.itCorrespondantFirstName}}</td>
+    <td class="col-2 d-none d-lg-block">{{event.itCorrespondantLastName}}</td>
+    <td class="col-1 commentAction"><button *ngIf="event.commentToShow" class="btn btn-info btn-sm"
+        (click)="this.displayComment = ! this.displayComment">...</button></td>
+</tr>
+<tr class="row streched" *ngIf="displayComment"> 
+    <td class="col-12 selectComment">{{event.commentEvent}}</td>
+</tr>

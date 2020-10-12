@@ -34,6 +34,7 @@ import { UserAccountComponent } from './components/user/user-account/user-accoun
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {HttpErrorInterceptor} from './interceptor/http-error.interceptor';
 import {TokenInterceptor} from './interceptor/token.interceptor';
+import { ProfilDetailEventsItemComponent } from './components/Profil/profil-detail-events-item/profil-detail-events-item.component';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -73,7 +74,8 @@ const appRoutes: Routes = [
     DialogModalFormComponent,
     ProfilCreateComponent,
     ProfilCreateFormComponent,
-    UserAccountComponent
+    UserAccountComponent,
+    ProfilDetailEventsItemComponent
   ],
   imports: [
     BrowserModule,
