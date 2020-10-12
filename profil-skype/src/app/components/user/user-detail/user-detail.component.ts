@@ -8,6 +8,7 @@ import {DialogModalComponent} from '../../partagé/dialog-modal/dialog-modal.com
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import { userMsg } from 'src/app/models/tech/user-msg';
+import {TechnicalService} from '../../../services/technical.service';
 
 
 @Component({
@@ -27,9 +28,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   // booléen dédié à l'action du bouton de mise à jour
   updateAuthorized: boolean;
   roles: string[];
-  private userUpdateSubscription:Subscription;
-  private userDeleteSubscription:Subscription;
-  private successSubscription:Subscription;
+  private userUpdateSubscription: Subscription;
+  private userDeleteSubscription: Subscription;
+  private successSubscription: Subscription;
 
   // variables pour l'affichage d'une popup
   successSubject = new Subject<string>();
@@ -40,8 +41,21 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   // options pour la fenêtre modale
   modalOptions: NgbModalOptions = {};
 
+  linkMail: string;
+  linkPhoneDesk: string;
+  linkPhoneMobile: string;
+
+  currentAddress: string;
+  isCurrentAddressAvailable = false;
+
+  urlMapGoogleDir = 'https://www.google.com/maps/dir/?api=1&origin=';
+  urlMapGoogleSearch = 'https://www.google.com/maps/search/?api=1&query=';
+
+  linkLocate: string;
+
   constructor(private routeUser: ActivatedRoute,
               private userService: UserService,
+              private technicalService: TechnicalService,
               private formBuilderUser: FormBuilder,
               private modalService: NgbModal,
               private router: Router) {}
@@ -59,12 +73,14 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.initForm();
     console.log('Roles formulaire :', this.userRolesForm);
     this.updateAuthorized = false;
+    this.getLocation();
+    this.toFormatLinkMapGoogle();
   }
 
   ngOnDestroy(): void {
-      if (this.successSubscription) {this.successSubscription.unsubscribe()};
-      if (this.userDeleteSubscription) {this.userDeleteSubscription.unsubscribe()};
-      if (this.userUpdateSubscription) {this.userUpdateSubscription.unsubscribe()};
+      if (this.successSubscription) {this.successSubscription.unsubscribe(); }
+      if (this.userDeleteSubscription) {this.userDeleteSubscription.unsubscribe(); }
+      if (this.userUpdateSubscription) {this.userUpdateSubscription.unsubscribe(); }
   }
 
   /**
@@ -76,16 +92,12 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     // formatage de l'adresse (donnée non modifiable)
     this.localisation = this.userResult.siteAddress.concat(' ', this.userResult.sitePostalCode, ' ', this.userResult.siteCity);
     this.userForm = this.formBuilderUser.group({
-      collaboraterId: this.userResult.collaboraterId,
-      lastName: this.userResult.lastName,
-      firstName: this.userResult.firstName,
-      deskPhoneNumber: this.userResult.deskPhoneNumber,
-      mobilePhoneNumber: this.userResult.mobilePhoneNumber,
-      mailAdress: this.userResult.mailAdress,
-      orgaUnitCode: this.userResult.orgaUnitCode,
-      localisation: this.localisation,
+
       userRolesForm: this.userRolesForm
     });
+    this.linkMail = 'mailto:' + this.userResult.mailAdress + '&subject=A propos de votre profil skype';
+    this.linkPhoneDesk = 'tel:' + this.userResult.deskPhoneNumber;
+    this.linkPhoneMobile = 'tel:' + this.userResult.mobilePhoneNumber;
   }
 
   /**
@@ -150,10 +162,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.userUpdateSubscription = this.userService.userUpdateSubject.subscribe(
       (response: userMsg) => {
         // update server done : display confirm box then routing
-        this.emitAlertAndRouting('Mise à jour effectuée',response);
+        this.emitAlertAndRouting('Mise à jour effectuée', response);
     }
     );
-    
+
     this.userService.updateUserToServer(this.userResult);
 
   }
@@ -171,7 +183,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     );
 
     const modalRef = this.openModal();
-    modalRef.result.then( 
+    modalRef.result.then(
         confirm => {
           console.log('retour modal', confirm);
           if (confirm.toString() === 'Confirm') {
@@ -199,9 +211,9 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     return modalDiag;
   }
 
- 
-  emitAlertAndRouting(message:string, response:userMsg) {
-        
+
+  emitAlertAndRouting(message: string, response: userMsg) {
+
     if (response.success) {
         this.successMessage = message;
         this.typeMessage = 'success';
@@ -210,7 +222,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             () => {
                 this.successMessage = '';
                 this.availableMessage = false;
-                this.router.navigate(['/users'])
+                this.router.navigate(['/users']);
             }
         );
         this.successSubject.next();
@@ -218,9 +230,78 @@ export class UserDetailComponent implements OnInit, OnDestroy {
         this.successMessage = response.msg;
         this.typeMessage = 'danger';
         this.availableMessage = true;
-    }  
-}
+    }
+  }
+  getLocation(): void{
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const longitude = position.coords.longitude;
+        const latitude = position.coords.latitude;
+        console.log('longitude: ' + longitude + ' latitude: ' + latitude);
+        this.getCurrentAddress(longitude, latitude);
+      });
+    } else {
+      console.log('No support for geolocation');
+    }
+  }
 
 
+   getCurrentAddress(longitude: number, latitude: number) {
+    this.technicalService.getGeoSubject.subscribe(
+        // la réponse est un objet GeoJSON de type FeatureCollection
+        // il respecte la norme RFC 7946
+        (response:
+            {
+          type: string,
+          version: string,
+          features: [
+            {
+              type: string
+              // , geometry: {
+              //   type: string,
+              //   coordinates: [number]
+              // }
+              , properties: {
+                label: string
+                // , score: number,
+                // housenumber: string,
+                // id: string,
+                // type: string,
+                // x: number,
+                // y: number,
+                // importance: number,
+                // name: string,
+                // postcode: string,
+                // citycode: string,
+                // city: string,
+                // context: string,
+                // street: string,
+                // distance: number
+              }
+            }
+          ]
+          //     , attribution: string,
+          // licence: string,
+          // limit: number
+       }
+        ) => {
+            this.isCurrentAddressAvailable = true;
+            console.log('response', response);
+          // récupération de l'adresse
+            this.currentAddress = response.features[0].properties.label;
+            this.toFormatLinkMapGoogle();
+        }
+    );
+    this.technicalService.getCurrentPosition(longitude, latitude);
+  }
+
+    toFormatLinkMapGoogle() {
+        if (this.isCurrentAddressAvailable) {
+            this.linkLocate = this.urlMapGoogleDir + this.currentAddress + '&destination=' + this.localisation;
+            console.log('lien vers google', this.linkLocate);
+        }else {
+            this.linkLocate = this.urlMapGoogleSearch + this.localisation;
+        }
+    }
 }
 

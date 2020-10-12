@@ -5,49 +5,58 @@
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="collaboraterId">Id annuaire :</label>
             <div class="col-6 col-sm-4">
-                <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>
+    <!--            <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>-->
+                    <label id="collaboraterId" >{{userResult.collaboraterId}}</label>
             </div>
+
         </div>
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="lastName">Nom :</label>
             <div class="col-6 col-sm-4">
-                <input type="text" id="lastName" class="form-control" formControlName="lastName" disabled>
+<!--                <input type="text" id="lastName" class="form-control" formControlName="lastName" disabled>-->
+                    <label id="lastName" >{{userResult.lastName}}</label>
             </div>
         </div>
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="firstName">Prénom :</label>
             <div class="col-6 col-sm-4">
-                <input type="text" id="firstName" class="form-control" formControlName="firstName" disabled>
+<!--                <input type="text" id="firstName" class="form-control" formControlName="firstName" disabled>-->
+                    <label id="firstName" >{{userResult.firstName}}</label>
             </div>
         </div>
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="deskPhoneNumber">Tel bureau :</label>
             <div class="col-6 col-sm-4">
-                <input type="tel" id="deskPhoneNumber" class="form-control" formControlName="deskPhoneNumber" disabled>
+<!--                <input type="tel" id="deskPhoneNumber" class="form-control" formControlName="deskPhoneNumber" disabled>-->
+                    <a [href]="linkPhoneDesk" target="_blank">{{userResult.deskPhoneNumber}}</a>
             </div>
         </div>
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="mobilePhoneNumber">Tel portable :</label>
             <div class="col-6 col-sm-4">
-                <input type="tel" id="mobilePhoneNumber" class="form-control" formControlName="mobilePhoneNumber" disabled>
+<!--                <input type="tel" id="mobilePhoneNumber" class="form-control" formControlName="mobilePhoneNumber" disabled>-->
+                    <a [href]="linkPhoneMobile" target="_blank">{{userResult.mobilePhoneNumber}}</a>
             </div>
         </div>
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="mailAdress">Adresse Mail :</label>
             <div class="col-6 col-sm-4">
-                <input type="email" id="mailAdress" class="form-control" formControlName="mailAdress" disabled>
+<!--                <input type="email" id="mailAdress" class="form-control" formControlName="mailAdress" disabled>-->
+                    <a [href]="linkMail" target="_blank">{{userResult.mailAdress}}</a>
             </div>
         </div>
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="orgaUnitCode">Code UO :</label>
             <div class="col-6 col-sm-4">
-                <input type="text" id="orgaUnitCode" class="form-control" formControlName="orgaUnitCode" disabled>
+<!--                <input type="text" id="orgaUnitCode" class="form-control" formControlName="orgaUnitCode" disabled>-->
+                    <label id="orgaUnitCode" >{{userResult.orgaUnitCode}}</label>
             </div>
         </div>
         <div class="formGroup row my-2">
             <label class="col-6 col-sm-2" for="localisation">Localisation :</label>
             <div class="col-6 col-sm-4">
-                <input type="text" id="localisation" class="form-control" formControlName="localisation" disabled>
+<!--                <input type="text" id="localisation" class="form-control" formControlName="localisation" disabled>-->
+                <a [href]="linkLocate" target="_blank">{{this.localisation}}</a>
             </div>
         </div>
         <div class="formGroup row my-2">
@@ -69,8 +78,6 @@
             <button class="btn btn-danger" (click)="deleteUser()">Supprimer</button>
 
         </footer>
-<!--         <div class="col-md-6 text-center">
-        </div> -->
         <br/>
         <div class="col-md-6">
             <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true (close)="availableMessage=false">{{ successMessage }}</ngb-alert>

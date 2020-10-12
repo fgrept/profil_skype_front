@@ -5,7 +5,7 @@ import {CustomPasswordValidator} from '../../../Validators/custom-password-valid
 import {debounceTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from '../../../services/user.service';
-import {HttpResponseBase} from "@angular/common/http";
+
 
 @Component({
   selector: 'app-user-account',
@@ -18,6 +18,11 @@ export class UserAccountComponent implements OnInit, OnDestroy {
   formAccount: FormGroup;
   // activation de la mise à jour du mot de passe
   updateAvailable: boolean;
+
+  collaboraterId: string;
+  lastName: string;
+  firstName: string;
+  userRoles: string;
 
   // variables pour l'affichage d'une popup
   successSubject = new Subject<string>();
@@ -58,11 +63,12 @@ export class UserAccountComponent implements OnInit, OnDestroy {
   }
 
   initForm() {
+    this.collaboraterId = localStorage.getItem('userId');
+    this.lastName = localStorage.getItem('lastName');
+    this.firstName = localStorage.getItem('firstName');
+    this.userRoles = localStorage.getItem('userRoles');
     this.formAccount = this.formBuilderUser.group( {
-      collaboraterId: localStorage.getItem('userId'),
-      lastName: localStorage.getItem('lastName'),
-      firstName: localStorage.getItem('firstName'),
-      userRoles: localStorage.getItem('userRoles'),
+
       actualPassword: ['', Validators.required],
       newPassword: ['', Validators.compose([
           Validators.required,

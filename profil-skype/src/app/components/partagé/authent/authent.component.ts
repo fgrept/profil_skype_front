@@ -9,6 +9,8 @@ import {UserResult} from '../../../models/user/user-result';
 import {Router} from '@angular/router';
 import {debounceTime} from 'rxjs/operators';
 import {Subject, Subscription} from 'rxjs';
+import {TechnicalService} from '../../../services/technical.service';
+import {userMsg} from '../../../models/tech/user-msg';
 
 @Component({
   selector: 'app-authent',
@@ -32,15 +34,18 @@ export class AuthentComponent implements OnInit, OnDestroy {
   errorMessage: string;
   availableMessage = false;
   private errorSubscription: Subscription;
+  private errorGetSubscription: Subscription;
 
   constructor(private userService: UserService,
               private profilService: ProfilsService,
               private httpClient: HttpClient,
               private formBuilder: FormBuilder,
+              private technicalService: TechnicalService,
               private router: Router) {}
 
   ngOnDestroy(): void {
-        if (this.errorSubject){this.errorSubject.unsubscribe();}
+        if (this.errorSubject){this.errorSubject.unsubscribe(); }
+        if (this.errorGetSubscription){this.errorGetSubscription.unsubscribe(); }
     }
 
   ngOnInit(): void {
@@ -54,6 +59,12 @@ export class AuthentComponent implements OnInit, OnDestroy {
       {username : ['', [Validators.required]], password : ['', [Validators.required]]}
     );
     this.authentForm.valueChanges.subscribe(form => this.checkConnectionAuthorized(form));
+    this.errorGetSubscription = this.technicalService.getErrorSubject.subscribe(
+        (response: userMsg) => {
+
+          this.emitAlertAndRouting('impossible de récupérer les données utilisateurs');
+        }
+    );
   }
 
   /**
@@ -100,7 +111,17 @@ export class AuthentComponent implements OnInit, OnDestroy {
         this.getUser(this.userId);
       },
       (error) => {
-        this.emitAlertAndRouting('utilisateur ou mot de passe incorrect');
+        if (error.status === 401){
+          this.emitAlertAndRouting('utilisateur ou mot de passe incorrect');
+        }else {
+          if (error.status === 0){
+            this.emitAlertAndRouting('connexion refusée par le serveur');
+          }else
+            {
+            this.emitAlertAndRouting('erreur lors de l\'authentification, code erreur: ' + error.status);
+          }
+        }
+
         console.log('retour userConnect back-end Ok : ', error);
       }
     );
