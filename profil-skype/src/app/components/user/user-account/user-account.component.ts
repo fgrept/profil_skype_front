@@ -5,7 +5,7 @@ import {CustomPasswordValidator} from '../../../Validators/custom-password-valid
 import {debounceTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from '../../../services/user.service';
-import {HttpResponseBase} from "@angular/common/http";
+
 
 @Component({
   selector: 'app-user-account',
