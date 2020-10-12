@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row">
+    <div class="row" *ngIf="!availableMessage">
         <div class="col-12" id="sidebar" style="display: none">
             <hr>
             <form [formGroup]="filterForm" class="d-flex flex-wrap" id="filterForm">    
@@ -122,11 +122,10 @@
             </table>
 
         </form>
-
       </div>
-
-      
-
+    </div>
+    <div class="col-md-6">
+        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true >{{ successMessage }}</ngb-alert>
     </div>
   </div>
 

@@ -3,6 +3,8 @@ import { UserService } from '../../../services/user.service';
 import { Subscription, Subject } from 'rxjs';
 import {UserResult} from '../../../models/user/user-result';
 import {debounceTime} from 'rxjs/operators';
+import {userMsg} from "../../../models/tech/user-msg";
+import {TechnicalService} from "../../../services/technical.service";
 
 @Component({
   selector: 'app-user-list',
@@ -17,17 +19,19 @@ export class UserListComponent implements OnInit, OnDestroy {
     currentUserType;
     userListResult: UserResult[];
     private userSubscription: Subscription;
-    private successSubscription:Subscription;
-    private getUserDeleteSubscription:Subscription;
-    successSubject = new Subject<string>();
+    private errorGetSubscription: Subscription;
+
+    // pour le message d'erreur
     successMessage: string;
     availableMessage = false;
+    typeMessage = 'success';
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+              private technicalService: TechnicalService) { }
     ngOnDestroy(): void {
-        if (this.getUserDeleteSubscription) {this.getUserDeleteSubscription.unsubscribe()};
-        if (this.userSubscription) {this.userSubscription.unsubscribe()};
-        if (this.successSubscription) {this.successSubscription.unsubscribe()};
+
+        if (this.userSubscription) {this.userSubscription.unsubscribe(); }
+        if (this.errorGetSubscription) {this.errorGetSubscription.unsubscribe(); }
     }
 
 
@@ -49,34 +53,21 @@ export class UserListComponent implements OnInit, OnDestroy {
       } else {
           console.log('liste en cours', this.userService.getUsers());
       }
+      this.errorGetSubscription = this.technicalService.getErrorSubject.subscribe(
+            (response: userMsg) => {
+
+                this.emitAlertAndRouting('Impossible de récupérer la liste des utilisateurs, code erreur : ', response);
+            }
+        );
       /* this.initAlert();
       this.isDeletedUser(); */
   }
   // Normalement ce code ne sert plus car la suppression est effectuée dans le détail et le message s'affiche
   // avant d'effectuer le routing
 
-    /* initAlert() {
-        this.successSubscription = this.successSubject.subscribe(message => this.successMessage = message);
-        this.successSubject.pipe(
-            debounceTime(2000)
-        ).subscribe(() => {
-            this.successMessage = '';
-            this.availableMessage = false;
-        });
-    }
-
-    isDeletedUser() {
-      this.getUserDeleteSubscription = this.userService.getUserDeleteSubject().subscribe(
-          (response) => {
-              console.log(response);
-              this.changeSuccessMessage('Suppression effectuée ICI');
-          }
-      );
-    }
-
-    changeSuccessMessage(message: string) {
+    emitAlertAndRouting(message: string, response: userMsg) {
+        this.successMessage = message.concat(response.msg);
+        this.typeMessage = 'danger';
         this.availableMessage = true;
-        this.successSubject.next(message);
-    } */
-
+    }
 }

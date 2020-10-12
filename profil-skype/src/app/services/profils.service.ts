@@ -231,7 +231,7 @@ export class ProfilsService  {
                     this.getProfilSubject.next(result);
                 },
                 (error) => {
-                    this.getProfilSubject.next(error);
+                //    this.getProfilSubject.next(error);
                     console.log('erreur back-end ' + error.status );
                 }
             );

@@ -34,6 +34,8 @@ import { UserAccountComponent } from './components/user/user-account/user-accoun
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {HttpErrorInterceptor} from './interceptor/http-error.interceptor';
 import {TokenInterceptor} from './interceptor/token.interceptor';
+//import { ServiceWorkerModule } from '@angular/service-worker';
+//import { environment } from '../environments/environment';
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -84,6 +86,8 @@ const appRoutes: Routes = [
     NgxPaginationModule,
     NgbModule,
     FontAwesomeModule
+//	,
+//    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [AuthentGuardService,
               UserService,
