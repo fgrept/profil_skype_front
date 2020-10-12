@@ -30,19 +30,22 @@
   <!-- // PROTO de connexion sur login-->
   <form [formGroup]="authentForm">
     <p><br/><strong>Connexion à l'application profil skype</strong></p>
+    <br class="custom-scroll"/>
     <div class="formGroup row">
-      <label class="col-3" for="username">Nom utilisateur :</label>
-      <div class="col-4">
+      <label class="col-6 col-sm-3" for="username">Nom utilisateur :</label>
+      <div class="col-6 col-sm-3">
         <input type="text" id="username" class="form-control" formControlName="username">
       </div>
     </div>
+    <br class="custom-scroll"/>
     <div class="formGroup row">
-      <label class="col-3" for="password">Mot de passe :</label>
-      <div class="col-4">
+      <label class="col-6 col-sm-3" for="password">Mot de passe :</label>
+      <div class="col-6 col-sm-3">
         <input type="password" id="password" class="form-control" formControlName="password">
       </div>
     </div>
     <br/>
+    <br class="custom-scroll"/>
     <div class="col-md-6 text-center">
       <button [disabled]="!isAutorized" class="btn btn-success mx-3" (click)="userConnect()">Se connecter</button>
       <button class="btn btn-danger" (click)="reset()">Réinitialiser</button>

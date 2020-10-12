@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import { UserResult } from 'src/app/models/user/user-result';
 import {UserService} from '../../../services/user.service';
 
 @Component({
@@ -11,13 +12,18 @@ import {UserService} from '../../../services/user.service';
  */
 export class UserListItemComponent implements OnInit {
 
-  @Input() user;
+  @Input() user:UserResult;
   @Input() idUser: number;
+  roleShow = new Array<string>();
   currentUserType;
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
+    
+    for (const iterator of this.user.roles) {
+      this.roleShow.push(iterator + ' ');
+    }
   }
 
 }

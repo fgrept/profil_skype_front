@@ -15,18 +15,24 @@
                     <label for="searchFirstName" class="col-5">Prénom :</label>
                     <input placeholder="Martin" type="text" id="searchFirstName" class="col-7 form-control" formControlName="searchFirstName">
                 </div>
+             
                 <div class="form-group d-flex">
                     <label for="searchUo" class="col-5">UO :</label>
                     <input placeholder="00123" type="tel" id="searchUo" class="col-7 form-control" formControlName="searchUo">
                 </div>
+           
                 <div class="form-group d-flex">
                     <label for="searchSite" class="col-5">Site :</label>
                     <input placeholder="00123" type="tel" id="searchSite" class="col-7 form-control" formControlName="searchSite">
-                </div>
+                </div>                    
+        
+        
                 <div class="form-group d-flex">
                     <label for="searchSamAccount" class="col-5">Account Name :</label>
                     <input placeholder="M000012345" type="email" id="searchSamAccount" class="col-7 form-control" formControlName="searchSamAccount">
-                </div>
+                </div>                    
+            
+        
                 <div class="form-group d-flex">
                     <div class="col-5">
                         <input type="checkbox" class="form-check-input ml-1" formControlName="searchVoiceActivate"
@@ -39,7 +45,9 @@
                         formControlName="searchVoiceEnabled" (click)=onVoiceEnabledClick()>
                         <label class="custom-control-label" for="customSwitch1"></label>
                     </div>
-                </div>
+                </div>                    
+        
+            
                 <div class="form-group d-flex">
                     <label for="searchVoiceEnabled" class="col-5">Accès international :</label>
                     <div class="custom-control custom-switch ml-2">
@@ -47,11 +55,15 @@
                         formControlName="searchVoicePolicy">
                         <label class="custom-control-label" for="customSwitch2"></label>
                     </div>
-                </div>
+                </div>                    
+        
+            
                 <div class="form-group d-flex">
                     <label for="searchExpirationDate" class="col-5">Date expiration :</label>
                     <input placeholder="jj/mm/aaaa" type="date" id="searchExpirationDate" class="col-7 form-control" formControlName="searchExpirationDate">
-                </div>
+                </div>                    
+         
+
             </form>
             <button class="btn btn-success mx-3" (click)="onSearchFilterClick()">Appliquer</button>
             <button class="btn btn-danger" (click)="onResetForm()">Réinitialiser</button>
@@ -66,34 +78,34 @@
                 <thead>
                     <tr class="row">
                         <th class="col-3 d-none d-lg-block" (click)=onSortClick(0)>adresse sip 
-                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[0]===1"></fa-icon>
-                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[0]===(-1)"></fa-icon>
-                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[0]===0"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowDown" *ngIf="sortColum[0]===1"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[0]===(-1)"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[0]===0"></fa-icon>
                         </th>
                         <th class="col-2" (click)=onSortClick(1)>uid 
-                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[1]===1"></fa-icon>
-                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[1]===(-1)"></fa-icon>
-                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[1]===0"></fa-icon>                        </th>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowDown" *ngIf="sortColum[1]===1"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[1]===(-1)"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[1]===0"></fa-icon>                        </th>
                         <th class="col-4 col-sm-3 col-lg-2" (click)=onSortClick(2)>prénom 
-                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[2]===1"></fa-icon>
-                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[2]===(-1)"></fa-icon>
-                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[2]===0"></fa-icon>                        </th>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowDown" *ngIf="sortColum[2]===1"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[2]===(-1)"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[2]===0"></fa-icon>                        </th>
                         <th class="col-4 col-sm-3 col-lg-2" (click)=onSortClick(3)>nom 
-                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[3]===1"></fa-icon>
-                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[3]===(-1)"></fa-icon>
-                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[3]===0"></fa-icon>                        </th>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowDown" *ngIf="sortColum[3]===1"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[3]===(-1)"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[3]===0"></fa-icon>                        </th>
                         <th class="col-md-2 col-lg-1 d-none d-lg-block" (click)=onSortClick(4)>uo 
-                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[4]===1"></fa-icon>
-                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[4]===(-1)"></fa-icon>
-                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[4]===0"></fa-icon>                        </th>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowDown" *ngIf="sortColum[4]===1"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[4]===(-1)"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[4]===0"></fa-icon>                        </th>
                         <th class="col-2 col-md-3 col-lg-1 d-none d-sm-block" (click)=onSortClick(5)>site 
-                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[5]===1"></fa-icon>
-                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[5]===(-1)"></fa-icon>
-                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[5]===0"></fa-icon>                        </th>                
-                        <th class="col-1" (click)=onSortClick(6)>status
-                            <fa-icon [icon]="faArrowDown" *ngIf="sortColum[6]===1"></fa-icon>
-                            <fa-icon [icon]="faArrowUp" *ngIf="sortColum[6]===(-1)"></fa-icon>
-                            <fa-icon [icon]="faArrowsAltV" *ngIf="sortColum[6]===0"></fa-icon>                        </th>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowDown" *ngIf="sortColum[5]===1"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[5]===(-1)"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[5]===0"></fa-icon>                        </th>                
+                        <th class="col-2 col-sm-1" (click)=onSortClick(6)>status
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowDown" *ngIf="sortColum[6]===1"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[6]===(-1)"></fa-icon>
+                            <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[6]===0"></fa-icon>                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,13 +122,16 @@
                     <div class="d-flex justify-content-start">
                         <a><button class="btn btn-secondary mx-2" (click)=collapseSideBar()>Filtres</button></a>
                         <a routerLink="create"><button class="btn btn-success mx-2">Créer</button></a>
-                        <form [formGroup]="searchForm" class="my-2 my-lg-0">
+                        <form [formGroup]="searchForm" class="my-2 my-lg-0 d-none d-sm-block">
                             <input class="form-control mx-2" style="width: 210px;" type="search" placeholder="Recherche dans la page"
                             formControlName="search">
                         </form>
                     </div>
                     <br/>
-                    <pagination-controls class="d-flex justify-content-center" (pageChange)="onPageChanged($event)"></pagination-controls>
+                    <pagination-controls style="background-color: #F8F9FA;
+                                                margin-left: -15px;
+                                                padding-top: 10px;"
+                            class="d-flex justify-content-center" (pageChange)="onPageChanged($event)"></pagination-controls>
                 </footer>
 
             </table>

@@ -4,12 +4,12 @@
     <table class="table">
         <thead>
             <tr class="row">
-                <th class="col-5 col-lg-3">Date événement</th>
+                <th class="col-4 col-lg-2">Date événement</th>
                 <th class="col-4 col-lg-2">Type événement</th>
                 <th class="col-2">Id</th>
                 <th class="col-2 d-none d-lg-block">Nom</th>  
                 <th class="col-2 d-none d-lg-block">Prénom</th>              
-                <th class="col-1 ml-n4">Détail</th>
+                <th class="col-2 ">Détail</th>
             </tr>
         </thead>        
         
@@ -19,16 +19,16 @@
             </app-profil-detail-events-item>
         </div>
         <br/>
-        <a [routerLink]="['/profils', idProfil]">
-            <button class="btn btn-secondary">Retour</button>
-        </a>
-        <footer>
-             <pagination-controls class="d-flex justify-content-center"
+        <footer class="w-100">
+            <a [routerLink]="['/profils', idProfil]">
+                <button class="btn btn-secondary">Retour</button>
+            </a>
+            <pagination-controls  style="background-color: #F8F9FA;
+                                        margin-left: -15px;
+                                        padding-top: 10px;"
+            class="d-flex justify-content-center"
                     (pageChange)="page = $event"></pagination-controls>
-        </footer>
+        </footer>    
     </table>
-
-
-
   </div>
 
