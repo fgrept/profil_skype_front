@@ -1,7 +1,7 @@
 
 <div class="container">
 
-    <table class="table">
+    <table class="table" *ngIf="!availableMessage">
         <thead>
             <tr class="row">
                 <th class="col-5 col-lg-3">Date événement</th>
@@ -29,6 +29,8 @@
     </table>
 
 
-
+    <div class="col-md-6">
+        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true >{{ successMessage }}</ngb-alert>
+    </div>
   </div>
 

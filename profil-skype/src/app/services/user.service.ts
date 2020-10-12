@@ -249,7 +249,7 @@ export class UserService {
                     let msg = this.errorHandler(error);
                     this.userDeleteSubject.next(new userMsg(false,msg));
                   }
-                } 
+                }
             );
     }
 
