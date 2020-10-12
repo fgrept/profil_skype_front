@@ -57,7 +57,8 @@
             [collaborater]="item" [idUser]="item.collaboraterId" [type]="type">
             </app-collaborater-search-item>
             <footer>
-                <pagination-controls (pageChange)="page = $event"></pagination-controls>
+                <pagination-controls class="d-flex justify-content-center"
+                        (pageChange)="page = $event"></pagination-controls>
             </footer>
         </table>
     </div>

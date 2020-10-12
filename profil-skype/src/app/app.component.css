@@ -1,10 +1,20 @@
-/* main {
-    display: flex; 
-    flex-direction: row;
-} */
-/* nav {
-    position: fixed;
-    top: 0;
-    z-index: 1;
-    width: 100%;
+/* footer-xs {
+
+}
+ */
+/* 
+@include media-breakpoint-up(sm) { ... }
+@include media-breakpoint-up(md) { ... }
+@include media-breakpoint-up(lg) { ... }
+@include media-breakpoint-up(xl) { ... }
+
+
+.custom-class {
+  display: none;
+}
+
+@include media-breakpoint-up(sm) {
+  .custom-class {
+    display: block;
+  }
 } */
