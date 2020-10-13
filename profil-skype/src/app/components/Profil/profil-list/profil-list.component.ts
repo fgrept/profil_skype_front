@@ -6,12 +6,9 @@ import { ProfilsService } from 'src/app/services/profils.service';
 import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
-<<<<<<< HEAD
 import { Router } from '@angular/router';
-=======
 import {TechnicalService} from "../../../services/technical.service";
 import {userMsg} from "../../../models/tech/user-msg";
->>>>>>> 15cbe7fa3721542bbe21b18550be7b762eccf75a
 
 @Component({
   selector: 'app-profil-list',
@@ -48,14 +45,10 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
-<<<<<<< HEAD
               private formBuilder:FormBuilder,
-              private router: Router) {
-=======
-              private formBuilder: FormBuilder,
+              private router: Router, 
               private technicalService: TechnicalService) {
->>>>>>> 15cbe7fa3721542bbe21b18550be7b762eccf75a
-  }
+   }
 
   ngOnDestroy(): void {
     if (this.search2Subscription) {this.search2Subscription.unsubscribe(); }
@@ -63,7 +56,6 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     if (this.profilNumberSubscription) {this.profilNumberSubscription.unsubscribe(); }
     if (this.errorGetSubscription) {this.errorGetSubscription.unsubscribe(); }
   }
-
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
 
