@@ -65,8 +65,11 @@
          
 
             </form>
-            <button class="btn btn-success mx-3" (click)="onSearchFilterClick()">Appliquer</button>
-            <button class="btn btn-danger" (click)="onResetForm()">Réinitialiser</button>
+            <div>
+                <button class="btn btn-success mx-3" (click)="onSearchFilterClick()">Appliquer</button>
+                <button class="btn btn-danger mx-3" (click)="onResetForm()">Réinitialiser</button>
+                <button class="btn btn-primary mx-3" (click)="routingTo('expired')">Profils expirés</button>
+            </div>
             <br/><br />
         </div>
  

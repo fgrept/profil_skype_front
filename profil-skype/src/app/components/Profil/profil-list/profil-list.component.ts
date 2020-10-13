@@ -6,6 +6,7 @@ import { ProfilsService } from 'src/app/services/profils.service';
 import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
 import {TechnicalService} from "../../../services/technical.service";
 import {userMsg} from "../../../models/tech/user-msg";
 
@@ -44,9 +45,10 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
-              private formBuilder: FormBuilder,
+              private formBuilder:FormBuilder,
+              private router: Router, 
               private technicalService: TechnicalService) {
-  }
+   }
 
   ngOnDestroy(): void {
     if (this.search2Subscription) {this.search2Subscription.unsubscribe(); }
@@ -54,7 +56,6 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     if (this.profilNumberSubscription) {this.profilNumberSubscription.unsubscribe(); }
     if (this.errorGetSubscription) {this.errorGetSubscription.unsubscribe(); }
   }
-
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
 
@@ -174,6 +175,56 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
 
   }
+
+  onFilterExpired() {
+    let profilSearch = new ProfilFromList (
+      null,
+      this.filterForm.get('searchVoiceEnabled').value,
+      this.filterForm.get('searchVoicePolicy').value,
+      null,
+      this.filterForm.get('searchSamAccount').value,
+      null,
+      null,
+      null,
+      'ENABLED',
+      this.filterForm.get('searchId').value, // collaboraterId
+      this.filterForm.get('searchExpirationDate').value,
+      this.filterForm.get('searchFirstName').value,
+      this.filterForm.get('searchLastName').value,
+      this.filterForm.get('searchUo').value,
+      this.filterForm.get('searchSite').value
+    );
+
+    // in case of activation criteria, we reset the list at the first page => 1
+    let p = 1;
+    // the filtrer on boolean must not be "" but null
+    if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
+    // filter on users having international option 
+    if (profilSearch.voicePolicy.toString() === 'true') { //the value has a boolean type !
+      profilSearch.voicePolicy = 'EMEA-VP-FR_BDDF_InternationalAuthorized'
+    } else {
+      profilSearch.voicePolicy = null;
+    }
+
+    this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
+    
+    this.profilSubscription = this.profilsService.profilsSubject.subscribe(
+      (profils: ProfilFromList[]) => {
+        this.profilList2 = profils;
+      }
+    );
+
+
+  } 
+
+  routingTo(route:string) {
+    //    this.cd.detectChanges();
+    console.log("method_RoutingTo-Route =  :", route)
+        // this.profilsService.buttonFilterSubject.subscribe(
+        //   () => this.router.navigate([route])
+        // );
+        this.router.navigate([route]) 
+    } 
 
   onResetForm(): void {
     this.filterForm.reset({value : ''});
