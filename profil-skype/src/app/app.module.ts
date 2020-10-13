@@ -40,10 +40,10 @@ import {TokenInterceptor} from './interceptor/token.interceptor';
 import { ProfilDetailEventsItemComponent } from './components/Profil/profil-detail-events-item/profil-detail-events-item.component';
 import { ProfilExpiredComponent } from './components/Profil/profil-expired/profil-expired.component';
 import { ProfilExpiredItemComponent } from './components/Profil/profil-expired-item/profil-expired-item.component';
-import { MaterialModule } from './components/partagé/material/material/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoaderService } from './services/loader.service';
 import { LoaderInterceptor } from './interceptor/loader.interceptor';
+import {NgxLoadingModule} from "ngx-loading";
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -99,8 +99,8 @@ const appRoutes: Routes = [
     NgxPaginationModule,
     NgbModule,
     FontAwesomeModule,
-    MaterialModule,
     BrowserAnimationsModule,
+    NgxLoadingModule,
     /*
         ,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })

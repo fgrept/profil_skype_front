@@ -15,7 +15,6 @@ import { ProfilsService } from 'src/app/services/profils.service';
 })
 export class ProfilExpiredComponent implements OnInit {
 
-  isLoading$:Observable<boolean>;
   
   expiredProfilForm :FormGroup
   
@@ -33,7 +32,7 @@ export class ProfilExpiredComponent implements OnInit {
                public loaderService: LoaderService) { }
 
   ngOnInit(): void {
-    this.isLoading$ = this.loaderService.isLoading$;
+
     //Initialize array profilListForActiveStatus
 
     
