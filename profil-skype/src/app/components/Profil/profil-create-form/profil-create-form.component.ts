@@ -28,8 +28,8 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
     {name : 'Linked Mailbox', value: 'Linked Mailbox', checked : true}];
   isVoiceDisabled = false;
   private profilCreate: ProfilForChange;
-  private profilSubscription:Subscription;
-  private successSubscription:Subscription;
+  private profilSubscription: Subscription;
+  private successSubscription: Subscription;
 
   // variables pour le message de confirmation
   successSubject = new Subject<string>();
@@ -58,7 +58,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
 
   private initForm() {
     this.profilFormCreate = this.formBuilder.group({
-      collaboraterId: this.idCollaborater,
+      // collaboraterId: this.idCollaborater,
       sip: ['sip:', [Validators.required, Validators.pattern('^sip:.*$')]],
       voiceEnabled: 'false',
       voicePolicy: '',
@@ -98,14 +98,14 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
         localStorage.getItem('userId'),
         'création du profil'
     );
-    //console.log("avant suscribe");
+    // console.log("avant suscribe");
     this.profilSubscription = this.profilService.createSubject.subscribe(
       (response: userMsg) => {
         // update server done : display confirm box then routing
         this.emitAlertAndRouting('Création du profil effectuée',response);
         }        
     );
-    //console.log("après suscribe");
+    // console.log("après suscribe");
     this.profilService.createProfil(profilCreate);
   }
 

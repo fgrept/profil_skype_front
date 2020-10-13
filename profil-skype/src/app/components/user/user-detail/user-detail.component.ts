@@ -41,6 +41,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   // options pour la fenêtre modale
   modalOptions: NgbModalOptions = {};
 
+  // variables pour le formatage des liens
   linkMail: string;
   linkPhoneDesk: string;
   linkPhoneMobile: string;

@@ -13,6 +13,11 @@ import { DialogModalFormComponent } from '../../partagé/dialog-modal-form/dialo
 import {debounceTime} from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 import { userMsg } from 'src/app/models/tech/user-msg';
+import {UserResult} from '../../../models/user/user-result';
+import {HttpResponse} from '@angular/common/http';
+import {Collaborater} from '../../../models/collaborater/collaborater';
+import {CollaboraterService} from '../../../services/collaborater.service';
+import {TechnicalService} from "../../../services/technical.service";
 
 @Component({
     selector: 'app-profil-detail',
@@ -40,30 +45,50 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
     profilInputDesactivated = false;
     private updateSubscription: Subscription;
     private deleteSubscription: Subscription;
-    private successSubscription:Subscription;
-    private valueChangesFormSubscription:Subscription;
+    private successSubscription: Subscription;
+    private valueChangesFormSubscription: Subscription;
     updateAuthorized: boolean;
 
     // options pour la fenêtre modale
     modalOptions: NgbModalOptions = {};
     successSubject = new Subject<string>();
     successMessage: string;
-    availableMessage:boolean = false;
+    availableMessage = false;
     typeMessage = 'success';
+
+    // variables pour afficher et masquer les informations collaborater
+    isDisplayInfos = false;
+    isGetError = false;
+    private collaboraterGetSubscription: Subscription;
+    collaborater: Collaborater;
+    linkPhoneDesk: string;
+    linkPhoneMobile: string;
+    linkMail: string;
+    linkLocate: string;
+    localisation: string;
+
+    currentAddress: string;
+    isCurrentAddressAvailable = false;
+
+    urlMapGoogleDir = 'https://www.google.com/maps/dir/?api=1&origin=';
+    urlMapGoogleSearch = 'https://www.google.com/maps/search/?api=1&query=';
 
     constructor(private route: ActivatedRoute,
                 private profilService: ProfilsService,
                 private formBuilder: FormBuilder,
                 private userService: UserService,
+                private collaboraterService: CollaboraterService,
+                private technicalService: TechnicalService,
                 private router: Router,
                 private modalService: NgbModal
                 ) { }
 
     ngOnDestroy(): void {
-        if (this.updateSubscription) {this.updateSubscription.unsubscribe();}
-        if (this.deleteSubscription) {this.deleteSubscription.unsubscribe();}
-        if (this.successSubscription) {this.successSubscription.unsubscribe();}
-        if (this.valueChangesFormSubscription) {this.valueChangesFormSubscription.unsubscribe()};
+        if (this.updateSubscription) {this.updateSubscription.unsubscribe(); }
+        if (this.deleteSubscription) {this.deleteSubscription.unsubscribe(); }
+        if (this.successSubscription) {this.successSubscription.unsubscribe(); }
+        if (this.valueChangesFormSubscription) {this.valueChangesFormSubscription.unsubscribe(); }
+        if (this.collaboraterGetSubscription) {this.collaboraterGetSubscription.unsubscribe(); }
     }
 
     ngOnInit(): void {
@@ -91,6 +116,12 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
             this.statusProfile[2].disabled = false;
         }
 
+        this.initForm();
+        this.getCollaboraterFromProfil();
+    }
+
+    initForm() {
+
         this.profilForm = this.formBuilder.group({
             sip: [{value : this.profilToShow.sip, disabled : this.profilInputDesactivated},
                 [Validators.required ,
@@ -110,50 +141,50 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
                 Validators.required],
             objectClass: [{value : this.profilToShow.objectClass, disabled : this.profilInputDesactivated},
                 Validators.required],
-            expirationDate: [{value : this.profilToShow.expirationDate.slice(0,10), disabled : true},
+            expirationDate: [{value : this.profilToShow.expirationDate.slice(0, 10), disabled : true},
                     Validators.required],
             status: [{value : this.profilToShow.statusProfile, disabled : this.changedNotAuthorized},
                 Validators.required]
         });
 
         if (this.profilForm.get('voiceEnabled').value === 'false') {
-            this.profilForm.controls['voicePolicy'].disable();
-            this.profilForm.controls['voicePolicy'].setValue(this.profilToShow.voicePolicy); 
+            this.profilForm.controls.voicePolicy.disable();
+            this.profilForm.controls.voicePolicy.setValue(this.profilToShow.voicePolicy);
         }
 
         this.valueChangesFormSubscription = this.profilForm.valueChanges.subscribe
                                             (form => this.checkUpdateAuthorized2(form));
 
-        
+
     }
 
     /**
      * method pour check the voice Policy when the VoiceEnbaled has changed
-     * @param valueOfVoiceEnabled 
+     * @param valueOfVoiceEnabled
      */
     checkVoicePolicy(valueOfVoiceEnabled) {
         if (valueOfVoiceEnabled === 'false') {
-            this.profilForm.controls['voicePolicy'].disable();
+            this.profilForm.controls.voicePolicy.disable();
             this.profilForm.get('voicePolicy').setValue('');
         } else {
-            this.profilForm.controls['voicePolicy'].enable();
+            this.profilForm.controls.voicePolicy.enable();
             if (this.profilForm.get('voiceEnabled').value === this.profilToShow.enterpriseVoiceEnabled) {
                 // we reset to the initial value
-                this.profilForm.get('voicePolicy').setValue(this.profilToShow.voicePolicy)
+                this.profilForm.get('voicePolicy').setValue(this.profilToShow.voicePolicy);
             }
         }
         this.updateAuthorized = true; // don't work always ...
-        $("#updateButton").removeAttr('disabled');
+        $( '#updateButton').removeAttr('disabled');
     }
 
     /**
      * method for reset the value to their initial value when the user want to desactivate
      * the profil, and also prevent other change of param of the profil skype
-     * 
-     * @param value 
+     *
+     * @param value
      */
     checkActiveInput2(value) {
-        console.log("passage dans checkActiveInput2");
+        console.log('passage dans checkActiveInput2');
         if (value === 'DISABLED') {
             // we reset to initial value the input form
             this.profilForm.get('sip').setValue(this.profilToShow.sip);
@@ -176,7 +207,7 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
                 this.statusProfile[2].checked = false;
                 this.profilInputDesactivated = false;
                 this.updateAuthorized = true;
-            } 
+            }
             else {  // we come from DISABLED
                 this.statusProfile[0].checked = true;
                 this.statusProfile[1].checked = false;
@@ -185,13 +216,13 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
             }
         }
 
-        
+
 
     }
 
     checkUpdateAuthorized2(form) {
         this.updateAuthorized = true; // don't work always ...
-        $("#updateButton").removeAttr('disabled');
+        $('#updateButton').removeAttr('disabled');
     }
 
     /**
@@ -213,21 +244,22 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
 
         this.updateSubscription = this.profilService.updateSubject.subscribe(
             (response: userMsg) => {
+                this.isGetError = false;
                 // update server done : display confirm box then routing
-                this.emitAlertAndRouting('Mise à jour effectuée',response);
+                this.emitAlertAndRouting('Mise à jour effectuée', response);
             }
         );
-        
+
         const modalForm =  this.openModalForm();
         modalForm.result.then(
             confirm => {
                 console.log('retour modal', confirm);
-                if (confirm['result'] === 'Confirm') {
+                if (confirm.result === 'Confirm') {
                     this.profilService.updateProfilToServer(
                         profilChanged,
-                        this.profilToShow.collaboraterId, 
+                        this.profilToShow.collaboraterId,
                         localStorage.getItem('userId'),
-                        confirm['comment']);
+                        confirm.comment);
                 }
               }, dismiss => {
                 console.log('retour modal', dismiss);
@@ -243,10 +275,11 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
         this.deleteSubscription = this.profilService.deleteSubject.subscribe(
             (response: userMsg) => {
                 // update server done : display confirm box then routing
+                this.isGetError = false;
                 this.emitAlertAndRouting('Suppression effectuée', response);
             }
         );
-        
+
         const modalRef = this.openModal();
         modalRef.result.then(
             confirm => {
@@ -261,7 +294,7 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
               }, dismiss => {
                 console.log('retour modal', dismiss);
               }
-        );        
+        );
     }
 
     /**
@@ -272,9 +305,13 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
         this.router.navigate(['/profils']);
     }
 
+    routeToEvents(){
+        this.router.navigate(['/profils/' + this.idProfil + '/events']);
+    }
+
     /**
     * Paramétrage de la fenêtre modale de suppression
-    */
+     */
 
     openModal(): NgbModalRef {
 
@@ -291,7 +328,7 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
     * Paramétrage de la fenêtre modale de mise à jour
     */
     openModalForm(): NgbModalRef {
-        
+
         this.modalOptions.backdrop = 'static';
         this.modalOptions.keyboard = false;
         this.modalOptions.centered = true;
@@ -301,8 +338,8 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
         return modalDiag;
     }
 
-    emitAlertAndRouting(message:string, response:userMsg) {
-        
+    emitAlertAndRouting(message: string, response: userMsg) {
+
         if (response.success) {
             this.successMessage = message;
             this.typeMessage = 'success';
@@ -311,7 +348,7 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
                 () => {
                     this.successMessage = '';
                     this.availableMessage = false;
-                    this.router.navigate(['/profils'])
+                    this.router.navigate(['/profils']);
                 }
             );
             this.successSubject.next();
@@ -319,7 +356,101 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
             this.successMessage = response.msg;
             this.typeMessage = 'danger';
             this.availableMessage = true;
-        }  
+        }
     }
 
+     getCollaboraterFromProfil() {
+        this.collaboraterGetSubscription = this.collaboraterService.collaborterGetUniqSubject.subscribe(
+            (response: HttpResponse<Collaborater>) => {
+                if (response.status === 200) {
+                    this.collaborater = response.body;
+                    console.log('collaborater', this.collaborater);
+                    this.formatUserData();
+                }else {
+                    this.isGetError = true;
+                    this.emitAlertAndRouting(null, new userMsg(false, 'Impossible de récupérer les informations du collaborateur'));
+                    this.formatDefaultCollaborater();
+                }
+            },
+            (error) => {
+                console.log(error);
+                this.isGetError = true;
+                this.emitAlertAndRouting(null, new userMsg(false, 'Impossible de récupérer les informations du collaborateur'));
+                this.formatDefaultCollaborater();
+            }
+        );
+        console.log('id collaborater en entrée', this.profilToShow.collaboraterId);
+        this.collaboraterService.getCollaboraterFromServeurById(this.profilToShow.collaboraterId);
+
+    }
+
+    private formatUserData() {
+        this.linkPhoneDesk = 'tel:'.concat(this.collaborater.deskPhoneNumber);
+        this.linkPhoneMobile = 'tel:'.concat(this.collaborater.mobilePhoneNumber);
+        this.linkMail = 'mailto:'.concat(this.collaborater.mailAdress).concat('&subject=A propos de votre profil skype');
+        this.localisation = this.collaborater.siteAddress.concat(' ', this.collaborater.sitePostalCode, ' ', this.collaborater.siteCity);
+        console.log('linkPhoneDesk ', this.linkPhoneDesk);
+        console.log('linkPhoneMobile ', this.linkPhoneMobile);
+        console.log('linkMail ', this.linkMail);
+        console.log('localisation ', this.localisation);
+        this.getLocation();
+        this.toFormatLinkMapGoogle();
+    }
+    formatDefaultCollaborater(){
+        this.collaborater = new Collaborater('', '', '', '', '',
+            '', '', '', '',
+            '', '', '', '', '');
+    }
+
+    getLocation(): void {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const longitude = position.coords.longitude;
+                const latitude = position.coords.latitude;
+                console.log('longitude: ' + longitude + ' latitude: ' + latitude);
+                this.getCurrentAddress(longitude, latitude);
+            });
+        } else {
+            console.log('No support for geolocation');
+        }
+    }
+
+
+    getCurrentAddress(longitude: number, latitude: number) {
+        this.technicalService.getGeoSubject.subscribe(
+            // la réponse est un objet GeoJSON de type FeatureCollection
+            // il respecte la norme RFC 7946
+            (response:
+                 {
+                     type: string,
+                     version: string,
+                     features: [
+                         {
+                             type: string
+                             , properties: {
+                                 label: string
+
+                             }
+                         }
+                     ]
+                 }
+            ) => {
+                this.isCurrentAddressAvailable = true;
+                console.log('response', response);
+                // récupération de l'adresse
+                this.currentAddress = response.features[0].properties.label;
+                this.toFormatLinkMapGoogle();
+            }
+        );
+        this.technicalService.getCurrentPosition(longitude, latitude);
+    }
+
+    toFormatLinkMapGoogle() {
+        if (this.isCurrentAddressAvailable) {
+            this.linkLocate = this.urlMapGoogleDir + this.currentAddress + '&destination=' + this.localisation;
+            console.log('lien vers google', this.linkLocate);
+        }else {
+            this.linkLocate = this.urlMapGoogleSearch + this.localisation;
+        }
+    }
 }

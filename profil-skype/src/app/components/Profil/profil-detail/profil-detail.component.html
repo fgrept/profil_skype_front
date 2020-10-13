@@ -3,7 +3,72 @@
     <div class="container">
 
         <p><br /><strong>Détail du profil Skype : </strong></p>
-        
+
+        <div class="formGroup row my-2" >
+            <label class="col-6 col-sm-3" ind="infosCollaborater">Infos collaborateurs :</label>
+            <div class="col-6 col-sm-4">
+                <!--            <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>-->
+                <button  class="btn btn-secondary btn-sm"
+                        (click)="this.isDisplayInfos = ! this.isDisplayInfos">...</button>
+            </div>
+        </div>
+        <div *ngIf="isGetError">
+            <div class="col-md-6">
+                <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true (close)="availableMessage=false">{{ successMessage }}</ngb-alert>
+            </div>
+        </div>
+        <div *ngIf="!isGetError">
+            <div class="formGroup row my-2" *ngIf="isDisplayInfos">
+                <label class="col-6 col-sm-3" for="collaboraterId">Id annuaire :</label>
+                <div class="col-6 col-sm-4">
+                    <!--            <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>-->
+                    <label id="collaboraterId" >{{collaborater.collaboraterId}}</label>
+                </div>
+            </div>
+            <div class="formGroup row my-2" *ngIf="isDisplayInfos">
+                <label class="col-6 col-sm-3" for="lastName">Nom :</label>
+                <div class="col-6 col-sm-4">
+                    <!--                <input type="text" id="lastName" class="form-control" formControlName="lastName" disabled>-->
+                    <label id="lastName" >{{collaborater.lastName}}</label>
+                </div>
+            </div>
+            <div class="formGroup row my-2" *ngIf="isDisplayInfos">
+                <label class="col-6 col-sm-3" for="firstName">Prénom :</label>
+                <div class="col-6 col-sm-4">
+                    <!--                <input type="text" id="firstName" class="form-control" formControlName="firstName" disabled>-->
+                    <label id="firstName" >{{collaborater.firstName}}</label>
+                </div>
+            </div>
+            <div class="formGroup row my-2" *ngIf="isDisplayInfos">
+                <label class="col-6 col-sm-3" id="deskPhoneNumber">Tel bureau :</label>
+                <div class="col-6 col-sm-4">
+                    <!--                <input type="tel" id="deskPhoneNumber" class="form-control" formControlName="deskPhoneNumber" disabled>-->
+                    <a [href]="linkPhoneDesk" target="_blank">{{collaborater.deskPhoneNumber}}</a>
+                </div>
+            </div>
+            <div class="formGroup row my-2" *ngIf="isDisplayInfos">
+                <label class="col-6 col-sm-3" id="mobilePhoneNumber">Tel portable :</label>
+                <div class="col-6 col-sm-4">
+                    <!--                <input type="tel" id="mobilePhoneNumber" class="form-control" formControlName="mobilePhoneNumber" disabled>-->
+                    <a [href]="linkPhoneMobile" target="_blank">{{collaborater.mobilePhoneNumber}}</a>
+                </div>
+            </div>
+            <div class="formGroup row my-2" *ngIf="isDisplayInfos">
+                <label class="col-6 col-sm-3" id="mailAdress">Adresse Mail :</label>
+                <div class="col-6 col-sm-4">
+                    <!--                <input type="email" id="mailAdress" class="form-control" formControlName="mailAdress" disabled>-->
+                    <a [href]="linkMail" target="_blank">{{collaborater.mailAdress}}</a>
+                </div>
+            </div>
+
+            <div class="formGroup row my-2" *ngIf="isDisplayInfos">
+                <label class="col-6 col-sm-3" id="localisation">Localisation :</label>
+                <div class="col-6 col-sm-4">
+                    <!--                <input type="text" id="localisation" class="form-control" formControlName="localisation" disabled>-->
+                    <a [href]="linkLocate" target="_blank">{{this.localisation}}</a>
+                </div>
+            </div>
+        </div>
         <div class="form-group row">
             <label class="col-6 col-sm-3" for="sip">Adresse SIP :</label>
             <div class="col-6 col-sm-4">
@@ -117,9 +182,9 @@
                 Retour</button>
             </div>
             <div class="ml-1 ml-sm-4">
-                <button class="btn btn-secondary">
-                    <a routerLink="events">Journal</a>
-                </button>
+                <button class="btn btn-secondary" (click)="routeToEvents()">
+<!--                    <a routerLink="events">Journal</a>-->
+                Journal</button>
             </div>
             <div class="mx-1 mx-sm-4">
                 <button type ="submit" class="btn btn-success custom-btn" id="updateButton"
@@ -132,8 +197,10 @@
             </div>
         </footer> 
     </div>
-    <div class="col-md-6">
-        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true (close)="availableMessage=false">{{ successMessage }}</ngb-alert>
+    <div *ngIf="!isGetError">
+        <div class="col-md-6">
+            <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true (close)="availableMessage=false">{{ successMessage }}</ngb-alert>
+        </div>
     </div>
 </form>
 
