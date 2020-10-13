@@ -79,7 +79,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
           // in case of criteria :            
           if (this.searchFilter) {this.numberOfProfil = profils.length;}
-          if (this.searchFilter && profils.length === 2) {
+          if (this.searchFilter && profils.length === 10) {
             console.log("partiel");
             this.successMessage = 'Résultats partiels (' + profils.length + '). Affiner votre recherche.';
             this.typeMessage = 'warning';
