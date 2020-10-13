@@ -110,6 +110,8 @@
                             <fa-icon class="d-none d-sm-block" [icon]="faArrowUp" *ngIf="sortColum[6]===(-1)"></fa-icon>
                             <fa-icon class="d-none d-sm-block" [icon]="faArrowsAltV" *ngIf="sortColum[6]===0"></fa-icon>                        </th>
                     </tr>
+                      <!-- Barre de loading -->
+                        <mat-progress-bar *ngIf="isLoading$ | async" mode="indeterminate"></mat-progress-bar>
                 </thead>
                 <tbody>
                     <app-profil-list-item *ngFor="let item of profilList2 | paginate: 
@@ -147,7 +149,8 @@
     </div>
   </div>
 
- 
+
+
 
 
 

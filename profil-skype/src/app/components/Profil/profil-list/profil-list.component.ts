@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
@@ -9,6 +9,8 @@ import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg
 import { Router } from '@angular/router';
 import {TechnicalService} from "../../../services/technical.service";
 import {userMsg} from "../../../models/tech/user-msg";
+import { LoaderService } from 'src/app/services/loader.service';
+  
 
 @Component({
   selector: 'app-profil-list',
@@ -16,6 +18,8 @@ import {userMsg} from "../../../models/tech/user-msg";
   styleUrls: ['./profil-list.component.css']
 })
 export class ProfilListComponent implements OnInit, OnDestroy {
+
+  isLoading$:Observable<boolean>;
 
   currentUserType;
   profilList2: ProfilFromList[];
@@ -47,7 +51,8 @@ export class ProfilListComponent implements OnInit, OnDestroy {
               private profilsService: ProfilsService,
               private formBuilder:FormBuilder,
               private router: Router, 
-              private technicalService: TechnicalService) {
+              private technicalService: TechnicalService,
+              public loaderService: LoaderService, ) {
    }
 
   ngOnDestroy(): void {
@@ -57,6 +62,9 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     if (this.errorGetSubscription) {this.errorGetSubscription.unsubscribe(); }
   }
   ngOnInit(): void {
+
+    this.isLoading$ = this.loaderService.isLoading$;
+    
     this.currentUserType = this.userService.getCurrentRole();
 
     this.profilNumberSubscription = this.profilsService.numberProfilSubject.subscribe(
@@ -67,7 +75,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.profilsService.getNumberOfProfilFromServer();
 
     this.profilSubscription = this.profilsService.profilsSubject.subscribe(
-        (profils: ProfilFromList[]) => {
+        (profils: ProfilFromList[]) => { 
           this.profilList2 = profils;
         }
       );
