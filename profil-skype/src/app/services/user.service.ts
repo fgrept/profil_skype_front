@@ -196,7 +196,7 @@ export class UserService {
      */
     updatePasswordToServer(userId: string, oldPassword: string, newPassword){
         this.tokenId = 'Bearer ' + localStorage.getItem('token');
-       this.httpClient.put(urlUserUppassword + userId + '/' + oldPassword + '/' + newPassword, null,
+        this.httpClient.put(urlUserUppassword + userId + '/' + oldPassword + '/' + newPassword, null,
            {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
            .subscribe(
                (response) => {
@@ -249,7 +249,7 @@ export class UserService {
                     let msg = this.errorHandler(error);
                     this.userDeleteSubject.next(new userMsg(false,msg));
                   }
-                } 
+                }
             );
     }
 

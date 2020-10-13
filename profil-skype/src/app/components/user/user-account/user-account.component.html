@@ -2,30 +2,35 @@
     <div class="container">
         <p><br/><strong>Détail du compte utilisateur</strong></p>
 
-        <div class="formGroup row">
-            <label class="col-3" for="collaboraterId">Id de connexion :</label>
-            <div class="col-4">
-                <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>
+        <div class="my-2 formGroup row">
+            <label class="col-6 col-sm-3" for="collaboraterId">Id de connexion :</label>
+            <div class="col-6 col-sm-4">
+<!--                <input type="text" id="collaboraterId" class="form-control" formControlName="collaboraterId" disabled>-->
+                    <label id="collaboraterId" >{{this.collaboraterId}}</label>
             </div>
         </div>
-        <div class="formGroup row">
-            <label class="col-3" for="lastName">Nom :</label>
-            <div class="col-4">
-                <input type="text" id="lastName" class="form-control" formControlName="lastName" disabled>
+        <div class="my-2 formGroup row">
+            <label class="col-6 col-sm-3" for="lastName">Nom :</label>
+            <div class="col-6 col-sm-4">
+<!--                <input type="text" id="lastName" class="form-control" formControlName="lastName" disabled>-->
+                    <label id="lastName" >{{this.lastName}}</label>
             </div>
         </div>
-        <div class="formGroup row">
-            <label class="col-3" for="firstName">Prénom :</label>
-            <div class="col-4">
-                <input type="text" id="firstName" class="form-control" formControlName="firstName" disabled>
+        <div class="my-2 formGroup row">
+            <label class="col-6 col-sm-3" for="firstName">Prénom :</label>
+            <div class="col-6 col-sm-4">
+<!--                <input type="text" id="firstName" class="form-control" formControlName="firstName" disabled>-->
+                    <label id="firstName" >{{this.firstName}}</label>
             </div>
         </div>
-        <div class="formGroup row">
-            <label class="col-3" for="userRoles">Roles :</label>
-            <div class="col-4">
-                <input type="text" id="userRoles" class="form-control" formControlName="userRoles" disabled>
+        <div class="my-2 formGroup row">
+            <label class="col-6 col-sm-3" for="userRoles">Roles :</label>
+            <div class="col-6 col-sm-4">
+<!--                <input type="text" id="userRoles" class="form-control" formControlName="userRoles" disabled>-->
+                    <label id="userRoles" >{{this.userRoles}}</label>
             </div>
-        </div>
+        </div>               
+
         <br/>
         <div *ngIf="updateAvailable">
             <div class="formGroup row">

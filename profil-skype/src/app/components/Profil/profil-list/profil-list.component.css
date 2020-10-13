@@ -1,6 +1,5 @@
 footer {
     position: fixed;
-    /* width: inherit; */
     bottom: 0;
     background-color: white;
     z-index: 1;
@@ -16,21 +15,11 @@ footer {
 #filterForm > .form-group {
     width : 360px;
 }
-/* container {
-    max-width: 800px;
-} */
-/*
-svg {
-    font-size: 2em;
-    color:#2199E8;
+
+@media all and (max-width:575px)
+{
+  .custom-display {
+        display:none;
+  }
+
 }
-main {
-    position:fixed;
-    margin-top: 4%;
-    margin-left: 5%;
-}
-thead {
-    position: fixed;
-    background-color: white;
-    z-index: 1;
-} */

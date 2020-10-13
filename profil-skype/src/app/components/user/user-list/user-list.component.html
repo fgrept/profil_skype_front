@@ -4,11 +4,11 @@
             <table class="table">
                 <thead>
                     <tr class="row">
-                        <th class="col-2 col-lg-1">Id</th>
-                        <th class="col-2 col-lg-3">prénom</th>
-                        <th class="col-3">nom</th>
+                       <th class="col-2 col-lg-1">Id</th>
+                        <th class="col-2-sm d-none d-sm-block">prénom</th>
+                        <th class="col-4 col-sm-3">nom</th>
                         <th class="col-1 d-none d-lg-block">uo</th>
-                        <th class="col-5 col-lg-4">roles</th>
+                        <th class="col-6 col-sm-5">roles</th>
                     </tr>
                 </thead>
                 <app-user-list-item *ngFor="let item of userListResult, let index = index"
@@ -19,8 +19,12 @@
     </div>
     <div class="col-md-6">
         <ngb-alert *ngIf="availableMessage" type="success" (close)="successMessage = ''">{{ successMessage }}</ngb-alert>
-    </div> 
-    <a routerLink="create">
-    <button class="btn btn-success" *ngIf="currentUserType==2 || currentUserType==3">Créer</button>
-    </a>
+    </div>
+    <br class="custom-scroll"/><br class="custom-scroll"/>
+    <footer class="col-md-2 text-center d-flex justify-content-between custom-foot">
+        <a routerLink="create">
+        <button class="btn btn-success" *ngIf="currentUserType==2 || currentUserType==3">Créer</button>
+        </a>        
+    </footer> 
+
 </div>

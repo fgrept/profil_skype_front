@@ -6,7 +6,12 @@ import { ProfilsService } from 'src/app/services/profils.service';
 import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
+<<<<<<< HEAD
 import { Router } from '@angular/router';
+=======
+import {TechnicalService} from "../../../services/technical.service";
+import {userMsg} from "../../../models/tech/user-msg";
+>>>>>>> 15cbe7fa3721542bbe21b18550be7b762eccf75a
 
 @Component({
   selector: 'app-profil-list',
@@ -20,38 +25,50 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   private profilSubscription: Subscription;
   private profilNumberSubscription: Subscription;
   private search2Subscription: Subscription;
-  searchText:string;
-  page:number;
-  numberOfProfil:number;
-  filterForm:FormGroup;
+  private errorGetSubscription: Subscription;
+  searchText: string;
+  page: number;
+  numberOfProfil: number;
+  filterForm: FormGroup;
   searchForm:FormGroup;
   showSidebar:boolean=false;
-  //for search filter:
+  // for search filter:
   voiceChecked:boolean=false;
   voiceEnabled:boolean=false;
-  //for column filter
-  sortColum=Array<number>();
+  // for column filter
+  sortColum = Array<number>();
   faArrowsAltV = faArrowsAltV;
   faArrowDown = faArrowDown;
   faArrowUp = faArrowUp;
 
+  // pour le message d'erreur
+  successMessage: string;
+  availableMessage = false;
+  typeMessage = 'success';
+
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
+<<<<<<< HEAD
               private formBuilder:FormBuilder,
               private router: Router) {
+=======
+              private formBuilder: FormBuilder,
+              private technicalService: TechnicalService) {
+>>>>>>> 15cbe7fa3721542bbe21b18550be7b762eccf75a
   }
 
   ngOnDestroy(): void {
-    if (this.search2Subscription) {this.search2Subscription.unsubscribe()};
-    if (this.profilSubscription) {this.profilSubscription.unsubscribe()};
-    if (this.profilNumberSubscription) {this.profilNumberSubscription.unsubscribe()};
+    if (this.search2Subscription) {this.search2Subscription.unsubscribe(); }
+    if (this.profilSubscription) {this.profilSubscription.unsubscribe(); }
+    if (this.profilNumberSubscription) {this.profilNumberSubscription.unsubscribe(); }
+    if (this.errorGetSubscription) {this.errorGetSubscription.unsubscribe(); }
   }
 
   ngOnInit(): void {
     this.currentUserType = this.userService.getCurrentRole();
 
     this.profilNumberSubscription = this.profilsService.numberProfilSubject.subscribe(
-          (total:number) => {
+          (total: number) => {
             this.numberOfProfil = total;
           }
         );
@@ -62,6 +79,12 @@ export class ProfilListComponent implements OnInit, OnDestroy {
           this.profilList2 = profils;
         }
       );
+    this.errorGetSubscription = this.technicalService.getErrorSubject.subscribe(
+        (response: userMsg) => {
+
+          this.emitAlertAndRouting('Impossible de récupérer les profils skype, code erreur : ', response);
+        }
+    );
 
     this.page = this.profilsService.pageListToShow;
     this.profilsService.getProfilsFromServer(this.profilsService.pageListToShow);
@@ -308,4 +331,9 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     }
   }
 
+   emitAlertAndRouting(message: string, response: userMsg) {
+     this.successMessage = message.concat(response.msg);
+     this.typeMessage = 'danger';
+     this.availableMessage = true;
+  }
 }

@@ -10,3 +10,23 @@ a:hover, a:focus {
 input {
     margin-left: -20px;
 }
+.custom-scroll {
+    display: none;
+}
+
+@media all and (max-width:575px)
+{
+  .custom-foot {
+    position: fixed;
+    bottom: 0;
+    background-color:  #F8F9FA;
+    z-index: 1;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    margin-left: -15px
+  }
+  .custom-scroll {
+      display:block;
+  }
+}

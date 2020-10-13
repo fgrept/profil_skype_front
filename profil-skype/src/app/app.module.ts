@@ -35,6 +35,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {HttpErrorInterceptor} from './interceptor/http-error.interceptor';
 import {TokenInterceptor} from './interceptor/token.interceptor';
 
+// import { ServiceWorkerModule } from '@angular/service-worker';
+// import { environment } from '../environments/environment';
+import { ProfilDetailEventsItemComponent } from './components/Profil/profil-detail-events-item/profil-detail-events-item.component';
+
+
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
   {path: 'profils/create',component:ProfilCreateComponent},
@@ -73,7 +78,8 @@ const appRoutes: Routes = [
     DialogModalFormComponent,
     ProfilCreateComponent,
     ProfilCreateFormComponent,
-    UserAccountComponent
+    UserAccountComponent,
+    ProfilDetailEventsItemComponent
   ],
   imports: [
     BrowserModule,
@@ -84,6 +90,10 @@ const appRoutes: Routes = [
     NgxPaginationModule,
     NgbModule,
     FontAwesomeModule
+    /*
+        ,
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    */
   ],
   providers: [AuthentGuardService,
               UserService,

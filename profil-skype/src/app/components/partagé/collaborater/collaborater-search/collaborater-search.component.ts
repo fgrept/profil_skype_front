@@ -3,9 +3,11 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {CollaboraterService} from '../../../../services/collaborater.service';
 import {Collaborater} from '../../../../models/collaborater/collaborater';
 import {Subject, Subscription} from 'rxjs';
-import {debounceTime} from "rxjs/operators";
-import {UserService} from "../../../../services/user.service";
-import {ProfilsService} from "../../../../services/profils.service";
+import {debounceTime} from 'rxjs/operators';
+import {UserService} from '../../../../services/user.service';
+import {ProfilsService} from '../../../../services/profils.service';
+import {TechnicalService} from '../../../../services/technical.service';
+import {userMsg} from '../../../../models/tech/user-msg';
 
 @Component({
   selector: 'app-collaborater-search',
@@ -21,23 +23,27 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
   collaboraterListResult: Collaborater[];
   private collaboraterSubscription: Subscription;
   idUser: string;
-  page:number;
+  page: number;
 
     // variables pour l'affichage d'une popup
     errorSubject = new Subject<string>();
     errorMessage: string;
     availableMessage = false;
     private errorSubscription: Subscription;
+    private errorGetSubscription: Subscription;
 
   constructor(private formBuilderCollaborater: FormBuilder,
               private collaboraterService: CollaboraterService,
               private userService: UserService,
-              private profilService: ProfilsService) { }
+              private profilService: ProfilsService,
+              private technicalService: TechnicalService) { }
 
-    ngOnDestroy () {
-        if (this.collaboraterSubscription !== null && this.collaboraterSubscription!== undefined) {
+    ngOnDestroy() {
+        if (this.collaboraterSubscription !== null && this.collaboraterSubscription !== undefined) {
             this.collaboraterSubscription.unsubscribe();
         }
+        if (this.errorSubscription) { this.errorSubscription.unsubscribe(); }
+        if (this.errorGetSubscription) { this.errorGetSubscription.unsubscribe(); }
     }
 
     ngOnInit(): void {
@@ -55,6 +61,12 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
         this.profilService.profilExistSubject.subscribe(
             user => {
                 this.emitAlertAndRouting('L\'utilisateur ' + user + ' a déjà un profil skype');
+            }
+        );
+        // Erreur si pb lors de l'appel au back end pour vérifier l'existence d'un profil ou d'un user
+        this.errorGetSubscription = this.technicalService.getErrorSubject.subscribe(
+            (response: userMsg) => {
+            this.emitAlertAndRouting('Impossible de vérifier l\'existence du collaborateur, code erreur : '.concat(response.msg));
             }
         );
     }
