@@ -1,10 +1,11 @@
 import { Component, Input, OnInit, ɵConsole } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ProfilForActivate } from 'src/app/models/profil/profil-for-activate';
 import { ProfilForChange } from 'src/app/models/profil/profil-for-change';
 import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
+import { LoaderService } from 'src/app/services/loader.service';
 import { ProfilsService } from 'src/app/services/profils.service';
 
 @Component({
@@ -14,6 +15,7 @@ import { ProfilsService } from 'src/app/services/profils.service';
 })
 export class ProfilExpiredComponent implements OnInit {
 
+  isLoading$:Observable<boolean>;
   
   expiredProfilForm :FormGroup
   
@@ -27,10 +29,11 @@ export class ProfilExpiredComponent implements OnInit {
 
   constructor( private profilService: ProfilsService,
                private router: Router,
-               private formBuilder:FormBuilder) { }
+               private formBuilder:FormBuilder,
+               public loaderService: LoaderService) { }
 
   ngOnInit(): void {
-     
+    this.isLoading$ = this.loaderService.isLoading$;
     //Initialize array profilListForActiveStatus
 
     

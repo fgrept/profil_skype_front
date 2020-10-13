@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
 import { ProfilsService } from 'src/app/services/profils.service';
 import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
@@ -9,6 +9,10 @@ import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg
 import { Router } from '@angular/router';
 import {TechnicalService} from "../../../services/technical.service";
 import {userMsg} from "../../../models/tech/user-msg";
+import { LoaderService } from 'src/app/services/loader.service';
+  
+import { Subject } from 'rxjs/internal/Subject';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profil-list',
@@ -17,12 +21,15 @@ import {userMsg} from "../../../models/tech/user-msg";
 })
 export class ProfilListComponent implements OnInit, OnDestroy {
 
+  isLoading$:Observable<boolean>;
+
   currentUserType;
   profilList2: ProfilFromList[];
   private profilSubscription: Subscription;
   private profilNumberSubscription: Subscription;
   private search2Subscription: Subscription;
   private errorGetSubscription: Subscription;
+  private successSubscription: Subscription;
   searchText: string;
   page: number;
   numberOfProfil: number;
@@ -32,22 +39,25 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   // for search filter:
   voiceChecked:boolean=false;
   voiceEnabled:boolean=false;
+  searchFilter:boolean;
   // for column filter
   sortColum = Array<number>();
   faArrowsAltV = faArrowsAltV;
   faArrowDown = faArrowDown;
   faArrowUp = faArrowUp;
 
-  // pour le message d'erreur
+  // pour les messages utilisateurs
   successMessage: string;
   availableMessage = false;
   typeMessage = 'success';
+  successSubject = new Subject<string>();
 
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
               private formBuilder:FormBuilder,
               private router: Router, 
-              private technicalService: TechnicalService) {
+              private technicalService: TechnicalService,
+              public loaderService: LoaderService, ) {
    }
 
   ngOnDestroy(): void {
@@ -55,8 +65,13 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     if (this.profilSubscription) {this.profilSubscription.unsubscribe(); }
     if (this.profilNumberSubscription) {this.profilNumberSubscription.unsubscribe(); }
     if (this.errorGetSubscription) {this.errorGetSubscription.unsubscribe(); }
+    if (this.successSubscription) {this.successSubscription.unsubscribe(); }
   }
   ngOnInit(): void {
+
+    this.isLoading$ = this.loaderService.isLoading$;
+    
+    this.searchFilter = false;
     this.currentUserType = this.userService.getCurrentRole();
 
     this.profilNumberSubscription = this.profilsService.numberProfilSubject.subscribe(
@@ -67,19 +82,35 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.profilsService.getNumberOfProfilFromServer();
 
     this.profilSubscription = this.profilsService.profilsSubject.subscribe(
-        (profils: ProfilFromList[]) => {
+        (profils: ProfilFromList[]) => { 
           this.profilList2 = profils;
+
+          // in case of criteria :            
+          if (this.searchFilter) {this.numberOfProfil = profils.length;}
+          if (this.searchFilter && profils.length === 10) {
+            console.log("partiel");
+            this.successMessage = 'Résultats partiels (' + profils.length + '). Affiner votre recherche.';
+            this.typeMessage = 'warning';
+            this.availableMessage = true;
+            this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
+                () => {
+                    this.successMessage = '';
+                    this.availableMessage = false;
+                }
+            );
+            this.successSubject.next();
+          }
         }
       );
+
     this.errorGetSubscription = this.technicalService.getErrorSubject.subscribe(
         (response: userMsg) => {
-
           this.emitAlertAndRouting('Impossible de récupérer les profils skype, code erreur : ', response);
         }
     );
 
-    this.page = this.profilsService.pageListToShow;
-    this.profilsService.getProfilsFromServer(this.profilsService.pageListToShow);
+    this.page = 1;
+    this.profilsService.getProfilsFromServer(1);
     
     this.filterForm = this.formBuilder.group(
       {searchId : new FormControl(),
@@ -97,6 +128,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.filterForm.controls['searchVoicePolicy'].setValue(false);
     this.filterForm.controls['searchVoiceEnabled'].disable();
     this.filterForm.controls['searchVoicePolicy'].disable();
+    
 
     this.sortColum=[0,0,0,0,0,0,0];
 
@@ -161,8 +193,6 @@ export class ProfilListComponent implements OnInit, OnDestroy {
       this.filterForm.get('searchSite').value
     );
 
-    // in case of activation criteria, we reset the list at the first page => 1
-    let p = 1;
     // the filtrer on boolean must not be "" but null
     if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
     // filter on users having international option 
@@ -171,8 +201,9 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     } else {
       profilSearch.voicePolicy = null;
     }
-
-    this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
+    this.searchFilter = true;
+    this.page = 1;
+    this.profilsService.getProfilsFromServerWithCriteria(this.page, profilSearch );
 
   }
 
@@ -231,6 +262,9 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.filterForm.controls['searchVoicePolicy'].setValue(false);
     this.filterForm.controls['searchVoiceEnabled'].disable();
     this.filterForm.controls['searchVoicePolicy'].disable();
+    this.searchFilter = false;
+    this.profilsService.getNumberOfProfilFromServer();
+    this.page = 1;
     this.profilsService.getProfilsFromServer(this.page);
   }
 
@@ -323,7 +357,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     }
   }
 
-   emitAlertAndRouting(message: string, response: userMsg) {
+  emitAlertAndRouting(message: string, response: userMsg) {
      this.successMessage = message.concat(response.msg);
      this.typeMessage = 'danger';
      this.availableMessage = true;
