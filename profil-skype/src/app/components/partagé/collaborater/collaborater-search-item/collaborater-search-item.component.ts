@@ -78,7 +78,7 @@ export class CollaboraterSearchItemComponent implements OnInit, OnDestroy {
             console.log('le profil existe déjà');
             this.profilService.profilExist(this.idUser);
           }
-          if (response.status === 404) {
+          if (response.status === 404 || response.status === 204) {
               console.log('le profil n\'existe pas');
               this.router.navigate(['profils/create/' + this.userIdRoute]);
           }
