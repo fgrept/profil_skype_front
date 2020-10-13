@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row" *ngIf="!availableMessage">
+    <div class="row" *ngIf="!(availableMessage && (typeMessage === 'danger')) ">
         <div class="col-12" id="sidebar" style="display: none">
             <hr>
             <form [formGroup]="filterForm" class="d-flex flex-wrap" id="filterForm">    
@@ -25,14 +25,12 @@
                     <label for="searchSite" class="col-5">Site :</label>
                     <input placeholder="00123" type="tel" id="searchSite" class="col-7 form-control" formControlName="searchSite">
                 </div>                    
-        
-        
+              
                 <div class="form-group d-flex">
                     <label for="searchSamAccount" class="col-5">Account Name :</label>
                     <input placeholder="M000012345" type="email" id="searchSamAccount" class="col-7 form-control" formControlName="searchSamAccount">
                 </div>                    
-            
-        
+                  
                 <div class="form-group d-flex">
                     <div class="col-5">
                         <input type="checkbox" class="form-check-input ml-1" formControlName="searchVoiceActivate"
@@ -46,8 +44,7 @@
                         <label class="custom-control-label" for="customSwitch1"></label>
                     </div>
                 </div>                    
-        
-            
+                   
                 <div class="form-group d-flex">
                     <label for="searchVoiceEnabled" class="col-5">Accès international :</label>
                     <div class="custom-control custom-switch ml-2">
@@ -56,8 +53,7 @@
                         <label class="custom-control-label" for="customSwitch2"></label>
                     </div>
                 </div>                    
-        
-            
+                   
                 <div class="form-group d-flex">
                     <label for="searchExpirationDate" class="col-5">Date expiration :</label>
                     <input placeholder="jj/mm/aaaa" type="date" id="searchExpirationDate" class="col-7 form-control" formControlName="searchExpirationDate">
@@ -145,7 +141,9 @@
       </div>
     </div>
     <div class="col-md-6">
-        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true >{{ successMessage }}</ngb-alert>
+        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true
+            (close)="availableMessage=false"
+            >{{ successMessage }}</ngb-alert>
     </div>
   </div>
 

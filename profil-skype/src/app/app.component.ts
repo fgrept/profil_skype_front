@@ -18,6 +18,9 @@ export class AppComponent  implements OnInit{
   userSuscribe: Subscription;
   faSignOutAlt = faSignOutAlt;
   faUser = faUser;
+  userLink = 0;
+  profilLink = 0;
+  authentLink = 0;
   // options pour la fenêtre modale
   modalOptions: NgbModalOptions = {};
 
@@ -58,6 +61,26 @@ export class AppComponent  implements OnInit{
    * @param route 
    */
   routingTo(route:string) {
+    this.authentLink = 0;
+    this.userLink = 0;
+    this.profilLink = 0;
+    switch (route) {
+      case 'auth':
+        this.authentLink = 1;
+        break;
+      case 'profils':
+        this.profilLink = 1;
+        break;
+      case 'users':
+        this.userLink = 1;
+        break;
+      case 'account':
+        this.authentLink = 1;
+        break;
+      default:
+        break;
+    }
+
     this.router.navigate([route]);
   }
 

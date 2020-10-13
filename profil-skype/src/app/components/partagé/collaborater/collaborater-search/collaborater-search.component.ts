@@ -26,11 +26,17 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
   page: number;
 
     // variables pour l'affichage d'une popup
-    errorSubject = new Subject<string>();
-    errorMessage: string;
     availableMessage = false;
+    userMessage: string;
+    typeMessage = 'success';
+    successSubject = new Subject<string>();
+    errorSubject = new Subject<String>();
+
     private errorSubscription: Subscription;
     private errorGetSubscription: Subscription;
+    private userExistSubscription: Subscription;
+    private profilExistSubscription: Subscription;
+    private successSubscription: Subscription;
 
   constructor(private formBuilderCollaborater: FormBuilder,
               private collaboraterService: CollaboraterService,
@@ -39,26 +45,26 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
               private technicalService: TechnicalService) { }
 
     ngOnDestroy() {
-        if (this.collaboraterSubscription !== null && this.collaboraterSubscription !== undefined) {
-            this.collaboraterSubscription.unsubscribe();
-        }
+        if (this.collaboraterSubscription) {this.collaboraterSubscription.unsubscribe(); }
         if (this.errorSubscription) { this.errorSubscription.unsubscribe(); }
         if (this.errorGetSubscription) { this.errorGetSubscription.unsubscribe(); }
+        if (this.profilExistSubscription) { this.profilExistSubscription.unsubscribe(); }
+        if (this.userExistSubscription) { this.userExistSubscription.unsubscribe(); }
+        if (this.successSubscription) { this.successSubscription.unsubscribe(); }
     }
 
     ngOnInit(): void {
         this.isSearched = false;
         this.initializeForm();
-        console.log(this.collaboraterSubscription);
         this.page = 1;
         // Emission d'un message à la création dès que le collaborateur sélectionné est déjà un utilisateur
-        this.userService.userExistSubject.subscribe(
+        this.userExistSubscription = this.userService.userExistSubject.subscribe(
             user => {
                 this.emitAlertAndRouting('L\'utilisateur ' + user + ' existe déjà');
             }
         );
         // Emission d'un message à la création dès que l'utilisateur sélectionné a déjà un profil
-        this.profilService.profilExistSubject.subscribe(
+        this.profilExistSubscription = this.profilService.profilExistSubject.subscribe(
             user => {
                 this.emitAlertAndRouting('L\'utilisateur ' + user + ' a déjà un profil skype');
             }
@@ -67,6 +73,38 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
         this.errorGetSubscription = this.technicalService.getErrorSubject.subscribe(
             (response: userMsg) => {
             this.emitAlertAndRouting('Impossible de vérifier l\'existence du collaborateur, code erreur : '.concat(response.msg));
+            }
+        );
+        // Cas d'erreur grave vers l'utilisateur
+        this.errorSubscription = this.errorSubject.pipe(debounceTime(5000)).subscribe(
+            () => {
+                this.userMessage = '';
+                this.availableMessage = false;
+            }
+        );
+        // Cas d'un message d'info
+        this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
+            () => {
+                this.userMessage = '';
+                this.availableMessage = false;
+            }
+        );
+        // Récupération des collaborateurs après exécution du service back-end
+        this.collaboraterSubscription = this.collaboraterService.getCollaboraterGetSubject().subscribe(
+            (collaboraters: Collaborater[]) => {
+                this.collaboraterListResult = collaboraters;
+                console.log('liste collaborateurs', this.collaboraterListResult);
+                // Pas d'affichage du tableau si aucun résultat trouvé
+                if (this.collaboraterService.countApi > 0) {
+                    this.isSearched = true;
+                }
+                // Cas liste partielle (nb retournés = taille de la page serveur)
+                if (this.collaboraterService.countApi === 100) { // !!! valeur en dur
+                    this.userMessage = 'Résultats partiels (' + this.collaboraterService.countApi + '). Affiner votre recherche.';
+                    this.typeMessage = 'warning';
+                    this.availableMessage = true;
+                    this.successSubject.next();
+                }
             }
         );
     }
@@ -79,21 +117,10 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
     /**
      * Méthode appelée sur clic du bouton Rechercher
      */
-  onSearch() {
-      this.initCollaboraterSearch();
-      this.collaboraterService.getCollaboratersFromServer(this.collaboraterSearch);
-      this.collaboraterSubscription = this.collaboraterService.getCollaboraterGetSubject().subscribe(
-          (collaboraters: Collaborater[]) => {
-              this.collaboraterListResult = collaboraters;
-              console.log('liste collaborateurs', this.collaboraterListResult);
-              console.log(this.collaboraterSubscription);
-              // Pas d'affichage du tableau si aucun résultat trouvé
-              if (this.collaboraterService.countApi > 0) {
-                  this.isSearched = true;
-              }
-          }
-      );
-  }
+    onSearch() {
+        this.initCollaboraterSearch();
+        this.collaboraterService.getCollaboratersFromServer(this.collaboraterSearch);
+    }
 
     /**
      * Récupération des données de recherche issues du formulaire
@@ -138,14 +165,8 @@ export class CollaboraterSearchComponent implements OnInit, OnDestroy {
      * @param message
      */
     emitAlertAndRouting(message: string) {
-        this.errorMessage = message;
+        this.userMessage = message;
         this.availableMessage = true;
-        this.errorSubscription = this.errorSubject.pipe(debounceTime(5000)).subscribe(
-            () => {
-                this.errorMessage = '';
-                this.availableMessage = false;
-            }
-        );
         this.errorSubject.next();
     }
 }

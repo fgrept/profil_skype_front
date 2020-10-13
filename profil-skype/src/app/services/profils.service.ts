@@ -43,7 +43,7 @@ export class ProfilsService  {
   // variables when we go back to the list from the detail
   public profilListToReload = true;
   public profilListToCount = true;
-  public pageListToShow = 1;
+  private pageListToShow = 1;
 
   private tokenId: string;
 
@@ -139,6 +139,7 @@ export class ProfilsService  {
     this.pageListToShow = pageAsked;
     if (this.profilListToReload) {
       const url = baseUrl5 + (pageAsked - 1) + '/10/0/ASC';
+      // en cas de chgt de taille de page : penser à modifier aussi le critère dans la liste profils avec filtre
       this.httpClient.post<any[]>(url, searchprofil,
           {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
           .subscribe(
