@@ -40,6 +40,8 @@ import {TokenInterceptor} from './interceptor/token.interceptor';
 import { ProfilDetailEventsItemComponent } from './components/Profil/profil-detail-events-item/profil-detail-events-item.component';
 import { ProfilExpiredComponent } from './components/Profil/profil-expired/profil-expired.component';
 import { ProfilExpiredItemComponent } from './components/Profil/profil-expired-item/profil-expired-item.component';
+import { ProfilExpiredbisComponent } from './components/Profil/profil-expiredbis/profil-expiredbis.component';
+import { ProfilExpiredbisItemComponent } from './components/Profil/profil-expiredbis-item/profil-expiredbis-item.component';
 
 
 const appRoutes: Routes = [
@@ -84,7 +86,9 @@ const appRoutes: Routes = [
     UserAccountComponent,
     ProfilDetailEventsItemComponent,
     ProfilExpiredComponent,
-    ProfilExpiredItemComponent
+    ProfilExpiredItemComponent,
+    ProfilExpiredbisComponent,
+    ProfilExpiredbisItemComponent
   ],
   imports: [
     BrowserModule,

@@ -311,7 +311,7 @@ export class ProfilDetailComponent implements OnInit, OnDestroy {
                 () => {
                     this.successMessage = '';
                     this.availableMessage = false;
-                    this.router.navigate(['/profils'])
+                    this.router.navigate(['/profils']);
                 }
             );
             this.successSubject.next();

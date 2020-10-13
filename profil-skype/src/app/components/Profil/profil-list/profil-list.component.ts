@@ -36,6 +36,8 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   voiceChecked:boolean=false;
   voiceEnabled:boolean=false;
   searchFilter:boolean;
+  searchExpiredActivate = false;
+
   // for column filter
   sortColum = Array<number>();
   faArrowsAltV = faArrowsAltV;
@@ -75,25 +77,29 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
     this.profilSubscription = this.profilsService.profilsSubject.subscribe(
         (profils: ProfilFromList[]) => {
-          this.profilList2 = profils;
+          // do nothing in case of expiration profils list
+          if (!this.searchExpiredActivate) {
+            this.profilList2 = profils;
 
-          // in case of criteria :            
-          if (this.searchFilter) {this.numberOfProfil = profils.length;}
-          if (this.searchFilter && profils.length === 10) {
-            console.log("partiel");
-            this.successMessage = 'Résultats partiels (' + profils.length + '). Affiner votre recherche.';
-            this.typeMessage = 'warning';
-            this.availableMessage = true;
-            this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
-                () => {
-                    this.successMessage = '';
-                    this.availableMessage = false;
-                }
-            );
-            this.successSubject.next();
+            // in case of criteria :            
+            if (this.searchFilter) {this.numberOfProfil = profils.length;}
+            if (this.searchFilter && profils.length === 10) {
+              console.log("partiel");
+              this.successMessage = 'Résultats partiels (' + profils.length + '). Affiner votre recherche.';
+              this.typeMessage = 'warning';
+              this.availableMessage = true;
+              this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
+                  () => {
+                      this.successMessage = '';
+                      this.availableMessage = false;
+                  }
+              );
+              this.successSubject.next();
+            }
+          
           }
         }
-      );
+    );
 
     this.errorGetSubscription = this.technicalService.getErrorSubject.subscribe(
         (response: userMsg) => {
@@ -132,15 +138,6 @@ export class ProfilListComponent implements OnInit, OnDestroy {
       () => this.searchText = this.searchForm.get('search').value
     );
 
-      /* var el = document.getElementById('tata');
-      document.addEventListener('scroll', (e) => {
-        console.log('scroll : ' , document.documentElement.scrollHeight,
-        ' - ' , document.documentElement.scrollTop, ' -' ,
-        document.documentElement.scrollHeight);
-        let pos:number = document.documentElement.scrollHeight - document.documentElement.scrollTop;
-         el.style.top = pos.toString();
-      }) */
-
   }
 
   /**
@@ -176,7 +173,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
       null,
       null,
       null,
-      null,
+      ( (this.searchExpiredActivate) ? 'EXPIRED' : null),
       this.filterForm.get('searchId').value, // collaboraterId
       this.filterForm.get('searchExpirationDate').value,
       this.filterForm.get('searchFirstName').value,
@@ -197,6 +194,20 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.page = 1;
     this.profilsService.getProfilsFromServerWithCriteria(this.page, profilSearch );
 
+  }
+
+  switchToExpirated() {
+    this.filterForm.disable();
+    this.searchExpiredActivate = true;
+    this.onSearchFilterClick();
+  }
+
+  reloadProfils(event) {
+    // for the moment, same action in the parent, if it has failed or succeed :
+    // we reload the list and destroy the sub components.
+    console.log('action 3 :', event);
+    this.searchExpiredActivate = false;
+    this.onResetForm();
   }
 
   onFilterExpired() {
@@ -242,14 +253,15 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
   routingTo(route:string) {
     //    this.cd.detectChanges();
-    console.log("method_RoutingTo-Route =  :", route)
+    console.log("method_RoutingTo-Route =  :", route);
         // this.profilsService.buttonFilterSubject.subscribe(
         //   () => this.router.navigate([route])
         // );
-        this.router.navigate([route]) 
+        this.router.navigate([route]);
     } 
 
   onResetForm(): void {
+    this.filterForm.enable();
     this.filterForm.reset({value : ''});
     this.filterForm.controls['searchVoicePolicy'].setValue(false);
     this.filterForm.controls['searchVoiceEnabled'].disable();
@@ -258,6 +270,8 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.profilsService.getNumberOfProfilFromServer();
     this.page = 1;
     this.profilsService.getProfilsFromServer(this.page);
+    // subcomponent Expired
+    this.searchExpiredActivate = false;
   }
 
   onVoiceClick() {

@@ -64,13 +64,15 @@
             <div>
                 <button class="btn btn-success mx-3" (click)="onSearchFilterClick()">Appliquer</button>
                 <button class="btn btn-danger mx-3" (click)="onResetForm()">Réinitialiser</button>
-                <button class="btn btn-primary mx-3" (click)="routingTo('expired')">Profils expirés</button>
+                <!-- <button class="btn btn-primary mx-3" (click)="routingTo('expired')">Profils expirés</button> -->
+                <button class="btn btn-secondary mx-3" (click)=switchToExpirated()>Profils expirés</button>
             </div>
             <br/><br />
         </div>
- 
-      <div class="col-12">
-        <form [formGroup]="filterForm" class="form-group">
+        
+    <!-- Section pour la liste des profils avec ou sans filtre -->
+      <main class="col-12" *ngIf="!searchExpiredActivate">
+        <!-- <form [formGroup]="filterForm" class="form-group"> -->
             <!-- not possible for using bootsrap style because of the sub-component
                 same pb with the sorting functionnality -->
             <table class="table">              <!--table-striped-->
@@ -134,9 +136,16 @@
                 </footer>
 
             </table>
+        
+        <!-- </form> -->
+      </main>
 
-        </form>
+    <!-- Section pour la liste des profils expirés -->
+      <div class="col-12" *ngIf="searchExpiredActivate"
+            (reloadEvent)="reloadProfils($event)">
+        <app-profil-expiredbis></app-profil-expiredbis>
       </div>
+
     </div>
     <div class="col-md-6">
         <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true
