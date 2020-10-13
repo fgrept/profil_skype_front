@@ -41,6 +41,10 @@ import { ProfilDetailEventsItemComponent } from './components/Profil/profil-deta
 import { ProfilExpiredbisComponent } from './components/Profil/profil-expiredbis/profil-expiredbis.component';
 import { ProfilExpiredbisItemComponent } from './components/Profil/profil-expiredbis-item/profil-expiredbis-item.component';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoaderService } from './services/loader.service';
+import { LoaderInterceptor } from './interceptor/loader.interceptor';
+import {NgxLoadingModule} from "ngx-loading";
 
 const appRoutes: Routes = [
   {path: 'profils', canActivate:[AuthentGuardService],component : ProfilListComponent},
@@ -60,6 +64,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
+
   declarations: [
     AppComponent,
     AuthentComponent,
@@ -93,7 +98,9 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     NgxPaginationModule,
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    BrowserAnimationsModule,
+    NgxLoadingModule,
     /*
         ,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
@@ -102,7 +109,9 @@ const appRoutes: Routes = [
   providers: [AuthentGuardService,
               UserService,
               ProfilsService,
-    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi:true}
+              LoaderService,
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi:true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi:true}
 //    ,{provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi:true}
   ],
   bootstrap: [AppComponent]

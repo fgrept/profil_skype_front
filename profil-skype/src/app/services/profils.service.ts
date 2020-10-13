@@ -5,6 +5,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angula
 import { ProfilRaw } from '../models/profil/profil-raw';
 import { ProfilForChange } from '../models/profil/profil-for-change';
 import { userMsg } from '../models/tech/user-msg';
+import { delay } from 'rxjs/operators';
 
 const baseUrl = 'http://localhost:8181/v1/profile/list/all';
 const baseUrl2 = 'http://localhost:8181/v1/profile/update';
@@ -91,7 +92,7 @@ export class ProfilsService  {
       this.httpClient.get<any>(baseUrl4,
           {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
       .subscribe(
-        (response) => {
+        (response) => { delay (4000)
           console.log('retour back-end Ok : ', response);
           this.numberProfil = response.body;
           this.profilListToCount = false;
@@ -118,7 +119,7 @@ export class ProfilsService  {
           this.httpClient.get<any[]>(url,
               {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
           .subscribe(
-            (response) => {
+            (response) => {delay (4000)
               console.log('retour back-end Ok : ', response);
               this.profils = response.body;
               this.profilsSubject.next(response.body);

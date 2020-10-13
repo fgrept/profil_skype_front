@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '../../../services/user.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ProfilFromList } from 'src/app/models/profil/profil-to-show';
 import { ProfilsService } from 'src/app/services/profils.service';
-import { FilterProfilPipe } from '../../../pipes/filter-profil.pipe';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { faArrowsAltV, faArrowDown, faArrowUp} from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
-import {TechnicalService} from "../../../services/technical.service";
-import {userMsg} from "../../../models/tech/user-msg";
+import {TechnicalService} from '../../../services/technical.service';
+import {userMsg} from '../../../models/tech/user-msg';
+import { LoaderService } from 'src/app/services/loader.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { debounceTime } from 'rxjs/operators';
 
@@ -18,6 +18,7 @@ import { debounceTime } from 'rxjs/operators';
   styleUrls: ['./profil-list.component.css']
 })
 export class ProfilListComponent implements OnInit, OnDestroy {
+
 
   currentUserType;
   profilList2: ProfilFromList[];
@@ -31,11 +32,11 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   page: number;
   numberOfProfil: number;
   filterForm: FormGroup;
-  searchForm:FormGroup;
-  showSidebar:boolean=false;
+  searchForm: FormGroup;
+  showSidebar = false;
   // for search filter:
-  voiceChecked:boolean=false;
-  voiceEnabled:boolean=false;
+  voiceChecked = false;
+  voiceEnabled = false;
   searchFilter:boolean;
   searchExpiredActivate = false;
 
@@ -51,11 +52,16 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   typeMessage = 'success';
   successSubject = new Subject<string>();
 
+  // pour la barre de chargement
+  loaderSubject = new Subject();
+  isLoading = true;
+
   constructor(private userService: UserService,
               private profilsService: ProfilsService,
-              private formBuilder:FormBuilder,
-              private router: Router, 
-              private technicalService: TechnicalService) {
+              private formBuilder: FormBuilder,
+              private router: Router,
+              private technicalService: TechnicalService,
+              private loaderService: LoaderService, ) {
    }
 
   ngOnDestroy(): void {
@@ -68,6 +74,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     
   }
   ngOnInit(): void {
+
     this.searchFilter = false;
     this.currentUserType = this.userService.getCurrentRole();
 
@@ -112,7 +119,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
     this.page = 1;
     this.profilsService.getProfilsFromServer(1);
-    
+
     this.filterForm = this.formBuilder.group(
       {searchId : new FormControl(),
       searchFirstName : new FormControl(),
@@ -150,6 +157,13 @@ export class ProfilListComponent implements OnInit, OnDestroy {
         }
     );
 
+    // Désactivation de l'animation de chargement à l'arrivée de la réponse
+    this.loaderService.loaderSubject.subscribe(
+        (response: boolean) => {
+          this.isLoading = response;
+        }
+    );
+
   }
 
   /**
@@ -157,7 +171,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
    * 
    * @param pageDemand 
    */
-  onPageChanged(pageDemand:number) {
+  onPageChanged(pageDemand: number) {
     this.page = pageDemand;
     this.profilsService.getProfilsFromServer(pageDemand);
   }
@@ -167,7 +181,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
    */
   collapseSideBar() {
     this.showSidebar = ! this.showSidebar;
-    // use jquery for the slideshow effect, waiting of other best UI components   
+    // use jquery for the slideshow effect, waiting of other best UI components
     this.showSidebar ? $('#sidebar').slideDown(300): $('#sidebar').slideUp(300);
   }
 
@@ -196,9 +210,9 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
     // the filtrer on boolean must not be "" but null
     if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
-    // filter on users having international option 
-    if (profilSearch.voicePolicy.toString() === 'true') { //the value has a boolean type !
-      profilSearch.voicePolicy = 'EMEA-VP-FR_BDDF_InternationalAuthorized'
+    // filter on users having international option
+    if (profilSearch.voicePolicy.toString() === 'true') { // the value has a boolean type !
+      profilSearch.voicePolicy = 'EMEA-VP-FR_BDDF_InternationalAuthorized';
     } else {
       profilSearch.voicePolicy = null;
     }
@@ -258,55 +272,55 @@ export class ProfilListComponent implements OnInit, OnDestroy {
    * method for filtering the column of the list 
    * @param col 
    */
-  onSortClick(col:number) {
-    this.sortColum[col] == 0 ? this.sortColum[col] = 1 : this.sortColum[col]=-this.sortColum[col];
-    
+  onSortClick(col: number) {
+    this.sortColum[col] === 0 ? this.sortColum[col] = 1 : this.sortColum[col]=-this.sortColum[col];
+
     switch (col) {
       case 0:
-        if (this.sortColum[col]==1) {
+        if (this.sortColum[col] === 1) {
           this.profilList2.sort((a,b) => ('' + a.sip).localeCompare(b.sip));
         } else {
           this.profilList2.sort((a,b) => ('' + b.sip).localeCompare(a.sip));
         }
         break;
       case 1:
-        if (this.sortColum[col]==1) {
+        if (this.sortColum[col] === 1) {
           this.profilList2.sort((a,b) => ('' + a.collaboraterId).localeCompare(b.collaboraterId));
         } else {
           this.profilList2.sort((a,b) => ('' + b.collaboraterId).localeCompare(a.collaboraterId));
         }
-        
+
         break;
       case 2:
-        if (this.sortColum[col]==1) {
+        if (this.sortColum[col] === 1) {
           this.profilList2.sort((a,b) => ('' + a.firstName).localeCompare(b.firstName));
         } else {
           this.profilList2.sort((a,b) => ('' + b.firstName).localeCompare(a.firstName));
         }
         break;
       case 3:
-        if (this.sortColum[col]==1) {
+        if (this.sortColum[col] === 1) {
           this.profilList2.sort((a,b) => ('' + a.lastName).localeCompare(b.lastName));
         } else {
           this.profilList2.sort((a,b) => ('' + b.lastName).localeCompare(a.lastName));
         }
         break;
       case 4:
-        if (this.sortColum[col]==1) {
+        if (this.sortColum[col] === 1) {
           this.profilList2.sort((a,b) => ('' + a.orgaUnityCode).localeCompare(b.orgaUnityCode));
         } else {
           this.profilList2.sort((a,b) => ('' + b.orgaUnityCode).localeCompare(a.orgaUnityCode));
         }
         break;
       case 5:
-        if (this.sortColum[col]==1) {
+        if (this.sortColum[col] === 1) {
           this.profilList2.sort((a,b) => ('' + a.siteCode).localeCompare(b.siteCode));
         } else {
           this.profilList2.sort((a,b) => ('' + b.siteCode).localeCompare(a.siteCode));
         }
         break;
       case 6:
-        if (this.sortColum[col]==1) {
+        if (this.sortColum[col] === 1) {
           this.profilList2.sort((a,b) => ('' + a.statusProfile).localeCompare(b.statusProfile));
         } else {
           this.profilList2.sort((a,b) => ('' + b.statusProfile).localeCompare(a.statusProfile));
@@ -315,9 +329,9 @@ export class ProfilListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-    //reset the others
+    // reset the others
     for (let index = 0; index < this.sortColum.length; index++) {
-      if (index !== col) {this.sortColum[index]=0;}
+      if (index !== col) {this.sortColum[index] = 0; }
     }
   }
 

@@ -14,6 +14,7 @@ export class ProfilDetailEventsItemComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
 }
