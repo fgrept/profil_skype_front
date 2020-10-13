@@ -26,6 +26,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   private search2Subscription: Subscription;
   private errorGetSubscription: Subscription;
   private successSubscription: Subscription;
+  private reloadProfilsSubject: Subscription;
   searchText: string;
   page: number;
   numberOfProfil: number;
@@ -63,6 +64,8 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     if (this.profilNumberSubscription) {this.profilNumberSubscription.unsubscribe(); }
     if (this.errorGetSubscription) {this.errorGetSubscription.unsubscribe(); }
     if (this.successSubscription) {this.successSubscription.unsubscribe(); }
+    if (this.reloadProfilsSubject) {this.reloadProfilsSubject.unsubscribe(); }
+    
   }
   ngOnInit(): void {
     this.searchFilter = false;
@@ -138,6 +141,15 @@ export class ProfilListComponent implements OnInit, OnDestroy {
       () => this.searchText = this.searchForm.get('search').value
     );
 
+    // for reload the page when profil expired update is done
+    this.profilsService.reloadProfilsSubject.subscribe(
+        () => {
+          this.searchExpiredActivate = false;
+          this.onResetForm();
+          console.log('victoire');
+        }
+    );
+
   }
 
   /**
@@ -202,61 +214,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.onSearchFilterClick();
   }
 
-  reloadProfils(event) {
-    // for the moment, same action in the parent, if it has failed or succeed :
-    // we reload the list and destroy the sub components.
-    console.log('action 3 :', event);
-    this.searchExpiredActivate = false;
-    this.onResetForm();
-  }
-
-  onFilterExpired() {
-    let profilSearch = new ProfilFromList (
-      null,
-      this.filterForm.get('searchVoiceEnabled').value,
-      this.filterForm.get('searchVoicePolicy').value,
-      null,
-      this.filterForm.get('searchSamAccount').value,
-      null,
-      null,
-      null,
-      'ENABLED',
-      this.filterForm.get('searchId').value, // collaboraterId
-      this.filterForm.get('searchExpirationDate').value,
-      this.filterForm.get('searchFirstName').value,
-      this.filterForm.get('searchLastName').value,
-      this.filterForm.get('searchUo').value,
-      this.filterForm.get('searchSite').value
-    );
-
-    // in case of activation criteria, we reset the list at the first page => 1
-    let p = 1;
-    // the filtrer on boolean must not be "" but null
-    if (profilSearch.statusProfile === '') {profilSearch.statusProfile = null}
-    // filter on users having international option 
-    if (profilSearch.voicePolicy.toString() === 'true') { //the value has a boolean type !
-      profilSearch.voicePolicy = 'EMEA-VP-FR_BDDF_InternationalAuthorized'
-    } else {
-      profilSearch.voicePolicy = null;
-    }
-
-    this.profilsService.getProfilsFromServerWithCriteria(p, profilSearch );
-    
-    this.profilSubscription = this.profilsService.profilsSubject.subscribe(
-      (profils: ProfilFromList[]) => {
-        this.profilList2 = profils;
-      }
-    );
-
-
-  } 
-
   routingTo(route:string) {
-    //    this.cd.detectChanges();
-    console.log("method_RoutingTo-Route =  :", route);
-        // this.profilsService.buttonFilterSubject.subscribe(
-        //   () => this.router.navigate([route])
-        // );
         this.router.navigate([route]);
     } 
 

@@ -37,6 +37,7 @@ export class ProfilsService  {
   public deleteSubject = new Subject();
   public getProfilSubject = new Subject();
   public createSubject = new Subject();
+  public reloadProfilsSubject = new Subject();
   public numberProfilSubject = new Subject<number>();
   public buttonFilterSubject = new Subject<boolean>();
   // variables when we go back to the list from the detail
@@ -157,36 +158,6 @@ export class ProfilsService  {
     }
   }
 
-  /**
-   * method for retrieving the list of expired profil 
-   */
-  getExpiredProfilsFromServer(profilSearch:ProfilFromList) {
-    
-    console.log("profilSearch :",profilSearch) 
-
-    this.tokenId = 'Bearer ' + localStorage.getItem('token');
-     
-    // const url = (baseUrl5+profilSearch) ;
-    const url = (baseUrl5) ;
-    console.log("Service-Expired-URL", url)
-
-    this.httpClient.post<any[]>(url,profilSearch, 
-        {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
-        .subscribe(
-          (response) => {
-            console.log('Retour back-end Ok');
-            console.log('Response : ', response);
-            this.profils = response.body;
-            this.profilsSubject.next(response.body);
-            console.log("listExpired:", this.profils )
-          },
-          (error) => {
-            console.log('Retour back-end Ko' + error );
-          }
-        );
-     
-    
-  }
   updateProfilToServer(profilRaw: ProfilRaw, idAnnuaire: string , idCil: string, comment: string) {
     const profilChanged = new ProfilForChange (
           profilRaw.sip, profilRaw.enterpriseVoiceEnabled, profilRaw.voicePolicy, profilRaw.dialPlan,

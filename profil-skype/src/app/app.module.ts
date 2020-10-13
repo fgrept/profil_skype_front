@@ -38,8 +38,6 @@ import {TokenInterceptor} from './interceptor/token.interceptor';
 // import { ServiceWorkerModule } from '@angular/service-worker';
 // import { environment } from '../environments/environment';
 import { ProfilDetailEventsItemComponent } from './components/Profil/profil-detail-events-item/profil-detail-events-item.component';
-import { ProfilExpiredComponent } from './components/Profil/profil-expired/profil-expired.component';
-import { ProfilExpiredItemComponent } from './components/Profil/profil-expired-item/profil-expired-item.component';
 import { ProfilExpiredbisComponent } from './components/Profil/profil-expiredbis/profil-expiredbis.component';
 import { ProfilExpiredbisItemComponent } from './components/Profil/profil-expiredbis-item/profil-expiredbis-item.component';
 
@@ -56,7 +54,6 @@ const appRoutes: Routes = [
   {path: 'users/create/:idUser',component:UserCreateRoleComponent},
   {path: 'users/:idUser',component:UserDetailComponent},
   {path: 'account',component:UserAccountComponent},
-  {path: 'expired',component:ProfilExpiredComponent},
   {path: '', component:ProfilListComponent,},
   {path: 'not-found', component:UrlNotFoundComponent},
   {path: '**', redirectTo: 'not-found'}
@@ -85,8 +82,6 @@ const appRoutes: Routes = [
     ProfilCreateFormComponent,
     UserAccountComponent,
     ProfilDetailEventsItemComponent,
-    ProfilExpiredComponent,
-    ProfilExpiredItemComponent,
     ProfilExpiredbisComponent,
     ProfilExpiredbisItemComponent
   ],

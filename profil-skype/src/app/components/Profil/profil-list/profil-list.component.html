@@ -55,16 +55,15 @@
                 </div>                    
                    
                 <div class="form-group d-flex">
-                    <label for="searchExpirationDate" class="col-5">Date expiration :</label>
+                    <label for="searchExpirationDate" class="col-5">Date expiration inférieure à :</label>
                     <input placeholder="jj/mm/aaaa" type="date" id="searchExpirationDate" class="col-7 form-control" formControlName="searchExpirationDate">
                 </div>                    
          
 
             </form>
             <div>
-                <button class="btn btn-success mx-3" (click)="onSearchFilterClick()">Appliquer</button>
-                <button class="btn btn-danger mx-3" (click)="onResetForm()">Réinitialiser</button>
-                <!-- <button class="btn btn-primary mx-3" (click)="routingTo('expired')">Profils expirés</button> -->
+                <button class="btn btn-success mx-3 mb-2" (click)="onSearchFilterClick()">Appliquer</button>
+                <button class="btn btn-danger mx-3 mb-2" (click)="onResetForm()">Réinitialiser</button>
                 <button class="btn btn-secondary mx-3" (click)=switchToExpirated()>Profils expirés</button>
             </div>
             <br/><br />
@@ -141,8 +140,7 @@
       </main>
 
     <!-- Section pour la liste des profils expirés -->
-      <div class="col-12" *ngIf="searchExpiredActivate"
-            (reloadEvent)="reloadProfils($event)">
+      <div class="col-12" *ngIf="searchExpiredActivate">
         <app-profil-expiredbis></app-profil-expiredbis>
       </div>
 

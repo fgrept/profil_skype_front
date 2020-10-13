@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Subject } from 'rxjs/internal/Subject';
 import { debounceTime } from 'rxjs/operators';
@@ -20,7 +20,6 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
 
   profilList2: ProfilFromList[];
   page: number = 1;
-  @Output() reloadEvent = new EventEmitter<string>();
 
   // tab for control of the (n) calls to the back
   itemChecked = new Array<Boolean>();
@@ -37,6 +36,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
   typeMessage = 'success';
   successSubject = new Subject<string>();
   modalOptions: NgbModalOptions = {};
+  comment:string;
 
   constructor(private profilsService: ProfilsService,
               private modalService: NgbModal,
@@ -46,7 +46,6 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
     if (this.profilSubscription) {this.profilSubscription.unsubscribe(); }
     if (this.successSubscription) {this.successSubscription.unsubscribe(); }
     if (this.updateSubscription) {this.updateSubscription.unsubscribe();}
-    console.log('destroy expiredbis');
   }
 
   ngOnInit(): void {
@@ -75,13 +74,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
           this.successMessage = '';
           this.availableMessage = false;
           if (action === 'false' || action === 'true') {
-            console.log('action 2 :', action);
-            // ici commence un nouveau PB
-            //this.reloadEvent.emit(action); // solution 1 : ne marche pas
-            // this.router.navigate(['/profils']); // solution 2 (idem)
-            // il doit falloir mettre un ngOnChanged
-            // en attendant, on recharge la liste, et l'utilisateur devra cliquer sur Reinitialiser
-            
+            this.profilsService.reloadProfilsSubject.next(action);
           }
       }
     );
@@ -105,7 +98,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
               if (cpt === nextWanted) {break;}
             }
             console.log('nextWanted :' , nextWanted);
-            this.sendProfilToUpdate(nextWanted);
+            this.sendProfilToUpdate(nextWanted, this.comment);
           }
 
         } else {
@@ -138,7 +131,8 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
                     const itemIsChecked = this.itemChecked[index];
                     if (itemIsChecked) {first = index; break;};
                   }
-                  this.sendProfilToUpdate(first);
+                  this.comment = confirm['comment'];
+                  this.sendProfilToUpdate(first, this.comment);
               }
             }, dismiss => {
               console.log('retour modal', dismiss);
@@ -147,7 +141,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendProfilToUpdate (id:number) {
+  sendProfilToUpdate (id:number, comment:string) {
     const profilChanged = new ProfilRaw (
       this.profilList2[id].sip,
       this.profilList2[id].enterpriseVoiceEnabled,
@@ -158,14 +152,14 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
       this.profilList2[id].exchUser,
       this.profilList2[id].objectClass,
       'ENABLED'
-      //'EXPIRED' à garder pour le test Ko (dès le 1er)
+      //'EXPIRED' //à garder pour le test Ko (dès le 1er)
     );
     
     this.profilsService.updateProfilToServer(
       profilChanged,
       this.profilList2[id].collaboraterId, 
       localStorage.getItem('userId'),
-      confirm['comment']
+      comment
     );
 
   }
