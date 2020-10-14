@@ -27,15 +27,15 @@
             <label class="col-6 col-sm-3" for="userRoles">Roles :</label>
             <div class="col-6 col-sm-4">
 <!--                <input type="text" id="userRoles" class="form-control" formControlName="userRoles" disabled>-->
-                    <label id="userRoles" >{{this.userRoles}}</label>
+                    <label id="userRoles" >{{this.userRolesForShow}}</label>
             </div>
         </div>               
 
         <br/>
         <div *ngIf="updateAvailable">
             <div class="formGroup row">
-                <label class="col-3" for="actualPassword">Mot de passe :</label>
-                <div class="col-4">
+                <label class="col-6 col-sm-3" for="actualPassword">Mot de passe :</label>
+                <div class="col-6 col-sm-4">
                     <input type="password" id="actualPassword" class="form-control" formControlName="actualPassword" >
                 </div>
             </div>
@@ -43,8 +43,8 @@
                 <label class="text-danger">doit être renseigné</label>
             </div>
             <div class="formGroup row">
-                <label class="col-3" for="newPassword">Nouveau mot de passe :</label>
-                <div class="col-4">
+                <label class="col-6 col-sm-3" for="newPassword">Nouveau mot de passe :</label>
+                <div class="col-6 col-sm-4">
                     <input type="password" id="newPassword" class="form-control" formControlName="newPassword" >
                 </div>
             </div>
@@ -66,8 +66,8 @@
                 <label class="text-danger">doit contenir une lettre minuscule</label>
             </div>
             <div class="formGroup row">
-                <label class="col-3" for="newPasswordConfirmed">Confirmation mot de passe :</label>
-                <div class="col-4">
+                <label class="col-6 col-sm-3" for="newPasswordConfirmed">Confirmation mot de passe :</label>
+                <div class="col-6 col-sm-4">
                     <input type="password" id="newPasswordConfirmed" class="form-control" formControlName="newPasswordConfirmed" >
                 </div>
             </div>
