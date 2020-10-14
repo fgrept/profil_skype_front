@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subject} from 'rxjs';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { environment} from '../../environments/environment';
 
 
-const baseUrl = 'http://localhost:8181/v1/event/list/';
+const baseUrl = environment.urlServer + '/v1/event/list/';
 
 @Injectable({
   providedIn: 'root'

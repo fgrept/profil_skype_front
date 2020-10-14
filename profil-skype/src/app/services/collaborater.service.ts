@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import {Collaborater} from '../models/collaborater/collaborater';
 import {Subject} from 'rxjs';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
-const urlCollaboraterSearch = 'http://localhost:8181/v1/collaborater/list/criteria/';
-const urlGetCollaborater = 'http://localhost:8181/v1/collaborater/get/';
+const urlCollaboraterSearch = environment.urlServer + '/v1/collaborater/list/criteria/';
+const urlGetCollaborater = environment.urlServer + '/v1/collaborater/get/';
 
 @Injectable({
   providedIn: 'root'
