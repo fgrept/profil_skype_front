@@ -68,11 +68,15 @@ export class ProfilsService  {
               console.log('Maj back-end Ok');
               console.log(response);
               this.createSubject.next(new userMsg(true, null));
+              this.numberProfil++;
+              this.numberProfilSubject.next(this.numberProfil);
             },
             (error: HttpErrorResponse) => {
               console.log('Maj back-end Ko' + error );
               if (error.status === 200 || error.status === 201) {
                 this.createSubject.next(new userMsg(true, null));
+                this.numberProfil++;
+                this.numberProfilSubject.next(this.numberProfil);
               } else {
                 const msg = this.errorHandler(error);
                 this.createSubject.next(new userMsg(false, msg));
@@ -223,11 +227,15 @@ export class ProfilsService  {
             console.log('Maj back-end Ok');
             console.log(response);
             this.deleteSubject.next(new userMsg(true, null));
+            this.numberProfil--;
+            this.numberProfilSubject.next(this.numberProfil);
           },
           (error: HttpErrorResponse) => {
             console.log('Maj back-end Ko' + error );
             if (error.status === 200 || error.status === 201) {
               this.deleteSubject.next(new userMsg(true, null));
+              this.numberProfil--;
+              this.numberProfilSubject.next(this.numberProfil);
             } else {
               const msg = this.errorHandler(error);
               this.deleteSubject.next(new userMsg(false, msg));
