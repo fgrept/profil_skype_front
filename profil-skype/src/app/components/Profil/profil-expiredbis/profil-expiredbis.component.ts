@@ -86,6 +86,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
 
     this.updateSubscription = this.profilsService.updateSubject.subscribe(
       (response: userMsg) => {
+          console.log('updateSubject reçu', response);
         if (response.success) {
           this.totalItemControlled ++;
           if (this.totalItemChecked === this.totalItemControlled) {
@@ -97,13 +98,17 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
             // send the next
             let cpt: number = 0;
             let nextWanted: number = this.totalItemControlled + 1;
+            let indexProfilUpdate = 0;
             for (let index = 0; index < this.itemChecked.length; index++) {
               const itemIsChecked = this.itemChecked[index];
               if (itemIsChecked) {cpt ++;}
-              if (cpt === nextWanted) {break;}
+              if (cpt === nextWanted) {
+                  indexProfilUpdate = index;
+                  break;
+              }
             }
-            console.log('nextWanted :' , nextWanted);
-            this.sendProfilToUpdate(nextWanted, this.comment);
+            console.log('nextWanted :' , indexProfilUpdate);
+            this.sendProfilToUpdate(indexProfilUpdate, this.comment);
           }
 
         } else {
@@ -125,7 +130,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
     if (this.totalItemChecked !== 0) {
       console.log('nb à emettre : ' , this.totalItemChecked, 'demandé : ', this.itemChecked,
       'nb attendu : ', this.totalItemControlled);
-    
+
       const modalForm =  this.openModalForm();
       modalForm.result.then(
           confirm => {
@@ -159,10 +164,10 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
       'ENABLED'
       //'EXPIRED' //à garder pour le test Ko (dès le 1er)
     );
-    
+    console.log('sendProfilToUpdate, profilChanged', profilChanged);
     this.profilsService.updateProfilToServer(
       profilChanged,
-      this.profilList2[id].collaboraterId, 
+      this.profilList2[id].collaboraterId,
       localStorage.getItem('userId'),
       comment
     );

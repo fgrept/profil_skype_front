@@ -7,7 +7,7 @@ import { ProfilForChange } from '../models/profil/profil-for-change';
 import { userMsg } from '../models/tech/user-msg';
 import { delay } from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {LoaderService} from "./loader.service";
+import {LoaderService} from './loader.service';
 
 const baseUrl = environment.urlServer + '/v1/profile/list/all';
 const baseUrl2 = environment.urlServer + '/v1/profile/update';
