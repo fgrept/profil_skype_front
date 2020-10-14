@@ -64,7 +64,7 @@
             <div>
                 <button class="btn btn-success mx-3 mb-2" (click)="onSearchFilterClick()">Appliquer</button>
                 <button class="btn btn-danger mx-3 mb-2" (click)="onResetForm()">Réinitialiser</button>
-                <button class="btn btn-secondary mx-3 mb-2" (click)=switchToExpirated()>Profils expirés</button>
+                <button class="btn btn-secondary mx-3 mb-2" *ngIf="isAuthorizedToActive" (click)=switchToExpirated()>Profils expirés</button>
             </div>
             <br/><br />
         </div>

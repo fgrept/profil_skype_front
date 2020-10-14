@@ -40,6 +40,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   voiceEnabled = false;
   searchFilter: boolean;
   searchExpiredActivate = false;
+  isAuthorizedToActive = false;
 
   // for column filter
   sortColum = Array<number>();
@@ -101,6 +102,9 @@ export class ProfilListComponent implements OnInit, OnDestroy {
 
     this.searchFilter = false;
     this.currentUserType = this.userService.getCurrentRole();
+    if (this.currentUserType === 2 || this.currentUserType === 3) {
+      this.isAuthorizedToActive = true;
+    }
 
     this.profilNumberSubscription = this.profilsService.numberProfilSubject.subscribe(
         (total: number) => {
