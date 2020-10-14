@@ -34,6 +34,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   filterForm: FormGroup;
   searchForm: FormGroup;
   showSidebar = false;
+  smartphone = false;
   // for search filter:
   voiceChecked = false;
   voiceEnabled = false;
@@ -188,6 +189,8 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     );
 
 
+
+    this.detectSmartphone();
 
   }
 
@@ -368,5 +371,19 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     this.successMessage = message.concat(response.msg);
     this.typeMessage = 'danger';
     this.availableMessage = true;
+  }
+
+  getColorHeader(index:number) {
+    if (this.sortColum[index] === 1) return 'rgb(168, 226, 168)';
+    if (this.sortColum[index] === -1) return 'rgb(211, 115, 115)';
+    return 'initial';
+  }
+
+  /**
+   * method for hiding element when the boostrap hiding properties break the style
+   */
+  detectSmartphone () {
+    let size = document.body.offsetWidth;
+    if (size < 576) {this.smartphone = true; }
   }
 }

@@ -5,6 +5,7 @@ import {CustomPasswordValidator} from '../../../Validators/custom-password-valid
 import {debounceTime} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from '../../../services/user.service';
+import { UserResult } from 'src/app/models/user/user-result';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class UserAccountComponent implements OnInit, OnDestroy {
   collaboraterId: string;
   lastName: string;
   firstName: string;
+  userRolesForShow: string;
   userRoles: string;
 
   // variables pour l'affichage d'une popup
@@ -39,6 +41,7 @@ export class UserAccountComponent implements OnInit, OnDestroy {
     this.updateAvailable = false;
     this.initForm();
     this.initAlert();
+    this.userRolesForShow = this.userRoles.replace(',',' ').replace(',',' ');
   }
 
   updatePassword() {
