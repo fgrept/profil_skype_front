@@ -35,9 +35,9 @@
 <button class="btn btn-danger" (click)="onResetForm()">Réinitialiser</button>
 
 <br/><br />
-<div class="col-md-6">
+<!-- <div class="col-md-6">
     <ngb-alert *ngIf="availableMessage" [type]="typeMessage" (close)="availableMessage=false">{{ userMessage }}</ngb-alert>
-</div>
+</div> -->
 <div class="container">
     <div class="col-12">
         <table class="table" *ngIf="isSearched">
@@ -56,6 +56,9 @@
             | paginate: { itemsPerPage: 10, currentPage: page}"
             [collaborater]="item" [idUser]="item.collaboraterId" [type]="type">
             </app-collaborater-search-item>
+            <div class="col-md-6 custom-msg">
+                <ngb-alert *ngIf="availableMessage" [type]="typeMessage" (close)="availableMessage=false">{{ userMessage }}</ngb-alert>
+            </div>
             <footer>
                 <pagination-controls  style="background-color: #F8F9FA;
                                             margin-left: -45px;

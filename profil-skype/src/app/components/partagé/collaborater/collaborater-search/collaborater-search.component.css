@@ -7,4 +7,15 @@ footer {
     bottom: 0;
     background-color: #F8F9FA;
     z-index: 1;
-} 
+}
+@media all and (max-width:575px)
+{
+  .custom-msg {
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    padding-bottom: 50px;
+    width: 100%;
+    margin-left: -40px;
+  }
+}

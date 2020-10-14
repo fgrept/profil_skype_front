@@ -1,19 +1,15 @@
 .custom-scroll {
     display: none;
 }
-
 @media all and (max-width:575px)
 {
   .custom-foot {
     position: fixed;
     bottom: 0;
-    background-color: white;
+    background-color:white;
     z-index: 1;
     padding-top: 10px;
     padding-bottom: 20px;
-    width: 100;
-  }
-  .custom-scroll {
-      display:block;
-  }
+    width: 100%;
+  } 
 }
