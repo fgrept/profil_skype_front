@@ -41,6 +41,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
   searchFilter: boolean;
   searchExpiredActivate = false;
   isAuthorizedToActive = false;
+  profilSearchSave: ProfilFromList;
 
   // for column filter
   sortColum = Array<number>();
@@ -120,22 +121,22 @@ export class ProfilListComponent implements OnInit, OnDestroy {
             this.profilList2 = profils;
 
             // in case of criteria :
-            if (this.searchFilter) {
-              this.numberOfProfil = profils.length;
-            }
-            if (this.searchFilter && profils.length === 10) {
-              console.log('partiel');
-              this.successMessage = 'Résultats partiels (' + profils.length + '). Affiner votre recherche.';
-              this.typeMessage = 'warning';
-              this.availableMessage = true;
-              this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
-                  () => {
-                    this.successMessage = '';
-                    this.availableMessage = false;
-                  }
-              );
-              this.successSubject.next();
-            }
+            // if (this.searchFilter) {
+            //   this.numberOfProfil = profils.length;
+            // }
+            // if (this.searchFilter && profils.length === 10) {
+            //   console.log('partiel');
+            //   this.successMessage = 'Résultats partiels (' + profils.length + '). Affiner votre recherche.';
+            //   this.typeMessage = 'warning';
+            //   this.availableMessage = true;
+            //   this.successSubscription = this.successSubject.pipe(debounceTime(2000)).subscribe(
+            //       () => {
+            //         this.successMessage = '';
+            //         this.availableMessage = false;
+            //       }
+            //   );
+            //   this.successSubject.next();
+            // }
 
           }
         }
@@ -200,7 +201,11 @@ export class ProfilListComponent implements OnInit, OnDestroy {
    * @param pageDemand
    */
   onPageChanged(pageDemand: number) {
+
     this.page = pageDemand;
+    if (this.searchFilter) {
+      this.profilsService.getProfilsFromServerWithCriteria(this.page, this.profilSearchSave);
+    }
     this.profilsService.getProfilsFromServer(pageDemand);
   }
 
@@ -248,6 +253,7 @@ export class ProfilListComponent implements OnInit, OnDestroy {
     }
     this.searchFilter = true;
     this.page = 1;
+    this.profilSearchSave = profilSearch;
     this.profilsService.getProfilsFromServerWithCriteria(this.page, profilSearch);
 
   }

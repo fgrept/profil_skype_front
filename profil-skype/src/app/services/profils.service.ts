@@ -88,7 +88,7 @@ export class ProfilsService  {
   getNumberOfProfilFromServer() {
       this.tokenId = 'Bearer ' + localStorage.getItem('token');
 
-    if (this.profilListToCount) {
+    // if (this.profilListToCount) {
       this.httpClient.get<any>(baseUrl4,
           {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
       .subscribe(
@@ -102,9 +102,10 @@ export class ProfilsService  {
           console.log('retour back-end Ko : ', error );
         }
       );
-    } else {
-      this.numberProfilSubject.next(this.numberProfil);
-    }
+    // }
+    // else {
+    //   this.numberProfilSubject.next(this.numberProfil);
+    // }
   }
 
   /**
@@ -150,6 +151,9 @@ export class ProfilsService  {
               console.log('Maj back-end Ok');
               this.profils = response.body;
               this.profilsSubject.next(response.body);
+              this.numberProfil = Number(response.headers.get('count'));
+              this.numberProfilSubject.next(this.numberProfil);
+              console.log('numberProfil: ', this.numberProfil);
             },
             (error) => {
               console.log('Maj back-end Ko' + error );
