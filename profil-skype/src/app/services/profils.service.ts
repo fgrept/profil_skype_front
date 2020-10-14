@@ -32,6 +32,7 @@ export class ProfilsService  {
   public deleteSubject = new Subject();
   public getProfilSubject = new Subject();
   public createSubject = new Subject();
+  public reloadProfilsSubject = new Subject();
   public numberProfilSubject = new Subject<number>();
   public buttonFilterSubject = new Subject<boolean>();
   // variables when we go back to the list from the detail
@@ -180,6 +181,7 @@ export class ProfilsService  {
           }
         );
   }
+
   updateProfilToServer(profilRaw: ProfilRaw, idAnnuaire: string , idCil: string, comment: string) {
     const profilChanged = new ProfilForChange (
           profilRaw.sip, profilRaw.enterpriseVoiceEnabled, profilRaw.voicePolicy, profilRaw.dialPlan,

@@ -1,0 +1,45 @@
+
+<table class="table">
+    <thead>
+        <tr class="row">
+            <th class="col-2 col-sm-1">sel.</th>
+            <th class="col-2">uid</th>
+            <th class="col-4 col-sm-3 col-lg-2">prénom</th>
+            <th class="col-4 col-sm-3 col-lg-2">nom</th>
+            <th class="col-md-2 col-lg-1 d-none d-lg-block">uo</th>
+            <th class="col-2 col-md-3 col-lg-1 d-none d-sm-block">site</th>
+            <th class="col-3 d-none d-lg-block">date expiration</th>            
+        </tr>
+    </thead>
+
+    <tbody>
+        <app-profil-expiredbis-item *ngFor="let item of profilList2 | paginate: 
+            { itemsPerPage: 10, currentPage: 1 },
+            let index = index"
+            [profil]="item" [idProfil]="index"
+            (itemToCheckEvent)="checkProfilToActivate($event)">
+        </app-profil-expiredbis-item>
+    </tbody>
+    
+    <div class="col-md-6">
+        <ngb-alert *ngIf="availableMessage" [type]="typeMessage" dismissible=true
+            (close)="availableMessage=false"
+            >{{ successMessage }}</ngb-alert>
+    </div>
+
+    <!-- ajout de lignes vides pour pouvoir scroller avec le footer -->
+    <br/><br/><br/><br/><br/>
+    <footer class="w-100">
+        <br/>
+        <div class="d-flex justify-content-start">
+            <button class="btn btn-success mx-2" (click)="reactivateProfils()">Réactiver</button>
+        </div>
+        <br/>
+        <pagination-controls style="background-color: #F8F9FA;
+                                    margin-left: -15px;
+                                    padding-top: 10px;"
+                class="d-flex justify-content-center" (pageChange)="page = $event"></pagination-controls>
+    </footer>
+
+</table>
+
