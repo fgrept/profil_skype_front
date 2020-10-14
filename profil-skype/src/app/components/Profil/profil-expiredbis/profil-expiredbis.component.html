@@ -31,8 +31,8 @@
     <br/><br/><br/><br/><br/>
     <footer class="w-100">
         <br/>
-        <div class="d-flex justify-content-start">
-            <button class="btn btn-success mx-2" (click)="reactivateProfils()">Réactiver</button>
+        <div class="d-flex justify-content-start" *ngIf="isValidationAvailable">
+            <button class="btn btn-success mx-2" [disabled]="totalItemChecked === 0" (click)="reactivateProfils()">Réactiver</button>
         </div>
         <br/>
         <pagination-controls style="background-color: #F8F9FA;

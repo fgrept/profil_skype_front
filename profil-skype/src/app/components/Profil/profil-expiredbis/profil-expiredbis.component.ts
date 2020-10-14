@@ -36,7 +36,8 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
   typeMessage = 'success';
   successSubject = new Subject<string>();
   modalOptions: NgbModalOptions = {};
-  comment:string;
+  comment: string;
+  isValidationAvailable = false;
 
   constructor(private profilsService: ProfilsService,
               private modalService: NgbModal,
@@ -53,6 +54,10 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
     this.profilSubscription = this.profilsService.profilsSubject.subscribe(
       (profils: ProfilFromList[]) => {
 
+          console.log('taille profils expirés', profils.length);
+          if (profils.length > 0){
+              this.isValidationAvailable = true;
+          }
           this.profilList2 = profils.sort(
             (a,b) => a.expirationDate.localeCompare(b.expirationDate)
           );
@@ -90,8 +95,8 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
             this.emitAlertAndRouting('Mise à jour effectuée',response);
           } else {
             // send the next
-            let cpt:number = 0;
-            let nextWanted:number = this.totalItemControlled + 1;
+            let cpt: number = 0;
+            let nextWanted: number = this.totalItemControlled + 1;
             for (let index = 0; index < this.itemChecked.length; index++) {
               const itemIsChecked = this.itemChecked[index];
               if (itemIsChecked) {cpt ++;}
@@ -103,15 +108,15 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
 
         } else {
           console.log('pb lors de la maj : partiel');
-          this.emitAlertAndRouting('Mise à jour effectuée',response);
+          this.emitAlertAndRouting('Mise à jour effectuée', response);
         }
       }
     );
 
-    
+
   }
 
-  checkProfilToActivate(event:CheckItem) {
+  checkProfilToActivate(event: CheckItem) {
     this.itemChecked[event.index] = event.checked;
     (event.checked === true) ? this.totalItemChecked ++ : this.totalItemChecked --;
   }
@@ -126,7 +131,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
           confirm => {
               console.log('retour modal', confirm);
               if (confirm['result'] === 'Confirm') {
-                  let first:number;
+                  let first: number;
                   for (let index = 0; index < this.itemChecked.length; index++) {
                     const itemIsChecked = this.itemChecked[index];
                     if (itemIsChecked) {first = index; break;};
@@ -168,7 +173,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
     * Paramétrage de la fenêtre modale de mise à jour
     */
    openModalForm(): NgbModalRef {
-        
+
     this.modalOptions.backdrop = 'static';
     this.modalOptions.keyboard = false;
     this.modalOptions.centered = true;
@@ -178,7 +183,7 @@ export class ProfilExpiredbisComponent implements OnInit, OnDestroy {
     return modalDiag;
   }
 
-  emitAlertAndRouting(message:string, response:userMsg) {   
+  emitAlertAndRouting(message: string, response: userMsg) {
     if (response.success) {
         this.successMessage = message;
         this.typeMessage = 'success';

@@ -11,6 +11,9 @@ import {debounceTime} from 'rxjs/operators';
 import {Subject, Subscription} from 'rxjs';
 import {TechnicalService} from '../../../services/technical.service';
 import {userMsg} from '../../../models/tech/user-msg';
+import {environment} from '../../../../environments/environment';
+
+const routeAuthent = environment.urlServer + '/authenticate';
 
 @Component({
   selector: 'app-authent',
@@ -101,7 +104,7 @@ export class AuthentComponent implements OnInit, OnDestroy {
 
     // this.authentForm.get('username').value
     this.userId = this.authentForm.get('username').value;
-    const routeAuthent = 'http://localhost:8181/authenticate';
+
     this.httpClient.post<{token: string}>(routeAuthent, credential, {observe: 'response'})
     .subscribe(
       (response: any) => {

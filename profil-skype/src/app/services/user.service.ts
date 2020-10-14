@@ -5,13 +5,14 @@ import {UserResult} from '../models/user/user-result';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {UserCreate} from '../models/user/user-create';
 import { userMsg } from '../models/tech/user-msg';
+import {environment} from '../../environments/environment';
 
-const urlUserCreate = 'http://localhost:8181/v1/user/create';
-const urlUserUprole = 'http://localhost:8181/v1/user/uprole/';
-const urlUserUppassword = 'http://localhost:8181/v1/user/updatepassword/';
-const urlUserGetList = 'http://localhost:8181/v1/user/list';
-const urlUserGet = 'http://localhost:8181/v1/user/get/';
-const urlUserDelete = 'http://localhost:8181/v1/user/delete/';
+const urlUserCreate = environment.urlServer + '/v1/user/create';
+const urlUserUprole = environment.urlServer + '/v1/user/uprole/';
+const urlUserUppassword = environment.urlServer + '/v1/user/updatepassword/';
+const urlUserGetList = environment.urlServer + '/v1/user/list';
+const urlUserGet = environment.urlServer + '/v1/user/get/';
+const urlUserDelete = environment.urlServer + '/v1/user/delete/';
 
 enum userType {
   userUnknown,
@@ -152,20 +153,20 @@ export class UserService {
       this.httpClient.put(urlUserUprole + userResult.collaboraterId + '/' + userResult.roles, null,
           {observe : 'response', headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
           .subscribe(
-            (response:HttpResponse<Object>) => {
+            (response: HttpResponse<Object>) => {
               console.log('Maj back-end Ok');
               console.log(response);
-              this.userUpdateSubject.next(new userMsg(true,null));
+              this.userUpdateSubject.next(new userMsg(true, null));
             },
-            (error:HttpErrorResponse) => {
+            (error: HttpErrorResponse) => {
               console.log('Maj back-end Ko' + error );
               if (error.status === 200 || error.status === 201) {
-                this.userUpdateSubject.next(new userMsg(true,null));
+                this.userUpdateSubject.next(new userMsg(true, null));
               } else {
-                let msg = this.errorHandler(error);
-                this.userUpdateSubject.next(new userMsg(false,msg));
+                const msg = this.errorHandler(error);
+                this.userUpdateSubject.next(new userMsg(false, msg));
               }
-            } 
+            }
           );
       this.getRole(userResult);
     }
@@ -236,18 +237,18 @@ export class UserService {
         this.httpClient.delete(urlUserDelete + userResult.collaboraterId,
             {headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
             .subscribe(
-                (response:HttpResponse<Object>) => {
+                (response: HttpResponse<Object>) => {
                   console.log('Maj back-end Ok');
                   console.log(response);
-                  this.userDeleteSubject.next(new userMsg(true,null));
+                  this.userDeleteSubject.next(new userMsg(true, null));
                 },
-                (error:HttpErrorResponse) => {
+                (error: HttpErrorResponse) => {
                   console.log('Maj back-end Ko' + error );
                   if (error.status === 200 || error.status === 201) {
-                    this.userDeleteSubject.next(new userMsg(true,null));
+                    this.userDeleteSubject.next(new userMsg(true, null));
                   } else {
-                    let msg = this.errorHandler(error);
-                    this.userDeleteSubject.next(new userMsg(false,msg));
+                    const msg = this.errorHandler(error);
+                    this.userDeleteSubject.next(new userMsg(false, msg));
                   }
                 }
             );
@@ -263,20 +264,20 @@ export class UserService {
         this.httpClient.post(urlUserCreate, userCreate,
             {headers: new HttpHeaders().set('Authorization', this.tokenId), withCredentials: true})
             .subscribe(
-                (response:HttpResponse<Object>) => {
+                (response: HttpResponse<Object>) => {
                   console.log('Maj back-end Ok');
                   console.log(response);
-                  this.userCreateSubject.next(new userMsg(true,null));
+                  this.userCreateSubject.next(new userMsg(true, null));
                 },
-                (error:HttpErrorResponse) => {
+                (error: HttpErrorResponse) => {
                   console.log('Maj back-end Ko' + error );
                   if (error.status === 200 || error.status === 201) {
-                    this.userCreateSubject.next(new userMsg(true,null));
+                    this.userCreateSubject.next(new userMsg(true, null));
                   } else {
-                    let msg = this.errorHandler(error);
-                    this.userCreateSubject.next(new userMsg(false,msg));
+                    const msg = this.errorHandler(error);
+                    this.userCreateSubject.next(new userMsg(false, msg));
                   }
-                } 
+                }
             );
     }
 
@@ -301,30 +302,30 @@ export class UserService {
         return null;
     }
 
-    
-    errorHandler(error:HttpErrorResponse): string {
+
+    errorHandler(error: HttpErrorResponse): string {
         //
         // these case below are handled by the back-end, so we just return the error msg formatted by the back
           if (error.status === 409) {
             // conflict during the update server with other user
-            return "Un autre utilisateur a mis à jour le système entre temps." +
-                "Veuillez ressayer. ("  + error.error.message + ")";
+            return 'Un autre utilisateur a mis à jour le système entre temps.' +
+                'Veuillez ressayer. ('  + error.error.message + ')';
           }
           if (error.status === 400) {
             // the request has a correct syntax but bad values (validation control of the field
             // like sip, email, size of fields)
-            return "Données saisies incorrectes. (" + error.error.message + ")";
+            return 'Données saisies incorrectes. (' + error.error.message + ')';
           }
           if (error.status === 304) {
             // the request has a incorrect syntax but because of the front, not the user : serious error
-            return "Incohérence des données envoyées. Contactez la MOE. (" + error.error.message + ")";
+            return 'Incohérence des données envoyées. Contactez la MOE. (' + error.error.message + ')';
           }
           if (error.status === 404) {
             // the request has a incorrect syntax but because of the front, not the user : serious error
-            let msg = error.error.message;
-            return "Incohérence des données en base. Contactez la MOE. (" + msg + ")";
+            const msg = error.error.message;
+            return 'Incohérence des données en base. Contactez la MOE. (' + msg + ')';
           }
-  
-        return "Contactez la MOE. Erreur interne (" + error.status + ")";
+
+          return 'Contactez la MOE. Erreur interne (' + error.status + ')';
       }
 }
