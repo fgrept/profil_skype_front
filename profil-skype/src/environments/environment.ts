@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  urlServer: 'http://localhost:8181'
+  urlServer: 'http://localhost:8181',
+  pagination: 10
 };
 
 /*

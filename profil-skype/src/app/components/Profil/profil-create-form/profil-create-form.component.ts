@@ -58,7 +58,7 @@ export class ProfilCreateFormComponent implements OnInit, OnDestroy {
 
   private initForm() {
     this.profilFormCreate = this.formBuilder.group({
-      // collaboraterId: this.idCollaborater,
+        collaboraterId: this.idCollaborater,
       sip: ['sip:', [Validators.required, Validators.pattern('^sip:.*$')]],
       voiceEnabled: 'false',
       voicePolicy: '',

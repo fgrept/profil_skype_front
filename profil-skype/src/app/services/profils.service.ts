@@ -7,6 +7,7 @@ import { ProfilForChange } from '../models/profil/profil-for-change';
 import { userMsg } from '../models/tech/user-msg';
 import { delay } from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {LoaderService} from "./loader.service";
 
 const baseUrl = environment.urlServer + '/v1/profile/list/all';
 const baseUrl2 = environment.urlServer + '/v1/profile/update';
@@ -46,7 +47,8 @@ export class ProfilsService  {
   public profilIdExist: string;
   public profilExistSubject = new Subject<string>();
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient,
+              private loader: LoaderService) {}
 
   getProfilById(id: number) {
     if (id < this.profils.length) {
@@ -123,8 +125,10 @@ export class ProfilsService  {
             }
           );
     } else {
-      this.profilsSubject.next(this.profils);
-      this.profilListToReload = true;
+          console.log('profil service - pas de rechargement');
+          this.loader.hideLoader();
+          this.profilsSubject.next(this.profils);
+          this.profilListToReload = true;
     }
   }
 
@@ -148,8 +152,10 @@ export class ProfilsService  {
             }
           );
     } else {
-      this.profilsSubject.next(this.profils);
-      this.profilListToReload = true;
+        console.log('profil service - pas de rechargement');
+        this.loader.hideLoader();
+        this.profilsSubject.next(this.profils);
+        this.profilListToReload = true;
     }
   }
 
